@@ -1,0 +1,19 @@
+{
+  "name": "sqljs",
+  "version": "1.0.0",
+  "description": "bla bla",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ujjwalguptaofficial/sqljs.git"
+  },
+  "author": "Ujjwal Gupta",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ujjwalguptaofficial/sqljs/issues"
+  },
+  "homepage": "https://github.com/ujjwalguptaofficial/sqljs#readme"
+}
