@@ -1,3 +1,3 @@
-module SqlJs {
+namespace SqlJs {
   
 }

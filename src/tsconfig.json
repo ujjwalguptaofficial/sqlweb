@@ -13,12 +13,18 @@
     "exclude": [
         "node_modules"
     ],
+    "include": [
+        "code/model/*"
+    ],
     "files": [
         //library
-        "code/jsstore.d.ts",
+        "def_files/jsstore.d.ts",
 
         //License
         "code/license.ts",
+
+        //Model
+        // "code/model/*.ts",
         "code/error.ts",
         "code/query.ts",
         "code/insert.ts",

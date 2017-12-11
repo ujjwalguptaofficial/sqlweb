@@ -1,4 +1,4 @@
-module SqlJs {
+namespace SqlJs {
     export enum Errors {
         JsStoreUndefined = "Jstore_undefined",
         UndefinedCon = "undefined_connection",
@@ -6,8 +6,8 @@ module SqlJs {
     }
 
     export interface IError {
-        _type: Errors,
-        _message: string
+        _type: Errors;
+        _message: string;
     }
 
     export class Error implements IError {
@@ -19,11 +19,25 @@ module SqlJs {
             this._info = info;
         }
 
+        public throw = function () {
+            throw this.get();
+        };
+
+        print = function (isWarn: boolean = false) {
+            var error_obj = this.get();
+            if (isWarn) {
+                console.warn(error_obj);
+            }
+            else {
+                console.error(error_obj);
+            }
+        };
+
         private get = function () {
-            var error_obj = <IError>{
+            var error_obj = {
                 _type: this._type,
                 _message: this._message
-            }
+            } as IError;
 
             switch (this._type) {
                 case Errors.UndefinedCon:
@@ -37,20 +51,6 @@ module SqlJs {
                     break;
             }
             return error_obj;
-        }
-
-        throw = function () {
-            throw this.get();
-        }
-
-        print = function (isWarn: boolean = false) {
-            var error_obj = this.get();
-            if (isWarn) {
-                console.warn(error_obj);
-            }
-            else {
-                console.error(error_obj);
-            }
-        }
+        };
     }
 }

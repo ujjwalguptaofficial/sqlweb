@@ -1,11 +1,10 @@
-
-module SqlJs {
+namespace SqlJs {
     export class Instance {
         _connection: JsStore.Instance;
         _query: Query;
         constructor(jsstoreCon: JsStore.Instance) {
-            if (typeof JsStore == undefined) {
-
+            if (typeof JsStore === "undefined") {
+                new Error(Errors.JsStoreUndefined).throw();
             }
             else {
                 if (jsstoreCon) {
@@ -17,13 +16,18 @@ module SqlJs {
             }
         }
 
-        run = function (qry: Query) {
+        run = function (qry: Query, onSuccess: () => any, onError: () => IError) {
             this._query = qry;
             qry = undefined;
-            switch (this._query) {
+            var jsstore_query;
+            switch (this._query._api) {
                 case 'insert':
-                    // new Insert()
+                    jsstore_query = new Insert(this._query).getQuery();
+                    break;
+
             }
-        }
+            console.log(jsstore_query);
+            // this._connection[this._api](jsstore_query, onSuccess, onError);
+        };
     }
 }
