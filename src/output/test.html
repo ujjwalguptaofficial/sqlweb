@@ -12,8 +12,11 @@
 
 <body>
     <script>
-        var SqlCmd = new SqlJs.Instance('ss');
-        var SqlQry = new SqlJs.Query("Insert into item values=@values");
+        var JsStoreCon = new JsStore.Instance();
+        var SqlCmd = new SqlJs.Instance(
+            "create database Demo;create table Students (id number primarykey notnull autoincrement,name datatype string not null);"
+        );
+        var SqlQry = new SqlJs.Query("Insert into item values=@values skipdatacheck return");
         SqlQry.map("@values", ['fucl']);
         SqlCmd.run(SqlQry);
     </script>

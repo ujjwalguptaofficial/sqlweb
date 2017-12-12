@@ -27,6 +27,8 @@
         // "code/model/*.ts",
         "code/error.ts",
         "code/query.ts",
+        "code/column.ts",
+        "code/create.ts",
         "code/insert.ts",
         "code/select.ts",
         "code/instance.ts"

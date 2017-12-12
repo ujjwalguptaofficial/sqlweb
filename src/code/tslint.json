@@ -10,12 +10,14 @@
         "quotemark": false,
         "only-arrow-functions": false,
         "space-before-function-paren": false,
+        "one-variable-per-declaration": false,
         "variable-name": [
             true,
             "check-format",
             "allow-snake-case",
             "allow-leading-underscore"
         ],
+        "no-string-literal": false,
         "member-access": false,
         "eofline": false,
         "no-trailing-whitespace": false,

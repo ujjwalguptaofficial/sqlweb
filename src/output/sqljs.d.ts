@@ -25,16 +25,48 @@ declare namespace SqlJs {
         _api: string;
         _splittedQry: string[];
         constructor(qry: string);
-        getMapValue: (key: any) => any;
+        getMapValue: (key: any, isMapValue?: boolean) => any;
         getWords: () => any;
         map: (key: any, value: any) => void;
     }
 }
 declare namespace SqlJs {
-    class Insert {
-        query: Query;
-        index_for_loop: number;
+    class Column {
+        _query: Query;
+        _index_for_loop: number;
         constructor(qry: Query);
+        getKeyWordsValue: () => {
+            value: string;
+            rules: string;
+        }[];
+        getQuery: () => object;
+        getValue: (rule: any) => any;
+    }
+}
+declare namespace SqlJs {
+    class Create {
+        _query: Query;
+        _index_for_loop: number;
+        constructor(qry: Query);
+        getKeyWordsValue: () => {
+            value: string;
+            rules: string;
+        }[];
+        getIndexofColumnQuery: () => number;
+        getColumns: () => any[];
+        getQuery: () => object;
+        getValue: (rule: any) => any;
+    }
+}
+declare namespace SqlJs {
+    class Insert {
+        _query: Query;
+        _index_for_loop: number;
+        constructor(qry: Query);
+        getKeyWordsValue: () => {
+            value: string;
+            rules: string;
+        }[];
         getQuery: () => object;
         getValue: (rule: any) => any;
     }
@@ -48,8 +80,9 @@ declare namespace SqlJs {
     class Instance {
         _connection: JsStore.Instance;
         _query: Query;
-        constructor(jsstoreCon: JsStore.Instance);
+        constructor(dbSchemaQry: string);
         run: (qry: Query, onSuccess: () => any, onError: () => IError) => void;
+        private getDbSchema;
     }
 }
 declare namespace SqlJs {

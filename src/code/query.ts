@@ -10,8 +10,8 @@ namespace SqlJs {
             this._api = this._splittedQry[0];
         }
 
-        getMapValue = function (key) {
-            if (key.indexOf("@") >= 0) {
+        getMapValue = function (key, isMapValue = true) {
+            if (isMapValue === true && key.indexOf("@") >= 0) {
                 var is_value_exist = false;
                 for (var i = 0, length = this._maps.length; i < length; i++) {
                     if (this._maps[i]._key === key) {
@@ -29,7 +29,8 @@ namespace SqlJs {
         };
 
         getWords = function () {
-            return this._stringQry.replace(/  +/g, ' ').replace("=", " ").split(" ");
+            return this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').replace(/[=]/g, " ").split(" ");
+            // .replace("=", " ").replace("("," ")
         };
 
         map = function (key, value) {
