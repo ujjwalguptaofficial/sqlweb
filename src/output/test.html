@@ -13,10 +13,13 @@
 <body>
     <script>
         var JsStoreCon = new JsStore.Instance();
-        var SqlCmd = new SqlJs.Instance(
-            "create database Demo;create table Students (id number primarykey notnull autoincrement,name datatype string not null);"
-        );
-        var SqlQry = new SqlJs.Query("Insert into item values=@values skipdatacheck return");
+        var SqlCmd = new SqlJs.Instance();
+        var DbQry =
+            "create database Name=@dbname;create table Students (Id number primary key notnull autoincrement,name datatype string not null);"
+        var SqlQry = new SqlJs.Query(DbQry);
+        SqlQry.map("@dbName", 'Demo');
+        SqlCmd.run(SqlQry);
+        SqlQry = new SqlJs.Query("Insert into item values=@values skipdatacheck return");
         SqlQry.map("@values", ['fucl']);
         SqlCmd.run(SqlQry);
     </script>

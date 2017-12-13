@@ -6,16 +6,44 @@ namespace SqlJs {
             this._query = qry;
         }
 
-        getKeyWordsValue = function () {
+        getDb = function () {
+            const queries = this._query._stringQry.split(";");
+            var database, tables = [];
+            queries.forEach(function (item) {
+                if (item.length > 0) {
+                    var query = new Query(item);
+                    var keys = query.getMappedKeys();
+                    if (keys.length > 0) {
+                        var values = this._query.getMappedValues(keys);
+                        if (values.length === keys.length) {
+                            values.forEach((value) => {
+                                query.map(value._key, value._value);
+                            });
+                        }
+                    }
+                    if (query._stringQry.indexOf('table') >= 0) {
+                        tables.push(new Create(query).getQuery());
+                    }
+                    else {
+                        database = new Create(query).getQuery();
+                    }
+                }
+            }, this);
+            database.Tables = tables;
+            console.log(database);
+            return database;
+        };
+
+        private getKeyWordsValue = function () {
             const keywords_value = [
-                { value: 'Name', rules: 'next' },
-                { value: 'Name', rules: 'next' },
+                { value: 'Name', rules: 'getName' },
+                { value: 'Name', rules: 'getName' },
                 { value: 'Columns', rules: 'getColumns' }
             ];
             return keywords_value;
         };
 
-        getIndexofColumnQuery = function () {
+        private getIndexofColumnQuery = function () {
             var index = 0;
             for (var j = this._index_for_loop, length = this._query._stringQry.length;
                 (j > 0 && index < length); index++) {
@@ -26,7 +54,7 @@ namespace SqlJs {
             return index;
         };
 
-        getColumns = function () {
+        private getColumns = function () {
             var column_query = this._query._stringQry.substr(this.getIndexofColumnQuery()).
                 replace(/[()]/g, '').split(','),
                 columns = [];
@@ -39,7 +67,31 @@ namespace SqlJs {
             return columns;
         };
 
-        getQuery = function () {
+        private getValue = function (rule) {
+            switch (rule) {
+                case 'getName':
+                    return this.getName();
+                case 'next':
+                    var value = this._query._splittedQry[++this._index_for_loop];
+                    return (this._query.getMapValue(value));
+                case 'getColumns':
+                    var value = this.getColumns();
+                    this._index_for_loop = this._query._splittedQry.length;
+                    return value;
+                default:
+            }
+        };
+
+        private getName() {
+            var value = this._query._splittedQry[++this._index_for_loop];
+            return this._query._splittedQry[this._index_for_loop + 1].indexOf('@') >= 0 ?
+                this._query.getMapValue(this._query._splittedQry[++this._index_for_loop]) : value;
+            // this._query._splittedQry[this._index_for_loop];
+            // return value === 'name' ?
+            // this._query.getMapValue(this._query._splittedQry[++this._index_for_loop]) : value;
+        }
+
+        private getQuery = function () {
             var query: object = {};
             const keywords = ['database', 'table', '('];
 
@@ -57,17 +109,5 @@ namespace SqlJs {
             return query;
         };
 
-        getValue = function (rule) {
-            switch (rule) {
-                case 'next':
-                    var value = this._query._splittedQry[++this._index_for_loop];
-                    return (this._query.getMapValue(value));
-                case 'getColumns':
-                    var value = this.getColumns();
-                    this._index_for_loop = this._query._splittedQry.length;
-                    return value;
-                default:
-            }
-        };
     }
 }

@@ -26,7 +26,8 @@ namespace SqlJs {
 
         getQuery = function () {
             var query: object = {
-                Name: this._query._splittedQry[this._index_for_loop++]
+                // Name: this._query._splittedQry[this._index_for_loop++]
+                Name: this.getName()
             };
             const keywords = ['primary key', 'pk', 'primarykey', 'not null', 'notnull',
                 'autoincrement', 'unique', 'default', 'string', 'boolean', 'object', 'number'];
@@ -50,15 +51,24 @@ namespace SqlJs {
             return query;
         };
 
-        getValue = function (rule) {
+        private getValue = function (rule) {
             switch (rule) {
                 case 'next':
                     var value = this._query._splittedQry[++this._index_for_loop];
                     return (this._query.getMapValue(value));
                 case 'true':
-                    return (this._query.getMapValue(true, false));
+                    return true;
                 default:
             }
         };
+
+        private getName() {
+            return this._query._splittedQry[this._index_for_loop + 1].indexOf('@') >= 0 ?
+                this._query.getMapValue(this._query._splittedQry[++this._index_for_loop]) :
+                this._query._splittedQry[this._index_for_loop];
+            // var value = this._query._splittedQry[this._index_for_loop];
+            // return value === 'name' ? 
+            // this._query.getMapValue(this._query._splittedQry[++this._index_for_loop]) : value;
+        }
     }
 }

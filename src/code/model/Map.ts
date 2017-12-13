@@ -8,8 +8,8 @@ namespace SqlJs {
         export class Map implements IMap {
             _key: string;
             _value: any;
-            constructor(key, value) {
-                this._key = key;
+            constructor(key: string, value) {
+                this._key = key.toLowerCase();
                 this._value = value;
             }
         }

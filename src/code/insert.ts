@@ -40,7 +40,7 @@ namespace SqlJs {
                     var value = this._query._splittedQry[++this._index_for_loop];
                     return (this._query.getMapValue(value));
                 case 'true':
-                    return (this._query.getMapValue(true, false));
+                    return true;
                 default:
             }
         };

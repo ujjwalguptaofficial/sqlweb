@@ -25,9 +25,11 @@ declare namespace SqlJs {
         _api: string;
         _splittedQry: string[];
         constructor(qry: string);
-        getMapValue: (key: any, isMapValue?: boolean) => any;
-        getWords: () => any;
+        getMappedValues: (keys: any) => any[];
+        getMappedKeys: () => any[];
+        getMapValue: (key: any) => any;
         map: (key: any, value: any) => void;
+        private getWords;
     }
 }
 declare namespace SqlJs {
@@ -40,7 +42,8 @@ declare namespace SqlJs {
             rules: string;
         }[];
         getQuery: () => object;
-        getValue: (rule: any) => any;
+        private getValue;
+        private getName();
     }
 }
 declare namespace SqlJs {
@@ -48,14 +51,13 @@ declare namespace SqlJs {
         _query: Query;
         _index_for_loop: number;
         constructor(qry: Query);
-        getKeyWordsValue: () => {
-            value: string;
-            rules: string;
-        }[];
-        getIndexofColumnQuery: () => number;
-        getColumns: () => any[];
-        getQuery: () => object;
-        getValue: (rule: any) => any;
+        getDb: () => any;
+        private getKeyWordsValue;
+        private getIndexofColumnQuery;
+        private getColumns;
+        private getValue;
+        private getName();
+        private getQuery;
     }
 }
 declare namespace SqlJs {
@@ -78,11 +80,11 @@ declare namespace SqlJs {
 }
 declare namespace SqlJs {
     class Instance {
+        _isDbOpened: boolean;
         _connection: JsStore.Instance;
         _query: Query;
-        constructor(dbSchemaQry: string);
+        constructor();
         run: (qry: Query, onSuccess: () => any, onError: () => IError) => void;
-        private getDbSchema;
     }
 }
 declare namespace SqlJs {
@@ -94,7 +96,7 @@ declare namespace SqlJs {
         class Map implements IMap {
             _key: string;
             _value: any;
-            constructor(key: any, value: any);
+            constructor(key: string, value: any);
         }
     }
 }

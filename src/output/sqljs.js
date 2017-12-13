@@ -57,9 +57,26 @@ var SqlJs;
     var Query = /** @class */ (function () {
         function Query(qry) {
             this._maps = [];
-            this.getMapValue = function (key, isMapValue) {
-                if (isMapValue === void 0) { isMapValue = true; }
-                if (isMapValue === true && key.indexOf("@") >= 0) {
+            this.getMappedValues = function (keys) {
+                var mapped_value = [];
+                this._maps.forEach(function (element) {
+                    if (keys.indexOf(element._key) >= 0) {
+                        mapped_value.push(element);
+                    }
+                });
+                return mapped_value;
+            };
+            this.getMappedKeys = function () {
+                var keys = [];
+                this._splittedQry.forEach(function (element) {
+                    if (element.indexOf('@') >= 0) {
+                        keys.push(element);
+                    }
+                });
+                return keys;
+            };
+            this.getMapValue = function (key) {
+                if (key.indexOf("@") >= 0) {
                     var is_value_exist = false;
                     for (var i = 0, length = this._maps.length; i < length; i++) {
                         if (this._maps[i]._key === key) {
@@ -75,12 +92,12 @@ var SqlJs;
                     return key;
                 }
             };
+            this.map = function (key, value) {
+                this._maps.push(new SqlJs.Model.Map(key, value));
+            };
             this.getWords = function () {
                 return this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').replace(/[=]/g, " ").split(" ");
                 // .replace("=", " ").replace("("," ")
-            };
-            this.map = function (key, value) {
-                this._maps.push(new SqlJs.Model.Map(key, value));
             };
             this._stringQry = qry.toLowerCase();
             this._splittedQry = this.getWords();
@@ -114,7 +131,8 @@ var SqlJs;
             };
             this.getQuery = function () {
                 var query = {
-                    Name: this._query._splittedQry[this._index_for_loop++]
+                    // Name: this._query._splittedQry[this._index_for_loop++]
+                    Name: this.getName()
                 };
                 var keywords = ['primary key', 'pk', 'primarykey', 'not null', 'notnull',
                     'autoincrement', 'unique', 'default', 'string', 'boolean', 'object', 'number'];
@@ -143,12 +161,20 @@ var SqlJs;
                         var value = this._query._splittedQry[++this._index_for_loop];
                         return (this._query.getMapValue(value));
                     case 'true':
-                        return (this._query.getMapValue(true, false));
+                        return true;
                     default:
                 }
             };
             this._query = qry;
         }
+        Column.prototype.getName = function () {
+            return this._query._splittedQry[this._index_for_loop + 1].indexOf('@') >= 0 ?
+                this._query.getMapValue(this._query._splittedQry[++this._index_for_loop]) :
+                this._query._splittedQry[this._index_for_loop];
+            // var value = this._query._splittedQry[this._index_for_loop];
+            // return value === 'name' ? 
+            // this._query.getMapValue(this._query._splittedQry[++this._index_for_loop]) : value;
+        };
         return Column;
     }());
     SqlJs.Column = Column;
@@ -158,10 +184,37 @@ var SqlJs;
     var Create = /** @class */ (function () {
         function Create(qry) {
             this._index_for_loop = 0;
+            this.getDb = function () {
+                var queries = this._query._stringQry.split(";");
+                var database, tables = [];
+                queries.forEach(function (item) {
+                    if (item.length > 0) {
+                        var query = new SqlJs.Query(item);
+                        var keys = query.getMappedKeys();
+                        if (keys.length > 0) {
+                            var values = this._query.getMappedValues(keys);
+                            if (values.length === keys.length) {
+                                values.forEach(function (value) {
+                                    query.map(value._key, value._value);
+                                });
+                            }
+                        }
+                        if (query._stringQry.indexOf('table') >= 0) {
+                            tables.push(new Create(query).getQuery());
+                        }
+                        else {
+                            database = new Create(query).getQuery();
+                        }
+                    }
+                }, this);
+                database.Tables = tables;
+                console.log(database);
+                return database;
+            };
             this.getKeyWordsValue = function () {
                 var keywords_value = [
-                    { value: 'Name', rules: 'next' },
-                    { value: 'Name', rules: 'next' },
+                    { value: 'Name', rules: 'getName' },
+                    { value: 'Name', rules: 'getName' },
                     { value: 'Columns', rules: 'getColumns' }
                 ];
                 return keywords_value;
@@ -186,6 +239,20 @@ var SqlJs;
                 });
                 return columns;
             };
+            this.getValue = function (rule) {
+                switch (rule) {
+                    case 'getName':
+                        return this.getName();
+                    case 'next':
+                        var value = this._query._splittedQry[++this._index_for_loop];
+                        return (this._query.getMapValue(value));
+                    case 'getColumns':
+                        var value = this.getColumns();
+                        this._index_for_loop = this._query._splittedQry.length;
+                        return value;
+                    default:
+                }
+            };
             this.getQuery = function () {
                 var query = {};
                 var keywords = ['database', 'table', '('];
@@ -202,20 +269,16 @@ var SqlJs;
                 }
                 return query;
             };
-            this.getValue = function (rule) {
-                switch (rule) {
-                    case 'next':
-                        var value = this._query._splittedQry[++this._index_for_loop];
-                        return (this._query.getMapValue(value));
-                    case 'getColumns':
-                        var value = this.getColumns();
-                        this._index_for_loop = this._query._splittedQry.length;
-                        return value;
-                    default:
-                }
-            };
             this._query = qry;
         }
+        Create.prototype.getName = function () {
+            var value = this._query._splittedQry[++this._index_for_loop];
+            return this._query._splittedQry[this._index_for_loop + 1].indexOf('@') >= 0 ?
+                this._query.getMapValue(this._query._splittedQry[++this._index_for_loop]) : value;
+            // this._query._splittedQry[this._index_for_loop];
+            // return value === 'name' ?
+            // this._query.getMapValue(this._query._splittedQry[++this._index_for_loop]) : value;
+        };
         return Create;
     }());
     SqlJs.Create = Create;
@@ -256,7 +319,7 @@ var SqlJs;
                         var value = this._query._splittedQry[++this._index_for_loop];
                         return (this._query.getMapValue(value));
                     case 'true':
-                        return (this._query.getMapValue(true, false));
+                        return true;
                     default:
                 }
             };
@@ -279,47 +342,46 @@ var SqlJs;
 var SqlJs;
 (function (SqlJs) {
     var Instance = /** @class */ (function () {
-        function Instance(dbSchemaQry) {
+        function Instance() {
+            this._isDbOpened = false;
             this.run = function (qry, onSuccess, onError) {
-                this._query = qry;
-                qry = undefined;
-                var jsstore_query;
-                switch (this._query._api) {
+                var jsstore_query = null;
+                switch (qry._api) {
                     case 'insert':
-                        jsstore_query = new SqlJs.Insert(this._query).getQuery();
+                        jsstore_query = new SqlJs.Insert(qry).getQuery();
                         break;
+                    case 'create':
+                        var db_1 = new SqlJs.Create(qry).getDb();
+                        console.log(db_1);
+                        JsStore.isDbExist(db_1.Name, function (isExist) {
+                            if (isExist) {
+                                this._connection.openDb(db_1.Name);
+                            }
+                            else {
+                                this._connection.createDb(db_1.Name);
+                            }
+                        }, function (err) {
+                            throw err;
+                        });
+                }
+                if (jsstore_query !== null) {
+                    this._connection[qry._api](jsstore_query, onSuccess, onError);
                 }
                 console.log(jsstore_query);
                 // this._connection[this._api](jsstore_query, onSuccess, onError);
-            };
-            this.getDbSchema = function (dbSchemaInSql) {
-                var queries = dbSchemaInSql.split(";");
-                var database, tables = [];
-                queries.forEach(function (item) {
-                    if (item.length > 0) {
-                        var query = new SqlJs.Query(item);
-                        if (query._stringQry.indexOf('table') >= 0) {
-                            tables.push(new SqlJs.Create(query).getQuery());
-                        }
-                        else {
-                            database = new SqlJs.Create(query).getQuery();
-                        }
-                    }
-                });
-                database.Tables = tables;
-                return database;
             };
             if (typeof JsStore === "undefined") {
                 new SqlJs.Error(SqlJs.Errors.JsStoreUndefined).throw();
             }
             else {
-                if (dbSchemaQry) {
-                    this._connection = new JsStore.Instance();
-                    var dbSchema = this.getDbSchema(dbSchemaQry);
-                }
-                else {
-                    new SqlJs.Error(SqlJs.Errors.UndefinedCon).throw();
-                }
+                this._connection = new JsStore.Instance();
+                // if (dbSchemaQry) {
+                //     this._connection = new JsStore.Instance();
+                //     const dbSchema = this.getDbSchema(dbSchemaQry);
+                // }
+                // else {
+                //     new Error(Errors.UndefinedCon).throw();
+                // }
             }
         }
         return Instance;
@@ -332,7 +394,7 @@ var SqlJs;
     (function (Model) {
         var Map = /** @class */ (function () {
             function Map(key, value) {
-                this._key = key;
+                this._key = key.toLowerCase();
                 this._value = value;
             }
             return Map;

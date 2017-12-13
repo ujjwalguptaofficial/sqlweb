@@ -17,6 +17,7 @@
             "allow-snake-case",
             "allow-leading-underscore"
         ],
+        "arrow-parens": false,
         "no-string-literal": false,
         "member-access": false,
         "eofline": false,
