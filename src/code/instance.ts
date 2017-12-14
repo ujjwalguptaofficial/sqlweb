@@ -28,12 +28,12 @@ namespace SqlJs {
                 case 'create':
                     const db = new Create(qry).getDb();
                     console.log(db);
-                    JsStore.isDbExist(db.Name, function (isExist) {
+                    JsStore.isDbExist.call(this, db.Name, function (isExist) {
                         if (isExist) {
                             this._connection.openDb(db.Name);
                         }
                         else {
-                            this._connection.createDb(db.Name);
+                            this._connection.createDb(db);
                         }
                     }, function (err) {
                         throw err;

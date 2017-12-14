@@ -3,7 +3,7 @@ var SqlJsObj = new SqlJs.Instance();
 
 function initSqlJs() {
     console.log('initiate database');
-    SqlJsObj = new SqlJs.Instance('Demo');
+    SqlJsObj = new SqlJs.Instance();
 }
 
 function getSchema() {

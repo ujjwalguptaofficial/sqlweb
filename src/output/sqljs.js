@@ -60,7 +60,7 @@ var SqlJs;
             this.getMappedValues = function (keys) {
                 var mapped_value = [];
                 this._maps.forEach(function (element) {
-                    if (keys.indexOf(element._key) >= 0) {
+                    if (keys.indexOf(element._key.toLowerCase()) >= 0) {
                         mapped_value.push(element);
                     }
                 });
@@ -79,7 +79,7 @@ var SqlJs;
                 if (key.indexOf("@") >= 0) {
                     var is_value_exist = false;
                     for (var i = 0, length = this._maps.length; i < length; i++) {
-                        if (this._maps[i]._key === key) {
+                        if (this._maps[i]._key.toLowerCase() === key) {
                             is_value_exist = true;
                             return this._maps[i]._value;
                         }
@@ -99,9 +99,9 @@ var SqlJs;
                 return this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').replace(/[=]/g, " ").split(" ");
                 // .replace("=", " ").replace("("," ")
             };
-            this._stringQry = qry.toLowerCase();
+            this._stringQry = qry;
             this._splittedQry = this.getWords();
-            this._api = this._splittedQry[0];
+            this._api = this._splittedQry[0].toLowerCase();
         }
         return Query;
     }());
@@ -120,6 +120,7 @@ var SqlJs;
                     { value: 'NotNull', rules: 'true' },
                     { value: 'NotNull', rules: 'true' },
                     { value: 'AutoIncrement', rules: 'true' },
+                    { value: 'AutoIncrement', rules: 'true' },
                     { value: 'Unique', rules: 'true' },
                     { value: 'Default', rules: 'next' },
                     { value: 'string', rules: 'true' },
@@ -134,10 +135,10 @@ var SqlJs;
                     // Name: this._query._splittedQry[this._index_for_loop++]
                     Name: this.getName()
                 };
-                var keywords = ['primary key', 'pk', 'primarykey', 'not null', 'notnull',
-                    'autoincrement', 'unique', 'default', 'string', 'boolean', 'object', 'number'];
+                var keywords = ['primary_key', 'pk', 'primarykey', 'not_null', 'notnull',
+                    'autoincrement', 'auto_increment', 'unique', 'default', 'string', 'boolean', 'object', 'number'];
                 for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
-                    var index_of_keywords = keywords.indexOf(this._query._splittedQry[i]);
+                    var index_of_keywords = keywords.indexOf(this._query._splittedQry[i].toLowerCase());
                     if (index_of_keywords >= 0) {
                         var keywords_value = this.getKeyWordsValue();
                         this._index_for_loop = i;
@@ -208,7 +209,6 @@ var SqlJs;
                     }
                 }, this);
                 database.Tables = tables;
-                console.log(database);
                 return database;
             };
             this.getKeyWordsValue = function () {
@@ -257,7 +257,7 @@ var SqlJs;
                 var query = {};
                 var keywords = ['database', 'table', '('];
                 for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
-                    var index_of_keywords = keywords.indexOf(this._query._splittedQry[i]);
+                    var index_of_keywords = keywords.indexOf(this._query._splittedQry[i].toLowerCase());
                     if (index_of_keywords >= 0) {
                         var keywords_value = this.getKeyWordsValue();
                         this._index_for_loop = i;
@@ -301,7 +301,7 @@ var SqlJs;
                 var query = {};
                 var keywords = ['into', 'values', 'skipdatacheck', 'return'];
                 for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
-                    var index_of_keywords = keywords.indexOf(this._query._splittedQry[i]);
+                    var index_of_keywords = keywords.indexOf(this._query._splittedQry[i].toLowerCase());
                     if (index_of_keywords >= 0) {
                         var keywords_value = this.getKeyWordsValue();
                         this._index_for_loop = i;
@@ -353,12 +353,12 @@ var SqlJs;
                     case 'create':
                         var db_1 = new SqlJs.Create(qry).getDb();
                         console.log(db_1);
-                        JsStore.isDbExist(db_1.Name, function (isExist) {
+                        JsStore.isDbExist.call(this, db_1.Name, function (isExist) {
                             if (isExist) {
                                 this._connection.openDb(db_1.Name);
                             }
                             else {
-                                this._connection.createDb(db_1.Name);
+                                this._connection.createDb(db_1);
                             }
                         }, function (err) {
                             throw err;
@@ -394,7 +394,7 @@ var SqlJs;
     (function (Model) {
         var Map = /** @class */ (function () {
             function Map(key, value) {
-                this._key = key.toLowerCase();
+                this._key = key;
                 this._value = value;
             }
             return Map;

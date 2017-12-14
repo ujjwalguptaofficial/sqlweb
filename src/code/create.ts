@@ -30,7 +30,6 @@ namespace SqlJs {
                 }
             }, this);
             database.Tables = tables;
-            console.log(database);
             return database;
         };
 
@@ -96,7 +95,7 @@ namespace SqlJs {
             const keywords = ['database', 'table', '('];
 
             for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
-                var index_of_keywords = keywords.indexOf(this._query._splittedQry[i]);
+                var index_of_keywords = keywords.indexOf(this._query._splittedQry[i].toLowerCase());
                 if (index_of_keywords >= 0) {
                     const keywords_value = this.getKeyWordsValue();
                     this._index_for_loop = i;

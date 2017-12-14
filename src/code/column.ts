@@ -14,6 +14,7 @@ namespace SqlJs {
                 { value: 'NotNull', rules: 'true' },
                 { value: 'NotNull', rules: 'true' },
                 { value: 'AutoIncrement', rules: 'true' },
+                { value: 'AutoIncrement', rules: 'true' },
                 { value: 'Unique', rules: 'true' },
                 { value: 'Default', rules: 'next' },
                 { value: 'string', rules: 'true' },
@@ -29,10 +30,10 @@ namespace SqlJs {
                 // Name: this._query._splittedQry[this._index_for_loop++]
                 Name: this.getName()
             };
-            const keywords = ['primary key', 'pk', 'primarykey', 'not null', 'notnull',
-                'autoincrement', 'unique', 'default', 'string', 'boolean', 'object', 'number'];
+            const keywords = ['primary_key', 'pk', 'primarykey', 'not_null', 'notnull',
+                'autoincrement', 'auto_increment', 'unique', 'default', 'string', 'boolean', 'object', 'number'];
             for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
-                var index_of_keywords = keywords.indexOf(this._query._splittedQry[i]);
+                var index_of_keywords = keywords.indexOf(this._query._splittedQry[i].toLowerCase());
                 if (index_of_keywords >= 0) {
                     const keywords_value = this.getKeyWordsValue();
                     this._index_for_loop = i;

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <script src="https://cdn.jsdelivr.net/npm/jsstore@1.2.5"></script>
+    <script src="jsstore.js"></script>
     <script src="sqljs.js"></script>
 </head>
 
@@ -15,11 +15,11 @@
         var JsStoreCon = new JsStore.Instance();
         var SqlCmd = new SqlJs.Instance();
         var DbQry =
-            "create database Name=@dbname;create table Students (Id number primary key notnull autoincrement,name datatype string not null);"
+            "create database Name=@dbname;create table Students (Id number primary key notNull autoincrement,name datatype string not null);"
         var SqlQry = new SqlJs.Query(DbQry);
         SqlQry.map("@dbName", 'Demo');
         SqlCmd.run(SqlQry);
-        SqlQry = new SqlJs.Query("Insert into item values=@values skipdatacheck return");
+        SqlQry = new SqlJs.Query("Insert into item values=@values skipdatAcheck return");
         SqlQry.map("@values", ['fucl']);
         SqlCmd.run(SqlQry);
     </script>

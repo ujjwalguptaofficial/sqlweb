@@ -5,15 +5,15 @@ namespace SqlJs {
         _api: string;
         _splittedQry: string[];
         constructor(qry: string) {
-            this._stringQry = qry.toLowerCase();
+            this._stringQry = qry;
             this._splittedQry = this.getWords();
-            this._api = this._splittedQry[0];
+            this._api = this._splittedQry[0].toLowerCase();
         }
 
         getMappedValues = function (keys) {
             var mapped_value = [];
             this._maps.forEach(element => {
-                if (keys.indexOf(element._key) >= 0) {
+                if (keys.indexOf(element._key.toLowerCase()) >= 0) {
                     mapped_value.push(element);
                 }
             });
@@ -34,7 +34,7 @@ namespace SqlJs {
             if (key.indexOf("@") >= 0) {
                 var is_value_exist = false;
                 for (var i = 0, length = this._maps.length; i < length; i++) {
-                    if (this._maps[i]._key === key) {
+                    if (this._maps[i]._key.toLowerCase() === key) {
                         is_value_exist = true;
                         return this._maps[i]._value;
                     }

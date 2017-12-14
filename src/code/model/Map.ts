@@ -9,7 +9,7 @@ namespace SqlJs {
             _key: string;
             _value: any;
             constructor(key: string, value) {
-                this._key = key.toLowerCase();
+                this._key = key;
                 this._value = value;
             }
         }
