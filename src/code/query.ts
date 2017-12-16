@@ -6,7 +6,7 @@ namespace SqlJs {
         _splittedQry: string[];
         constructor(qry: string) {
             this._stringQry = qry.replace(/(\r\n|\n|\r)/gm, "");
-            this._splittedQry = this.getWords();
+            this._splittedQry = this.splitQuery();
             this._api = this._splittedQry[0].toLowerCase();
         }
 
@@ -52,8 +52,11 @@ namespace SqlJs {
             this._maps.push(new Model.Map(key, value));
         };
 
-        private getWords = function () {
-            return this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').replace(/[=]/g, " ").split(" ");
+        private splitQuery = function () {
+            var splitted_qry = this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').replace(/[=]/g, " ").split(" ");
+            return splitted_qry.filter(function (item) {
+                return !JsStore.isNull(item);
+            });
             // .replace("=", " ").replace("("," ")
         };
 

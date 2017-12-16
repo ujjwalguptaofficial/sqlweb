@@ -29,7 +29,7 @@ declare namespace SqlJs {
         getMappedKeys: () => any[];
         getMapValue: (key: any) => any;
         map: (key: any, value: any) => void;
-        private getWords;
+        private splitQuery;
     }
 }
 declare namespace SqlJs {
@@ -62,6 +62,19 @@ declare namespace SqlJs {
 }
 declare namespace SqlJs {
     class Insert {
+        _query: Query;
+        _index_for_loop: number;
+        constructor(qry: Query);
+        getKeyWordsValue: () => {
+            value: string;
+            rules: string;
+        }[];
+        getQuery: () => object;
+        getValue: (rule: any) => any;
+    }
+}
+declare namespace SqlJs {
+    class BulkInsert {
         _query: Query;
         _index_for_loop: number;
         constructor(qry: Query);

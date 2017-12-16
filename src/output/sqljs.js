@@ -95,12 +95,15 @@ var SqlJs;
             this.map = function (key, value) {
                 this._maps.push(new SqlJs.Model.Map(key, value));
             };
-            this.getWords = function () {
-                return this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').replace(/[=]/g, " ").split(" ");
+            this.splitQuery = function () {
+                var splitted_qry = this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').replace(/[=]/g, " ").split(" ");
+                return splitted_qry.filter(function (item) {
+                    return !JsStore.isNull(item);
+                });
                 // .replace("=", " ").replace("("," ")
             };
             this._stringQry = qry.replace(/(\r\n|\n|\r)/gm, "");
-            this._splittedQry = this.getWords();
+            this._splittedQry = this.splitQuery();
             this._api = this._splittedQry[0].toLowerCase();
         }
         return Query;
@@ -294,13 +297,14 @@ var SqlJs;
                     { value: 'Into', rules: 'next' },
                     { value: 'Values', rules: 'next' },
                     { value: 'SkipDataCheck', rules: 'true' },
+                    { value: 'SkipDataCheck', rules: 'true' },
                     { value: 'Return', rules: 'true' }
                 ];
                 return keywords_value;
             };
             this.getQuery = function () {
                 var query = {};
-                var keywords = ['into', 'values', 'skipdatacheck', 'return'];
+                var keywords = ['into', 'values', 'skipdatacheck', 'skip_data_check', 'return'];
                 for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
                     var index_of_keywords = keywords.indexOf(this._query._splittedQry[i].toLowerCase());
                     if (index_of_keywords >= 0) {
@@ -332,6 +336,50 @@ var SqlJs;
 })(SqlJs || (SqlJs = {}));
 var SqlJs;
 (function (SqlJs) {
+    var BulkInsert = /** @class */ (function () {
+        function BulkInsert(qry) {
+            this._index_for_loop = 0;
+            this.getKeyWordsValue = function () {
+                var keywords_value = [
+                    { value: 'Into', rules: 'next' },
+                    { value: 'Values', rules: 'next' }
+                ];
+                return keywords_value;
+            };
+            this.getQuery = function () {
+                var query = {};
+                var keywords = ['into', 'values'];
+                for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
+                    var index_of_keywords = keywords.indexOf(this._query._splittedQry[i].toLowerCase());
+                    if (index_of_keywords >= 0) {
+                        var keywords_value = this.getKeyWordsValue();
+                        this._index_for_loop = i;
+                        query[keywords_value[index_of_keywords].value] =
+                            this.getValue(keywords_value[index_of_keywords].rules);
+                        i = this._index_for_loop;
+                    }
+                    i++;
+                }
+                return query;
+            };
+            this.getValue = function (rule) {
+                switch (rule) {
+                    case 'next':
+                        var value = this._query._splittedQry[++this._index_for_loop];
+                        return (this._query.getMapValue(value));
+                    case 'true':
+                        return true;
+                    default:
+                }
+            };
+            this._query = qry;
+        }
+        return BulkInsert;
+    }());
+    SqlJs.BulkInsert = BulkInsert;
+})(SqlJs || (SqlJs = {}));
+var SqlJs;
+(function (SqlJs) {
     var Select = /** @class */ (function () {
         function Select(msg) {
             // ss
@@ -350,22 +398,22 @@ var SqlJs;
                 switch (qry._api) {
                     case 'insert':
                         jsstore_query = new SqlJs.Insert(qry).getQuery();
-                        console.log(jsstore_query);
+                        return this._connection[qry._api](jsstore_query);
+                    case 'bulkinsert':
+                    case 'bulk_insert':
+                        qry._api = 'bulkInsert';
+                        jsstore_query = new SqlJs.BulkInsert(qry).getQuery();
                         return this._connection[qry._api](jsstore_query);
                     case 'create':
                         var db_1 = new SqlJs.Create(qry).getDb();
-                        // console.log(db);
                         var that = this;
                         return new Promise(function (resolve, reject) {
                             JsStore.isDbExist.call(this, db_1.Name, function (isExist) {
-                                console.log('isDbExist:' + isExist);
                                 if (isExist) {
                                     that._connection.openDb(db_1.Name);
                                 }
                                 else {
-                                    that._connection.createDb(db_1, function () {
-                                        console.log('db_created');
-                                    });
+                                    that._connection.createDb(db_1);
                                 }
                                 resolve();
                             }, function (err) {

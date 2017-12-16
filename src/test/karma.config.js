@@ -5,7 +5,7 @@ module.exports = function (config) {
         frameworks: ['mocha', 'chai'],
         client: {
             mocha: {
-                timeout: 60000 // 6 seconds - upped from 2 seconds
+                timeout: 6000 // 6 seconds - upped from 2 seconds
             }
         },
         files: [
@@ -25,8 +25,7 @@ module.exports = function (config) {
                 pattern: 'static/*.json',
                 included: false,
                 served: true,
-            },
-            'setup.js'
+            }
         ],
         proxies: {
             '/static/': '/base/static/',

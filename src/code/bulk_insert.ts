@@ -1,5 +1,5 @@
 namespace SqlJs {
-    export class Insert {
+    export class BulkInsert {
         _query: Query;
         _index_for_loop: number = 0;
         constructor(qry: Query) {
@@ -9,17 +9,14 @@ namespace SqlJs {
         getKeyWordsValue = function () {
             const keywords_value = [
                 { value: 'Into', rules: 'next' },
-                { value: 'Values', rules: 'next' },
-                { value: 'SkipDataCheck', rules: 'true' },
-                { value: 'SkipDataCheck', rules: 'true' },
-                { value: 'Return', rules: 'true' }
+                { value: 'Values', rules: 'next' }
             ];
             return keywords_value;
         };
 
         getQuery = function () {
             var query: object = {};
-            const keywords = ['into', 'values', 'skipdatacheck', 'skip_data_check', 'return'];
+            const keywords = ['into', 'values'];
 
             for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
                 var index_of_keywords = keywords.indexOf(this._query._splittedQry[i].toLowerCase());

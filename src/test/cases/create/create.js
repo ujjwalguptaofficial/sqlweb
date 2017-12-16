@@ -1,5 +1,5 @@
 var SqlJsObj = new SqlJs.Instance();
-JsStore.enableLog();
+// JsStore.enableLog();
 describe('Test create', function () {
     it('create database', function (done) {
         SqlJsObj.run(getSchema()).
@@ -16,7 +16,7 @@ describe('Test create', function () {
 
 function getSchema() {
     var Database = "create database Demo";
-    var Customer = `create table Customer
+    var Customer = `create table Customers
                     (
                         CustomerID primarykey autoincrement,
                         CustomerName notnull string,

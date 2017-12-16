@@ -61,11 +61,11 @@ describe('Test insert', function () {
 
     it('insert OrderDetails - using bulk insert', function (done) {
         $.getJSON("static/OrderDetails.json", function (results) {
-            var Query = new SqlJs.Query('insert into OrderDetails skipdatacheck values=@values');
+            var Query = new SqlJs.Query('bulk_insert into OrderDetails values=@values');
             Query.map('@values', results);
             SqlJsObj.run(Query).
             then(function (results) {
-                expect(results).to.be.an('number').to.equal(77);
+                expect(results).to.be.an('undefined');
                 done();
             }).
             catch(function (err) {
