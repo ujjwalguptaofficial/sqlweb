@@ -5,7 +5,7 @@ namespace SqlJs {
         _api: string;
         _splittedQry: string[];
         constructor(qry: string) {
-            this._stringQry = qry;
+            this._stringQry = qry.replace(/(\r\n|\n|\r)/gm, "");
             this._splittedQry = this.getWords();
             this._api = this._splittedQry[0].toLowerCase();
         }

@@ -84,7 +84,7 @@ declare namespace SqlJs {
         _connection: JsStore.Instance;
         _query: Query;
         constructor();
-        run: (qry: Query, onSuccess: () => any, onError: () => IError) => void;
+        run: (qry: Query) => any;
     }
 }
 declare namespace SqlJs {

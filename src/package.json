@@ -4,7 +4,7 @@
   "description": "bla bla",
   "main": "index.js",
   "scripts": {
-    "test": "karma start test/karma.config.js",
+    "test": "tsc && karma start test/karma.config.js",
     "build": "tslint code/**/*.ts && tsc"
   },
   "repository": {

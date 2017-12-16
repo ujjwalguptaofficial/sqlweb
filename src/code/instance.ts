@@ -19,30 +19,35 @@ namespace SqlJs {
             }
         }
 
-        run = function (qry: Query, onSuccess: () => any, onError: () => IError) {
+        run = function (qry: Query) {
             var jsstore_query = null;
             switch (qry._api) {
                 case 'insert':
                     jsstore_query = new Insert(qry).getQuery();
-                    break;
+                    console.log(jsstore_query);
+                    return this._connection[qry._api](jsstore_query);
                 case 'create':
                     const db = new Create(qry).getDb();
-                    console.log(db);
-                    JsStore.isDbExist.call(this, db.Name, function (isExist) {
-                        if (isExist) {
-                            this._connection.openDb(db.Name);
-                        }
-                        else {
-                            this._connection.createDb(db);
-                        }
-                    }, function (err) {
-                        throw err;
+                    // console.log(db);
+                    var that = this;
+                    return new Promise(function (resolve, reject) {
+                        JsStore.isDbExist.call(this, db.Name, function (isExist) {
+                            console.log('isDbExist:' + isExist);
+                            if (isExist) {
+                                that._connection.openDb(db.Name);
+                            }
+                            else {
+                                that._connection.createDb(db, function () {
+                                    console.log('db_created');
+                                });
+                            }
+                            resolve();
+                        }, function (err: JsStore.IError) {
+                            reject(err);
+                            throw err;
+                        });
                     });
             }
-            if (jsstore_query !== null) {
-                this._connection[qry._api](jsstore_query, onSuccess, onError);
-            }
-            console.log(jsstore_query);
             // this._connection[this._api](jsstore_query, onSuccess, onError);
         };
 

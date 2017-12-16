@@ -99,7 +99,7 @@ var SqlJs;
                 return this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').replace(/[=]/g, " ").split(" ");
                 // .replace("=", " ").replace("("," ")
             };
-            this._stringQry = qry;
+            this._stringQry = qry.replace(/(\r\n|\n|\r)/gm, "");
             this._splittedQry = this.getWords();
             this._api = this._splittedQry[0].toLowerCase();
         }
@@ -273,7 +273,8 @@ var SqlJs;
         }
         Create.prototype.getName = function () {
             var value = this._query._splittedQry[++this._index_for_loop];
-            return this._query._splittedQry[this._index_for_loop + 1].indexOf('@') >= 0 ?
+            return this._index_for_loop + 1 < this._query._splittedQry.length &&
+                this._query._splittedQry[this._index_for_loop + 1].indexOf('@') >= 0 ?
                 this._query.getMapValue(this._query._splittedQry[++this._index_for_loop]) : value;
             // this._query._splittedQry[this._index_for_loop];
             // return value === 'name' ?
@@ -344,30 +345,35 @@ var SqlJs;
     var Instance = /** @class */ (function () {
         function Instance() {
             this._isDbOpened = false;
-            this.run = function (qry, onSuccess, onError) {
+            this.run = function (qry) {
                 var jsstore_query = null;
                 switch (qry._api) {
                     case 'insert':
                         jsstore_query = new SqlJs.Insert(qry).getQuery();
-                        break;
+                        console.log(jsstore_query);
+                        return this._connection[qry._api](jsstore_query);
                     case 'create':
                         var db_1 = new SqlJs.Create(qry).getDb();
-                        console.log(db_1);
-                        JsStore.isDbExist.call(this, db_1.Name, function (isExist) {
-                            if (isExist) {
-                                this._connection.openDb(db_1.Name);
-                            }
-                            else {
-                                this._connection.createDb(db_1);
-                            }
-                        }, function (err) {
-                            throw err;
+                        // console.log(db);
+                        var that = this;
+                        return new Promise(function (resolve, reject) {
+                            JsStore.isDbExist.call(this, db_1.Name, function (isExist) {
+                                console.log('isDbExist:' + isExist);
+                                if (isExist) {
+                                    that._connection.openDb(db_1.Name);
+                                }
+                                else {
+                                    that._connection.createDb(db_1, function () {
+                                        console.log('db_created');
+                                    });
+                                }
+                                resolve();
+                            }, function (err) {
+                                reject(err);
+                                throw err;
+                            });
                         });
                 }
-                if (jsstore_query !== null) {
-                    this._connection[qry._api](jsstore_query, onSuccess, onError);
-                }
-                console.log(jsstore_query);
                 // this._connection[this._api](jsstore_query, onSuccess, onError);
             };
             if (typeof JsStore === "undefined") {

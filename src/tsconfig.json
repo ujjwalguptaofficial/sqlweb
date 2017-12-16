@@ -23,8 +23,7 @@
         //License
         "code/license.ts",
 
-        //Model
-        // "code/model/*.ts",
+        //Business
         "code/error.ts",
         "code/query.ts",
         "code/column.ts",

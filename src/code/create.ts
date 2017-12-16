@@ -83,7 +83,8 @@ namespace SqlJs {
 
         private getName() {
             var value = this._query._splittedQry[++this._index_for_loop];
-            return this._query._splittedQry[this._index_for_loop + 1].indexOf('@') >= 0 ?
+            return this._index_for_loop + 1 < this._query._splittedQry.length &&
+                this._query._splittedQry[this._index_for_loop + 1].indexOf('@') >= 0 ?
                 this._query.getMapValue(this._query._splittedQry[++this._index_for_loop]) : value;
             // this._query._splittedQry[this._index_for_loop];
             // return value === 'name' ?
@@ -106,6 +107,7 @@ namespace SqlJs {
                 i++;
             }
             return query;
+
         };
 
     }

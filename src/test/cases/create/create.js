@@ -1,32 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
+var SqlJsObj = new SqlJs.Instance();
+JsStore.enableLog();
+describe('Test create', function () {
+    it('create database', function (done) {
+        SqlJsObj.run(getSchema()).
+        then(function (results) {
+            expect(results).to.be.an('undefined');
+            done();
+        }).
+        catch(function (err) {
+            done(err);
+        })
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <script src="../test/scripts/jsstore.js"></script>
-    <script src="sqljs.js"></script>
-</head>
+    });
+});
 
-<body>
-    <script>
-        var JsStoreCon = new JsStore.Instance();
-        var SqlCmd = new SqlJs.Instance();
-        var DbQry =
-            "create database Name=@dbname;create table Students (Id number primary key notNull autoincrement,name datatype string not null);"
-        var SqlQry = getSchema();
-        SqlQry.map("@dbName", 'Demo');
-        SqlCmd.run(SqlQry);
-        SqlQry = new SqlJs.Query("Insert into item values=@values skipdatAcheck return");
-        SqlQry.map("@values", ['fucl']);
-        SqlCmd.run(SqlQry);
-
-        function getSchema() {
-            var Database = "create database Demo";
-            var Customer =
-                `create table Customer
+function getSchema() {
+    var Database = "create database Demo";
+    var Customer = `create table Customer
                     (
                         CustomerID primarykey autoincrement,
                         CustomerName notnull string,
@@ -36,15 +26,13 @@
                         PostalCode string,
                         Country string
                     )`;
-            var Categories =
-                `create table Categories
+    var Categories = `create table Categories
                     (
                         CategoryID primarykey autoincrement,
                         CategoryName notnull string,
                         Description notnull string
                     )`;
-            var Employees =
-                `create table Employees
+    var Employees = `create table Employees
                     (
                         EmployeeID primarykey autoincrement,
                         LastName notnull string,
@@ -52,8 +40,7 @@
                         Photo NotNull string,
                         Notes NotNull string
                     )`;
-            var OrderDetails =
-                `create table OrderDetails
+    var OrderDetails = `create table OrderDetails
                     (
                         OrderDetailID primarykey autoincrement,
                         OrderID notnull number,
@@ -61,8 +48,7 @@
                         Quantity NotNull number
                     )`;
 
-            var Orders =
-                `create table Orders
+    var Orders = `create table Orders
                     (
                         OrderID primarykey,
                         CustomerID notnull number,
@@ -70,8 +56,8 @@
                         OrderDate NotNull string,
                         ShipperID NotNull number
                     )`;
-            var Products =
-                `create table Products
+
+    var Products = `create table Products
                     (
                         ProductID primarykey autoincrement,
                         ProductName notnull string,
@@ -80,15 +66,13 @@
                         Unit NotNull string,
                         Price NotNull number
                     )`;
-            var Shippers =
-                `create table Shippers
+    var Shippers = `create table Shippers
                     (
                         ShipperID primarykey autoincrement,
                         ShipperName notnull string,
                         Phone notnull string
                     )`;
-            var Suppliers =
-                `create table Suppliers
+    var Suppliers = `create table Suppliers
                     (
                         SupplierID primarykey autoincrement,
                         SupplierName notnull string,
@@ -98,14 +82,8 @@
                         Country NotNull string,
                         Phone NotNull string
                     )`;
-            var string_query = Database + ';' + Customer + ';' + Products + ';' + Categories + ';' + Employees + ';' +
-                Orders + ';' + OrderDetails + ';' + Shippers + ';' + Suppliers;
-            console.log(string_query);
-            var Qry = new SqlJs.Query(string_query);
-            Qry.map("@dbName", "Demo");
-            return Qry;
-        }
-    </script>
-</body>
-
-</html>
+    var string_query = Database + ';' + Customer + ';' + Products + ';' + Categories + ';' + Employees + ';' +
+        Orders + ';' + OrderDetails + ';' + Shippers + ';' + Suppliers;
+    var Qry = new SqlJs.Query(string_query);
+    return Qry;
+}

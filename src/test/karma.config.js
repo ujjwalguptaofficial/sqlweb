@@ -2,18 +2,19 @@ process.env.CHROME_BIN = require('puppeteer').executablePath()
 module.exports = function (config) {
     config.set({
         basePath: '',
-        frameworks: ['mocha', 'chai', 'jsstore'],
+        frameworks: ['mocha', 'chai'],
         client: {
             mocha: {
-                timeout: 6000 // 6 seconds - upped from 2 seconds
+                timeout: 60000 // 6 seconds - upped from 2 seconds
             }
         },
         files: [
-            // 'scripts/jquery-3.2.1.min.js',
-            // // 'scripts/jsstore.js',
-             '../output/sqljs.js',
-            'scripts/pre.js',
-            // 'cases/insert/*.js',
+
+            'scripts/jquery-3.2.1.min.js',
+            'scripts/jsstore.js',
+            '../output/sqljs.js',
+            'cases/create/*.js',
+            'cases/insert/*.js',
             // 'cases/count/*.js',
             // 'cases/select/*.js',
             // 'cases/update/*.js',
