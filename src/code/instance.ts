@@ -19,54 +19,56 @@ namespace SqlJs {
             }
         }
 
-        run = function (qry: Query) {
-            var jsstore_query = null;
+        getConnection = function () {
+            return this._connection;
+        };
+
+        getJsStoreQuery = function (qry: Query) {
+            var jsstore_query;
             switch (qry._api) {
+                case 'select':
+                    jsstore_query = new Select(qry).getQuery();
+                    break;
                 case 'insert':
                     jsstore_query = new Insert(qry).getQuery();
-                    return this._connection[qry._api](jsstore_query);
+                    break;
                 case 'bulkinsert':
                 case 'bulk_insert':
                     qry._api = 'bulkInsert';
                     jsstore_query = new BulkInsert(qry).getQuery();
-                    return this._connection[qry._api](jsstore_query);
+                    break;
                 case 'create':
-                    const db = new Create(qry).getDb();
-                    var that = this;
-                    return new Promise(function (resolve, reject) {
-                        JsStore.isDbExist.call(this, db.Name, function (isExist) {
-                            if (isExist) {
-                                that._connection.openDb(db.Name);
-                            }
-                            else {
-                                that._connection.createDb(db);
-                            }
-                            resolve();
-                        }, function (err: JsStore.IError) {
-                            reject(err);
-                            throw err;
-                        });
-                    });
+                    jsstore_query = new Create(qry).getDb();
+                    break;
             }
-            // this._connection[this._api](jsstore_query, onSuccess, onError);
+            return jsstore_query;
         };
 
-        // private getDbSchema = function (dbSchemaInSql: string) {
-        //     const queries = dbSchemaInSql.split(";");
-        //     var database, tables = [];
-        //     queries.forEach(function (item) {
-        //         if (item.length > 0) {
-        //             var query = new Query(item);
-        //             if (query._stringQry.indexOf('table') >= 0) {
-        //                 tables.push(new Create(query).getQuery());
-        //             }
-        //             else {
-        //                 database = new Create(query).getQuery();
-        //             }
-        //         }
-        //     });
-        //     database.Tables = tables;
-        //     return database;
-        // };
+        run = function (qry: Query) {
+            if (qry._api === 'create') {
+                var that = this;
+                const db = this.getJsStoreQuery(qry);
+                return new Promise(function (resolve, reject) {
+                    JsStore.isDbExist.call(this, db.Name, function (isExist) {
+                        if (isExist) {
+                            that._connection.openDb(db.Name);
+                        }
+                        else {
+                            that._connection.createDb(db);
+                        }
+                        resolve();
+                    }, function (err: JsStore.IError) {
+                        reject(err);
+                        throw err;
+                    });
+                });
+            }
+            else {
+                var jsstore_query = this.getJsStoreQuery(qry);
+                return this._connection[qry._api](jsstore_query);
+            }
+
+            // this._connection[this._api](jsstore_query, onSuccess, onError);
+        };
     }
 }

@@ -87,8 +87,31 @@ declare namespace SqlJs {
     }
 }
 declare namespace SqlJs {
+    class Where {
+        _query: Query;
+        _index_for_loop: number;
+        constructor(qry: Query);
+        getKeyWordValue: (index: any) => {
+            value: string;
+            rules: string;
+        };
+        getQuery: () => object;
+        getValue: (rule: any) => any;
+    }
+}
+declare namespace SqlJs {
     class Select {
-        constructor(msg: string);
+        _query: Query;
+        _index_for_loop: number;
+        constructor(qry: Query);
+        getKeyWordsValue: () => {
+            value: string;
+            rules: string;
+        }[];
+        getQuery: () => object;
+        private getKeyWords;
+        private getWhere;
+        private getValue;
     }
 }
 declare namespace SqlJs {
@@ -97,6 +120,8 @@ declare namespace SqlJs {
         _connection: JsStore.Instance;
         _query: Query;
         constructor();
+        getConnection: () => any;
+        getJsStoreQuery: (qry: Query) => any;
         run: (qry: Query) => any;
     }
 }

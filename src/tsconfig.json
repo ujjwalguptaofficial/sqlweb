@@ -30,6 +30,7 @@
         "code/create.ts",
         "code/insert.ts",
         "code/bulk_insert.ts",
+        "code/where.ts",
         "code/select.ts",
         "code/instance.ts"
     ]

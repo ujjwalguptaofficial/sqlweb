@@ -380,9 +380,128 @@ var SqlJs;
 })(SqlJs || (SqlJs = {}));
 var SqlJs;
 (function (SqlJs) {
+    var Where = /** @class */ (function () {
+        function Where(qry) {
+            this._index_for_loop = 0;
+            this.getKeyWordValue = function (index) {
+                var keywords_value = [
+                    { value: 'Like', rules: 'next' },
+                    { value: 'In', rules: 'next' },
+                    { value: 'Or', rules: 'true' }
+                ];
+                return keywords_value[index];
+            };
+            this.getQuery = function () {
+                var query = {}, or_query = {};
+                var keywords = ['like', 'in', 'or'];
+                for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
+                    var value = this._query._splittedQry[i].toLowerCase(), index_of_keywords = keywords.indexOf(value);
+                    if (value.toLowerCase() === "and") {
+                        query[this._query._splittedQry[++i]] = this._query._splittedQry[++i];
+                    }
+                    else {
+                        query[this._query._splittedQry[i]] = this._query._splittedQry[++i];
+                    }
+                    // if (index_of_keywords >= 0) {
+                    //     const keyword_value = this.getKeyWordValue(i);
+                    //     this._index_for_loop = i;
+                    //     query[keyword_value.value] = this.getValue(keyword_value.rules);
+                    //     i = this._index_for_loop;
+                    // }
+                    // i++;
+                }
+                return query;
+            };
+            this.getValue = function (rule) {
+                switch (rule) {
+                    case 'next':
+                        var value = this._query._splittedQry[++this._index_for_loop];
+                        return (this._query.getMapValue(value));
+                    case 'true':
+                        return true;
+                    default:
+                }
+            };
+            this._query = qry;
+        }
+        return Where;
+    }());
+    SqlJs.Where = Where;
+})(SqlJs || (SqlJs = {}));
+var SqlJs;
+(function (SqlJs) {
     var Select = /** @class */ (function () {
-        function Select(msg) {
-            // ss
+        function Select(qry) {
+            this._index_for_loop = 0;
+            this.getKeyWordsValue = function () {
+                var keywords_value = [
+                    { value: 'From', rules: 'next' },
+                    { value: 'Where', rules: 'getWhere' },
+                    { value: 'IgnoreCase', rules: 'true' },
+                    { value: 'IgnoreCase', rules: 'true' },
+                    { value: 'Limit', rules: 'next_number' },
+                    { value: 'Skip', rules: 'next_number' },
+                    { value: 'Distinct', rules: 'true' },
+                    { value: 'Order', rules: 'getOrderBy' },
+                    { value: 'Min', rules: 'next' },
+                    { value: 'Max', rules: 'next' },
+                    { value: 'Count', rules: 'next' },
+                    { value: 'Sum', rules: 'next' },
+                    { value: 'Avg', rules: 'next' },
+                    { value: 'GroupBy', rules: 'getGroupBy' }
+                ];
+                return keywords_value;
+            };
+            this.getQuery = function () {
+                var query = {};
+                var keywords = this.getKeyWords();
+                for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
+                    var index_of_keywords = keywords.indexOf(this._query._splittedQry[i].toLowerCase());
+                    if (index_of_keywords >= 0) {
+                        var keywords_value = this.getKeyWordsValue();
+                        this._index_for_loop = i;
+                        query[keywords_value[index_of_keywords].value] =
+                            this.getValue(keywords_value[index_of_keywords].rules);
+                        i = this._index_for_loop;
+                    }
+                    i++;
+                }
+                return query;
+            };
+            this.getKeyWords = function () {
+                var keywords = ['from', 'where', 'ignorecase', 'ignore_case', 'skip', 'distinct', 'order', 'min',
+                    'max', 'count', 'sum', 'avg', 'group'];
+                return keywords;
+            };
+            this.getWhere = function () {
+                ++this._index_for_loop;
+                var keywords = this.getKeyWords();
+                var where_query = "";
+                for (var j = this._index_for_loop, length = this._query._splittedQry.length; j < length;) {
+                    var index_of_keywords = keywords.indexOf(this._query._splittedQry[j].toLowerCase());
+                    if (index_of_keywords >= 0) {
+                        where_query = this._query._splittedQry.slice(this._index_for_loop, j + 1);
+                        return;
+                    }
+                    j++;
+                }
+                return new SqlJs.Where(new SqlJs.Query(where_query)).getQuery();
+            };
+            this.getValue = function (rule) {
+                switch (rule) {
+                    case 'next':
+                        var value = this._query._splittedQry[++this._index_for_loop];
+                        return (this._query.getMapValue(value));
+                    case 'true':
+                        return true;
+                    case 'next_number':
+                        var value = this._query._splittedQry[++this._index_for_loop];
+                        return Number(value);
+                    default:
+                        return this[rule]();
+                }
+            };
+            this._query = qry;
         }
         return Select;
     }());
@@ -393,34 +512,51 @@ var SqlJs;
     var Instance = /** @class */ (function () {
         function Instance() {
             this._isDbOpened = false;
-            this.run = function (qry) {
-                var jsstore_query = null;
+            this.getConnection = function () {
+                return this._connection;
+            };
+            this.getJsStoreQuery = function (qry) {
+                var jsstore_query;
                 switch (qry._api) {
+                    case 'select':
+                        jsstore_query = new SqlJs.Select(qry).getQuery();
+                        break;
                     case 'insert':
                         jsstore_query = new SqlJs.Insert(qry).getQuery();
-                        return this._connection[qry._api](jsstore_query);
+                        break;
                     case 'bulkinsert':
                     case 'bulk_insert':
                         qry._api = 'bulkInsert';
                         jsstore_query = new SqlJs.BulkInsert(qry).getQuery();
-                        return this._connection[qry._api](jsstore_query);
+                        break;
                     case 'create':
-                        var db_1 = new SqlJs.Create(qry).getDb();
-                        var that = this;
-                        return new Promise(function (resolve, reject) {
-                            JsStore.isDbExist.call(this, db_1.Name, function (isExist) {
-                                if (isExist) {
-                                    that._connection.openDb(db_1.Name);
-                                }
-                                else {
-                                    that._connection.createDb(db_1);
-                                }
-                                resolve();
-                            }, function (err) {
-                                reject(err);
-                                throw err;
-                            });
+                        jsstore_query = new SqlJs.Create(qry).getDb();
+                        break;
+                }
+                return jsstore_query;
+            };
+            this.run = function (qry) {
+                if (qry._api === 'create') {
+                    var that = this;
+                    var db_1 = this.getJsStoreQuery(qry);
+                    return new Promise(function (resolve, reject) {
+                        JsStore.isDbExist.call(this, db_1.Name, function (isExist) {
+                            if (isExist) {
+                                that._connection.openDb(db_1.Name);
+                            }
+                            else {
+                                that._connection.createDb(db_1);
+                            }
+                            resolve();
+                        }, function (err) {
+                            reject(err);
+                            throw err;
                         });
+                    });
+                }
+                else {
+                    var jsstore_query = this.getJsStoreQuery(qry);
+                    return this._connection[qry._api](jsstore_query);
                 }
                 // this._connection[this._api](jsstore_query, onSuccess, onError);
             };

@@ -5,7 +5,7 @@ module.exports = function (config) {
         frameworks: ['mocha', 'chai'],
         client: {
             mocha: {
-                timeout: 6000 // 6 seconds - upped from 2 seconds
+                timeout: 10000 // 6 seconds - upped from 2 seconds
             }
         },
         files: [
@@ -15,6 +15,7 @@ module.exports = function (config) {
             '../output/sqljs.js',
             'cases/create/*.js',
             'cases/insert/*.js',
+            'cases/tmp.js',
             // 'cases/count/*.js',
             // 'cases/select/*.js',
             // 'cases/update/*.js',
