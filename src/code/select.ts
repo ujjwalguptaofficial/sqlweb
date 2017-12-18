@@ -57,10 +57,14 @@ namespace SqlJs {
             for (var j = this._index_for_loop, length = this._query._splittedQry.length; j < length;) {
                 var index_of_keywords = keywords.indexOf(this._query._splittedQry[j].toLowerCase());
                 if (index_of_keywords >= 0) {
-                    where_query = this._query._splittedQry.slice(this._index_for_loop, j + 1);
-                    return;
+                    where_query = this._query._splittedQry.slice(this._index_for_loop, j + 1).join(" ");
+                    break;
                 }
                 j++;
+            }
+            if (where_query.length === 0) {
+                where_query = this._query._splittedQry.
+                    slice(this._index_for_loop, this._query._splittedQry.length).join(" ");
             }
             return new Where(new Query(where_query)).getQuery();
         };

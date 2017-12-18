@@ -386,8 +386,7 @@ var SqlJs;
             this.getKeyWordValue = function (index) {
                 var keywords_value = [
                     { value: 'Like', rules: 'next' },
-                    { value: 'In', rules: 'next' },
-                    { value: 'Or', rules: 'true' }
+                    { value: 'In', rules: 'next' }
                 ];
                 return keywords_value[index];
             };
@@ -395,31 +394,56 @@ var SqlJs;
                 var query = {}, or_query = {};
                 var keywords = ['like', 'in', 'or'];
                 for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
-                    var value = this._query._splittedQry[i].toLowerCase(), index_of_keywords = keywords.indexOf(value);
-                    if (value.toLowerCase() === "and") {
-                        query[this._query._splittedQry[++i]] = this._query._splittedQry[++i];
-                    }
-                    else {
-                        query[this._query._splittedQry[i]] = this._query._splittedQry[++i];
-                    }
-                    // if (index_of_keywords >= 0) {
-                    //     const keyword_value = this.getKeyWordValue(i);
-                    //     this._index_for_loop = i;
-                    //     query[keyword_value.value] = this.getValue(keyword_value.rules);
-                    //     i = this._index_for_loop;
+                    var value = this._query._splittedQry[i], index_of_keywords = keywords.indexOf(value);
+                    var key;
+                    // if (value.toLowerCase() === "and") {
+                    //     query[this._query._splittedQry[++i]] = this._query._splittedQry[++i];
                     // }
-                    // i++;
+                    // else if (value.toLowerCase() === "or") {
+                    //     or_query[this._query._splittedQry[++i]] = this._query._splittedQry[++i];
+                    // }
+                    // else {
+                    //     query[this._query._splittedQry[i]] = this._query._splittedQry[++i];
+                    // }
+                    // if (value.toLowerCase() === "and") {
+                    //     key = query[this._query._splittedQry[++i]];
+                    // }
+                    // else if (value.toLowerCase() === "or") {
+                    //     key = or_query[this._query._splittedQry[++i]];
+                    // }
+                    // else {
+                    //     key = query[this._query._splittedQry[i]];
+                    // }
+                    switch (value.toLowerCase()) {
+                        case 'and':
+                            query[this._query._splittedQry[++i]] = this.getValue(i);
+                            break;
+                        case 'or':
+                            or_query[this._query._splittedQry[++i]] = this.getValue(i);
+                            break;
+                        default:
+                            query[this._query._splittedQry[i]] = this.getValue(i);
+                    }
+                    i = this._index_for_loop;
+                }
+                if (Object.keys(or_query).length) {
+                    query['Or'] = or_query;
                 }
                 return query;
             };
-            this.getValue = function (rule) {
-                switch (rule) {
-                    case 'next':
-                        var value = this._query._splittedQry[++this._index_for_loop];
-                        return (this._query.getMapValue(value));
-                    case 'true':
-                        return true;
-                    default:
+            this.getValue = function (index) {
+                var keywords = ['like', 'in'];
+                var value = this._query._splittedQry[++index], index_of_keywords = keywords.indexOf(value.toLowerCase());
+                if (index_of_keywords >= 0) {
+                    value = {};
+                    value[this.getKeyWordValue(index_of_keywords).value] =
+                        this._query.getMapValue(this._query._splittedQry[++index]);
+                    this._index_for_loop = index + 1;
+                    return value;
+                }
+                else {
+                    this._index_for_loop = index + 1;
+                    return (this._query.getMapValue(value));
                 }
             };
             this._query = qry;
@@ -480,10 +504,14 @@ var SqlJs;
                 for (var j = this._index_for_loop, length = this._query._splittedQry.length; j < length;) {
                     var index_of_keywords = keywords.indexOf(this._query._splittedQry[j].toLowerCase());
                     if (index_of_keywords >= 0) {
-                        where_query = this._query._splittedQry.slice(this._index_for_loop, j + 1);
-                        return;
+                        where_query = this._query._splittedQry.slice(this._index_for_loop, j + 1).join(" ");
+                        break;
                     }
                     j++;
+                }
+                if (where_query.length === 0) {
+                    where_query = this._query._splittedQry.
+                        slice(this._index_for_loop, this._query._splittedQry.length).join(" ");
                 }
                 return new SqlJs.Where(new SqlJs.Query(where_query)).getQuery();
             };

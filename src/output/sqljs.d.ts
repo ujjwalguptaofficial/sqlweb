@@ -96,7 +96,7 @@ declare namespace SqlJs {
             rules: string;
         };
         getQuery: () => object;
-        getValue: (rule: any) => any;
+        getValue: (index: any) => any;
     }
 }
 declare namespace SqlJs {
