@@ -7,39 +7,15 @@ namespace SqlJs {
         }
 
         getKeyWordValue = function (index) {
-            const keywords_value = [
-                { value: 'Like', rules: 'next' },
-                { value: 'In', rules: 'next' }
-            ];
+            const keywords_value = ['Like', 'In', '>', '<', '>=', '<='];
             return keywords_value[index];
         };
 
         getQuery = function () {
             var query: object = {},
                 or_query = {};
-            const keywords = ['like', 'in', 'or'];
             for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
-                var value = this._query._splittedQry[i],
-                    index_of_keywords = keywords.indexOf(value);
-                var key;
-                // if (value.toLowerCase() === "and") {
-                //     query[this._query._splittedQry[++i]] = this._query._splittedQry[++i];
-                // }
-                // else if (value.toLowerCase() === "or") {
-                //     or_query[this._query._splittedQry[++i]] = this._query._splittedQry[++i];
-                // }
-                // else {
-                //     query[this._query._splittedQry[i]] = this._query._splittedQry[++i];
-                // }
-                // if (value.toLowerCase() === "and") {
-                //     key = query[this._query._splittedQry[++i]];
-                // }
-                // else if (value.toLowerCase() === "or") {
-                //     key = or_query[this._query._splittedQry[++i]];
-                // }
-                // else {
-                //     key = query[this._query._splittedQry[i]];
-                // }
+                var value = this._query._splittedQry[i];
                 switch (value.toLowerCase()) {
                     case 'and':
                         query[this._query._splittedQry[++i]] = this.getValue(i);
@@ -52,7 +28,7 @@ namespace SqlJs {
                 }
                 i = this._index_for_loop;
             }
-            if (Object.keys(or_query).length) {
+            if (Object.keys(or_query).length > 0) {
                 query['Or'] = or_query;
             }
             return query;
@@ -60,12 +36,12 @@ namespace SqlJs {
         };
 
         getValue = function (index) {
-            const keywords = ['like', 'in'];
+            const keywords = ['like', 'in', '>', '<', '>=', '<='];
             var value = this._query._splittedQry[++index],
                 index_of_keywords = keywords.indexOf(value.toLowerCase());
             if (index_of_keywords >= 0) {
                 value = {};
-                value[this.getKeyWordValue(index_of_keywords).value] =
+                value[this.getKeyWordValue(index_of_keywords)] =
                     this._query.getMapValue(this._query._splittedQry[++index]);
                 this._index_for_loop = index + 1;
                 return value;

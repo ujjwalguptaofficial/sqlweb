@@ -17,7 +17,7 @@ module.exports = function (config) {
             'cases/insert/*.js',
             'cases/tmp.js',
             // 'cases/count/*.js',
-            // 'cases/select/*.js',
+            'cases/select/*.js',
             // 'cases/update/*.js',
             // 'cases/delete/*.js',
             // 'cases/helper/*.js',

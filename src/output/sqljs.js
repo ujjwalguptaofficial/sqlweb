@@ -95,8 +95,14 @@ var SqlJs;
             this.map = function (key, value) {
                 this._maps.push(new SqlJs.Model.Map(key, value));
             };
+            this.mapMany = function (mapsData) {
+                mapsData.forEach(function (item) {
+                    this._maps.push(new SqlJs.Model.Map(item._key, item._value));
+                }, this);
+            };
             this.splitQuery = function () {
-                var splitted_qry = this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').replace(/[=]/g, " ").split(" ");
+                var splitted_qry = this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').
+                    replace(/(\w+)\s*=\s*(\w+)/g, '$1 $2').split(" ");
                 return splitted_qry.filter(function (item) {
                     return !JsStore.isNull(item);
                 });
@@ -384,36 +390,13 @@ var SqlJs;
         function Where(qry) {
             this._index_for_loop = 0;
             this.getKeyWordValue = function (index) {
-                var keywords_value = [
-                    { value: 'Like', rules: 'next' },
-                    { value: 'In', rules: 'next' }
-                ];
+                var keywords_value = ['Like', 'In', '>', '<', '>=', '<='];
                 return keywords_value[index];
             };
             this.getQuery = function () {
                 var query = {}, or_query = {};
-                var keywords = ['like', 'in', 'or'];
                 for (var i = this._index_for_loop, length = this._query._splittedQry.length; i < length;) {
-                    var value = this._query._splittedQry[i], index_of_keywords = keywords.indexOf(value);
-                    var key;
-                    // if (value.toLowerCase() === "and") {
-                    //     query[this._query._splittedQry[++i]] = this._query._splittedQry[++i];
-                    // }
-                    // else if (value.toLowerCase() === "or") {
-                    //     or_query[this._query._splittedQry[++i]] = this._query._splittedQry[++i];
-                    // }
-                    // else {
-                    //     query[this._query._splittedQry[i]] = this._query._splittedQry[++i];
-                    // }
-                    // if (value.toLowerCase() === "and") {
-                    //     key = query[this._query._splittedQry[++i]];
-                    // }
-                    // else if (value.toLowerCase() === "or") {
-                    //     key = or_query[this._query._splittedQry[++i]];
-                    // }
-                    // else {
-                    //     key = query[this._query._splittedQry[i]];
-                    // }
+                    var value = this._query._splittedQry[i];
                     switch (value.toLowerCase()) {
                         case 'and':
                             query[this._query._splittedQry[++i]] = this.getValue(i);
@@ -426,17 +409,17 @@ var SqlJs;
                     }
                     i = this._index_for_loop;
                 }
-                if (Object.keys(or_query).length) {
+                if (Object.keys(or_query).length > 0) {
                     query['Or'] = or_query;
                 }
                 return query;
             };
             this.getValue = function (index) {
-                var keywords = ['like', 'in'];
+                var keywords = ['like', 'in', '>', '<', '>=', '<='];
                 var value = this._query._splittedQry[++index], index_of_keywords = keywords.indexOf(value.toLowerCase());
                 if (index_of_keywords >= 0) {
                     value = {};
-                    value[this.getKeyWordValue(index_of_keywords).value] =
+                    value[this.getKeyWordValue(index_of_keywords)] =
                         this._query.getMapValue(this._query._splittedQry[++index]);
                     this._index_for_loop = index + 1;
                     return value;
@@ -493,7 +476,7 @@ var SqlJs;
                 return query;
             };
             this.getKeyWords = function () {
-                var keywords = ['from', 'where', 'ignorecase', 'ignore_case', 'skip', 'distinct', 'order', 'min',
+                var keywords = ['from', 'where', 'ignorecase', 'ignore_case', 'limit', 'skip', 'distinct', 'order', 'min',
                     'max', 'count', 'sum', 'avg', 'group'];
                 return keywords;
             };
@@ -504,7 +487,7 @@ var SqlJs;
                 for (var j = this._index_for_loop, length = this._query._splittedQry.length; j < length;) {
                     var index_of_keywords = keywords.indexOf(this._query._splittedQry[j].toLowerCase());
                     if (index_of_keywords >= 0) {
-                        where_query = this._query._splittedQry.slice(this._index_for_loop, j + 1).join(" ");
+                        where_query = this._query._splittedQry.slice(this._index_for_loop, j).join(" ");
                         break;
                     }
                     j++;
@@ -513,7 +496,9 @@ var SqlJs;
                     where_query = this._query._splittedQry.
                         slice(this._index_for_loop, this._query._splittedQry.length).join(" ");
                 }
-                return new SqlJs.Where(new SqlJs.Query(where_query)).getQuery();
+                var qry = new SqlJs.Query(where_query);
+                qry.mapMany(this._query.getMappedValues(qry.getMappedKeys()));
+                return new SqlJs.Where(qry).getQuery();
             };
             this.getValue = function (rule) {
                 switch (rule) {

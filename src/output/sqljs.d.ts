@@ -29,6 +29,7 @@ declare namespace SqlJs {
         getMappedKeys: () => any[];
         getMapValue: (key: any) => any;
         map: (key: any, value: any) => void;
+        mapMany: (mapsData: IMap[]) => void;
         private splitQuery;
     }
 }
@@ -91,10 +92,7 @@ declare namespace SqlJs {
         _query: Query;
         _index_for_loop: number;
         constructor(qry: Query);
-        getKeyWordValue: (index: any) => {
-            value: string;
-            rules: string;
-        };
+        getKeyWordValue: (index: any) => string;
         getQuery: () => object;
         getValue: (index: any) => any;
     }

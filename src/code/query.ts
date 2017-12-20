@@ -52,8 +52,15 @@ namespace SqlJs {
             this._maps.push(new Model.Map(key, value));
         };
 
+        mapMany = function (mapsData: IMap[]) {
+            mapsData.forEach(function (item) {
+                this._maps.push(new Model.Map(item._key, item._value));
+            }, this);
+        };
+
         private splitQuery = function () {
-            var splitted_qry = this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').replace(/[=]/g, " ").split(" ");
+            var splitted_qry = this._stringQry.replace("(", " ( ").replace(/  +/g, ' ').
+                replace(/(\w+)\s*=\s*(\w+)/g, '$1 $2').split(" ");
             return splitted_qry.filter(function (item) {
                 return !JsStore.isNull(item);
             });

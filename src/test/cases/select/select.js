@@ -1,10 +1,70 @@
 describe('Test Select Api', function () {
     it('select all', function (done) {
-        Con.select({
-            From: 'Customers'
-        }).
+        var Query = new SqlJs.Query('select from Customers');
+        SqlJsObj.run(Query).
         then(function (results) {
             expect(results).to.be.an('array').length(93);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
+        })
+    });
+
+    it('select with skip', function (done) {
+        var Query = new SqlJs.Query('select from Customers skip 10');
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(83);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
+        })
+    });
+
+    it('select with where', function (done) {
+        var Query = new SqlJs.Query('select from Customers where Country=Mexico');
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(5);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
+        })
+    });
+
+    it('select without ignore case', function (done) {
+        var Query = new SqlJs.Query('select from Customers where Country=mexico');
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(0);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
+        })
+    });
+
+    it('select with ignore case', function (done) {
+        var Query = new SqlJs.Query('select from Customers IgnoreCase where Country=mexico');
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(5);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
+        })
+    });
+
+    it('select with distinct', function (done) {
+
+        var Query = new SqlJs.Query('select from Customers Distinct IgnoreCase where City=bhubaneswar');
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(1);
             done();
         }).
         catch(function (err) {
@@ -13,233 +73,147 @@ describe('Test Select Api', function () {
 
     });
 
-    it('select with skip', function (done) {
-        Con.select({
-            From: 'Customers',
-            Skip: 10,
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(83);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
-    it('select with where', function (done) {
-        Con.select({
-            From: 'Customers',
-            Where: {
-                Country: 'Mexico'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(5);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
-    it('select without ignore case', function (done) {
-        Con.select({
-            From: 'Customers',
-            Where: {
-                Country: 'mexico'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(0);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
-    it('select with ignore case', function (done) {
-        Con.select({
-            From: 'Customers',
-            IgnoreCase: true,
-            Where: {
-                Country: 'meXico'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(5);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
-    it('select with distinct', function (done) {
-        Con.select({
-            From: 'Customers',
-            Distinct: true,
-            IgnoreCase: true,
-            Where: {
-                City: 'bhubaneswar'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(1);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
     it('select with or', function (done) {
-        Con.select({
-            From: 'Customers',
-            Where: {
-                Country: 'Mexico',
-                Or: {
-                    City: 'Madrid'
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(8);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
+        var Query = new SqlJs.Query('select from Customers where Country=Mexico Or City=Madrid');
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(8);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
+
     });
 
     it('select with in', function (done) {
-        Con.select({
-            From: 'Customers',
-            Where: {
-                Country: {
-                    In: ['Germany', 'France', 'UK']
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(29);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
+        var Query = new SqlJs.Query('select from Customers where Country in @country');
+        Query.map('@country', ['Germany', 'France', 'UK']);
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(29);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('select with operator - >', function (done) {
-        Con.select({
-            From: 'Products',
-            Where: {
-                Price: {
-                    ">": 20
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(37);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
+        var Query = new SqlJs.Query('select from Products where Price > @price');
+        Query.map('@price', 20);
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(37);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('select with operator - >=', function (done) {
-        Con.select({
-            From: 'Products',
-            Where: {
-                Price: {
-                    ">=": 20
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(38);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
+        var Query = new SqlJs.Query('select from Products where Price >= @price');
+        Query.map('@price', 20);
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(38);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('select with operator - <', function (done) {
-        Con.select({
-            From: 'Products',
-            Where: {
-                Price: {
-                    "<": 20
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(39);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
+        var Query = new SqlJs.Query('select from Products where Price < @price');
+        Query.map('@price', 20);
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(39);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('select with operator - <=', function (done) {
-        Con.select({
-            From: 'Products',
-            Where: {
-                Price: {
-                    "<=": 20
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(40);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
+
+        var Query = new SqlJs.Query('select from Products where Price <= @price');
+        Query.map('@price', 20);
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(40);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
+
     });
 
     it('select with operator - between', function (done) {
-        Con.select({
-            From: 'Products',
-            Where: {
-                Price: {
-                    "-": {
-                        Low: 10,
-                        High: 20
-                    }
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(29);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
+
+        var Query = new SqlJs.Query('select from Products where Price between @low_price and @high_price');
+        Query.map('@low_price', 10);
+        Query.map('@high_price', 20);
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(29);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
+
+        // Con.select({
+        //     From: 'Products',
+        //     Where: {
+        //         Price: {
+        //             "-": {
+        //                 Low: 10,
+        //                 High: 20
+        //             }
+        //         }
+        //     },
+        //     OnSuccess: function (results) {
+        //         expect(results).to.be.an('array').length(29);
+        //         done();
+        //     },
+        //     OnError: function (err) {
+        //         done(err);
+        //     }
+        // })
     });
 
     it('select with like', function (done) {
-        Con.select({
-            From: 'Customers',
-            Where: {
-                CustomerName: {
-                    Like: '%or%'
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(11);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
+        var Query = new SqlJs.Query('select from Customers where CustomerName  Like %or%');
+        Query.map('@price', 20);
+        SqlJsObj.run(Query).
+        then(function (results) {
+            expect(results).to.be.an('array').length(11);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
+
+        // Con.select({
+        //     From: 'Customers',
+        //     Where: {
+        //         CustomerName: {
+        //             Like: '%or%'
+        //         }
+        //     },
+        //     OnSuccess: function (results) {
+        //         expect(results).to.be.an('array').length(11);
+        //         done();
+        //     },
+        //     OnError: function (err) {
+        //         done(err);
+        //     }
+        // })
     });
 
     it('select with GroupBy', function (done) {

@@ -45,7 +45,7 @@ namespace SqlJs {
         };
 
         private getKeyWords = function () {
-            const keywords = ['from', 'where', 'ignorecase', 'ignore_case', 'skip', 'distinct', 'order', 'min',
+            const keywords = ['from', 'where', 'ignorecase', 'ignore_case', 'limit', 'skip', 'distinct', 'order', 'min',
                 'max', 'count', 'sum', 'avg', 'group'];
             return keywords;
         };
@@ -57,7 +57,7 @@ namespace SqlJs {
             for (var j = this._index_for_loop, length = this._query._splittedQry.length; j < length;) {
                 var index_of_keywords = keywords.indexOf(this._query._splittedQry[j].toLowerCase());
                 if (index_of_keywords >= 0) {
-                    where_query = this._query._splittedQry.slice(this._index_for_loop, j + 1).join(" ");
+                    where_query = this._query._splittedQry.slice(this._index_for_loop, j).join(" ");
                     break;
                 }
                 j++;
@@ -66,7 +66,9 @@ namespace SqlJs {
                 where_query = this._query._splittedQry.
                     slice(this._index_for_loop, this._query._splittedQry.length).join(" ");
             }
-            return new Where(new Query(where_query)).getQuery();
+            var qry = new Query(where_query);
+            qry.mapMany(this._query.getMappedValues(qry.getMappedKeys()));
+            return new Where(qry).getQuery();
         };
 
         private getValue = function (rule) {
