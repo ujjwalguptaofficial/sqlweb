@@ -5,33 +5,20 @@
         "removeComments": false,
         "sourceMap": true,
         "inlineSources": true,
-        "outFile": "output/sqljs.js",
+        // "out": "output/jsstore.js",
         "target": "es5",
         "preserveConstEnums": true,
-        "declaration": true
+        "declaration": true,
+        "module": "es6",
+        "outDir": "ts",
+        "lib": [
+            "es2015",
+            "dom",
+            "webworker"
+        ]
     },
     "exclude": [
-        "node_modules"
-    ],
-    "include": [
-        "code/model/*"
-    ],
-    "files": [
-        //library
-        "def_files/jsstore.d.ts",
-
-        //License
-        "code/license.ts",
-
-        //Business
-        "code/error.ts",
-        "code/query.ts",
-        "code/column.ts",
-        "code/create.ts",
-        "code/insert.ts",
-        "code/bulk_insert.ts",
-        "code/where.ts",
-        "code/select.ts",
-        "code/instance.ts"
+        "node_namespaces",
+        "output"
     ]
 }
