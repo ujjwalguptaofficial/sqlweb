@@ -1,32 +1,46 @@
 query= selectQuery/updateQuery;
 
-selectQuery="select"_"from"_ table:tableName _* whereQry* {return {qry:'select',from:table}}
+selectQuery="select"_ ("*"_)* "from"_ table:tableName _* where:whereQry {return { qry:'select', data:{ from:table, where:where } }}
 
 updateQuery="update"_"in"_ table:tableName {return {qry:'update',in:table}}
 
-whereQry="where"_ whereItem+ _"and"/"or";
+whereQry="where"_ item:whereItem+  { return item }
 
-whereItem = word _ "="/inQuery/likeQuery/"!=" _ value
+whereItem = col:column _* eq:(equalQuery/inQuery/likeQuery/notEqualQuery) _* joinQuery* { var value={};  value[col]= eq ; return value; }
 
-inQuery ="in"_*"("_*value _*inQueryBetweenValue* _*value*_*")"
+joinQuery =  (And/Or) _
+ 
+equalQuery = "=" _* val:value {return val}
 
-likeQuery ="in"_*"("_*value _*inQueryBetweenValue* _*value*_*")"
+notEqualQuery = "!="_* val:value {return {'!=':val}}
 
-inQueryBetweenValue = value _*","
+likeQuery ="like" _ f:"%"* _* val:value _* l:"%"* {return {'like':f+val+l}}
 
-tableName "table name" = word
+inQuery ="in" _* "(" _* val:inQueryValue _* ")" { return {'in':val} }
 
-value = wordAndNumber
+inQueryValue = fv:value mv:inQueryBetweenValue* { var value = fv+mv; return value.split('"')}
 
-word = l:letter+ {return l.join("");}
+inQueryBetweenValue = _* "," val:value _* {return val}
 
-wordAndNumber = [a-zA-Z0-9]
+tableName "table name" = Word
 
-letter=[a-zA-Z]
+value "column value"= val:WordAndNumber+ {return val.join("");}
 
-number= d:digit+ {return Number(d.join(""))}
+column "column" = Word;
 
-digit=[0-9]
+And = "&";
+
+Or = "|";
+
+Word = l:Letter+ {return l.join("");}
+
+WordAndNumber = [a-zA-Z0-9]
+
+Letter = [a-zA-Z]
+
+Number= d:Digit+ {return Number(d.join(""))}
+
+Digit=[0-9]
 
 Ws "Whitespace" = [ \t]
-_ "One or more whitespaces" = Ws+
+_ "One or more whitespaces" = space:Ws+ {return null;}
