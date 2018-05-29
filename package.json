@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "tsc && karma start test/karma.config.js",
-    "build": "tslint code/**/*.ts && tsc"
+    "build": "node src/build.js"
   },
   "repository": {
     "type": "git",

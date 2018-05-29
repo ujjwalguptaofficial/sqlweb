@@ -1,14 +1,63 @@
 query= selectQuery/updateQuery;
 
-selectQuery="select"_ ("*"_)* "from"_ table:tableName _* where:whereQry {return { qry:'select', data:{ from:table, where:where } }}
+selectQuery="select"_ ("*"_)? "from"_ table:tableName _* where:whereQry? {return { qry:'select', data:{ from:table, where:where } }}
 
 updateQuery="update"_"in"_ table:tableName {return {qry:'update',in:table}}
 
-whereQry="where"_ item:whereItem+  { return item }
+whereQry="where" _* fWItem:firstWhereItem jWItem:joinedWhereItem*  
+{
+    var temp=fWItem;
+   jWItem.forEach(function(columnValue){
+       var key =  Object.keys(columnValue)[0];
+        if(temp[key]==null){
+            if(typeof columnValue=='object'){
+                temp[key]=columnValue[key];
+            }
+            else{
+                temp[key]=columnValue;
+            }
+        }
+        else
+        {
+            if(key=='or'){
+                var orKey = Object.keys(columnValue[key])[0] ;
+                temp[key][orKey]=columnValue[key][orKey];
+             }
+            else
+            {
+                if(temp[key].in){
+                     temp[key].in.push(columnValue[key])
+                }
+                else
+                {
+                    // if (typeof columnValue[key]=='object'){
 
-whereItem = col:column _* eq:(equalQuery/inQuery/likeQuery/notEqualQuery) _* joinQuery* { var value={};  value[col]= eq ; return value; }
+                    // }
+                    // else
+                    // {
+                        var value = [temp[key],columnValue[key]];
+                        if(typeof temp[key]!=='object'){
+                            temp[key]={['in']:value};
+                        }       
+                        else
+                        {
+                            temp[key].in=value;
+                        }
+                    // }
+                   
+                }
+            }
+        }
+    });
+    return temp;
+}
 
-joinQuery =  (And/Or) _
+firstWhereItem = item:whereItem {return item};
+
+joinedWhereItem = op:joinQuery item:whereItem { if(op=='|') {return {or:item}} else return item};
+
+whereItem = col:column _* eq:(equalQuery/inQuery/likeQuery/notEqualQuery) _* {return {[col]: eq}; }
+joinQuery =  op:(And/Or) _ {return op;}
  
 equalQuery = "=" _* val:value {return val}
 

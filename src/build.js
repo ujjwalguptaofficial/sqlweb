@@ -23,7 +23,7 @@ generateParser = function () {
     var content = peg.generate(grammar, {
         optimize: "speed",
         output: 'source',
-        // format: "bare"
+        format: "commonjs"
     });
     saveAsFile('./output/parser.js', content);
 }
