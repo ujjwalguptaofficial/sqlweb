@@ -5,7 +5,7 @@ const fs = require('fs');
 // import * as parser from './parser';
 
 function getFileContent(path) {
-    return fs.readFileSync(`./${path}`, {
+    return fs.readFileSync(`${path}`, {
         encoding: 'utf8'
     })
 }
@@ -19,13 +19,13 @@ function saveAsFile(filePath, content) {
 }
 
 generateParser = function () {
-    var grammar = getFileContent('./code/index.pegjs');
+    var grammar = getFileContent('src/code/index.pegjs');
     var content = peg.generate(grammar, {
         optimize: "speed",
         output: 'source',
         format: "commonjs"
     });
-    saveAsFile('./output/parser.js', content);
+    saveAsFile('./src/output/parser.js', content);
 }
 
 generateParser();

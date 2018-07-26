@@ -1,22 +1,31 @@
 {
-  "name": "sqljs",
+  "name": "sqlweb",
   "version": "1.0.0",
-  "description": "bla bla",
+  "description": "sql web is a sql wrapper for indexeddb. It takes query in sql and execute in indexeddb.",
   "main": "index.js",
   "scripts": {
     "test": "tsc && karma start test/karma.config.js",
-    "build": "node src/build.js"
+    "build": "node src/build.js",
+    "lint": "tslint src/codes/**/*.ts",
+    "test:dev": "karma start src/test/karma.config.dev.js",
+    "test:prod": "karma start src/test/karma.config.prod.js",
+    "build:dev": "npm run lint && npm run webpack:dev",
+    "build:prod": "npm run webpack:prod && npm run test:prod",
+    "build:ci": "npm run build:dev && npm run build:prod",
+    "webpack:dev": "webpack --config src/webpack/webpack.dev.config.js",
+    "webpack:prod": "webpack --config src/webpack/webpack.prod.config.js",
+    "deploy": "npm run build:ci"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ujjwalguptaofficial/sqljs.git"
+    "url": "git+https://github.com/ujjwalguptaofficial/sqlweb.git"
   },
   "author": "Ujjwal Gupta",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ujjwalguptaofficial/sqljs/issues"
+    "url": "https://github.com/ujjwalguptaofficial/sqlweb/issues"
   },
-  "homepage": "https://github.com/ujjwalguptaofficial/sqljs#readme",
+  "homepage": "https://github.com/ujjwalguptaofficial/sqlweb#readme",
   "devDependencies": {
     "chai": "^4.1.2",
     "karma": "^1.7.1",

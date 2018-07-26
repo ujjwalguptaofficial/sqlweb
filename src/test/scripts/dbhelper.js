@@ -1,4 +1,5 @@
 var Con = new JsStore.Instance();
+var sqlWebObj = new sqlWebObj.Instance();
 // JsStore.enableLog();
 
 function initDb() {
