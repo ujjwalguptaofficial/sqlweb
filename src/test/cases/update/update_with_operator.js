@@ -2,236 +2,225 @@ describe('Test update with operator option', function () {
 
     it('update with operator - +', function (done) {
         var Price;
-        Con.select({
-            From: "Products",
-            Where: {
+        con.connection_.select({
+            from: "Products",
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                Price = results[0].Price;
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            Price = results[0].Price;
+        }).catch(function (err) {
+            done(err);
         });
-        Con.update({
-            In: "Products",
-            Set: {
+
+        con.connection_.update({ in: "Products",
+            set: {
                 Price: {
                     '+': 5
                 }
             },
-            Where: {
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(1);
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(1);
+        }).catch(function (err) {
+            done(err);
         });
 
-        Con.select({
-            From: "Products",
-            Where: {
+        con.connection_.select({
+            from: "Products",
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                expect(results[0].Price).to.be.an('number').to.equal(Price + 5);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results[0].Price).to.be.an('number').to.equal(Price + 5);
+            done();
+        }).catch(function (err) {
+            done(err);
         });
     });
 
     it('update with operator - "-" ', function (done) {
         var Price;
-        Con.select({
-            From: "Products",
-            Where: {
+        con.connection_.select({
+            from: "Products",
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                Price = results[0].Price;
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            Price = results[0].Price;
+        }).catch(function (err) {
+            done(err);
         });
-        Con.update({
-            In: "Products",
-            Set: {
+
+        con.connection_.update({ in: "Products",
+            set: {
                 Price: {
                     '-': 5
                 }
             },
-            Where: {
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(1);
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(1);
+        }).catch(function (err) {
+            done(err);
         });
 
-        Con.select({
-            From: "Products",
-            Where: {
+        con.connection_.select({
+            from: "Products",
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                expect(results[0].Price).to.be.an('number').to.equal(Price - 5);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results[0].Price).to.be.an('number').to.equal(Price - 5);
+            done();
+        }).catch(function (err) {
+            done(err);
         });
     });
 
     it('update with operator - *', function (done) {
         var Price;
-        Con.select({
-            From: "Products",
-            Where: {
+        con.connection_.select({
+            from: "Products",
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                Price = results[0].Price;
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            Price = results[0].Price;
+        }).catch(function (err) {
+            done(err);
         });
-        Con.update({
-            In: "Products",
-            Set: {
+        con.connection_.update({ in: "Products",
+            set: {
                 Price: {
                     '*': 5
                 }
             },
-            Where: {
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(1);
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(1);
+        }).catch(function (err) {
+            done(err);
         });
 
-        Con.select({
-            From: "Products",
-            Where: {
+        con.connection_.select({
+            from: "Products",
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                expect(results[0].Price).to.be.an('number').to.equal(Price * 5);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results[0].Price).to.be.an('number').to.equal(Price * 5);
+            done();
+        }).catch(function (err) {
+            done(err);
         });
     });
 
     it('update with operator - *', function (done) {
         var Price;
-        Con.select({
-            From: "Products",
-            Where: {
+        con.connection_.select({
+            from: "Products",
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                Price = results[0].Price;
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            Price = results[0].Price;
+        }).catch(function (err) {
+            done(err);
         });
-        Con.update({
-            In: "Products",
-            Set: {
+        con.connection_.update({ in: "Products",
+            set: {
                 Price: {
                     '/': 5
                 }
             },
-            Where: {
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(1);
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(1);
+        }).catch(function (err) {
+            done(err);
         });
 
-        Con.select({
-            From: "Products",
-            Where: {
+        con.connection_.select({
+            from: "Products",
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                expect(results[0].Price).to.be.an('number').to.equal(Price / 5);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results[0].Price).to.be.an('number').to.equal(Price / 5);
+            done();
+        }).catch(function (err) {
+            done(err);
         });
     });
 
     it('update with operator - + : string concat', function (done) {
         var Name;
-        Con.select({
-            From: "Products",
-            Where: {
+        con.connection_.select({
+            from: "Products",
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                Name = results[0].ProductName;
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            Name = results[0].ProductName;
+        }).catch(function (err) {
+            done(err);
         });
-        Con.update({
-            In: "Products",
-            Set: {
+        con.connection_.update({ in: "Products",
+            set: {
                 ProductName: {
                     '+': 'temp'
                 }
             },
-            Where: {
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(1);
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(1);
+        }).catch(function (err) {
+            done(err);
         });
 
-        Con.select({
-            From: "Products",
-            Where: {
+        con.connection_.select({
+            from: "Products",
+            where: {
                 ProductID: 1
-            },
-            OnSuccess: function (results) {
-                expect(results[0].ProductName).to.be.an('string').to.equal(Name + 'temp');
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results[0].ProductName).to.be.an('string').to.equal(Name + 'temp');
+            done();
+        }).catch(function (err) {
+            done(err);
+        });
+    });
+
+    it('update with wrong operator - #', function (done) {
+        con.connection_.update({ in: "Products",
+            set: {
+                ProductName: {
+                    '#': 'temp'
+                }
+            },
+            where: {
+                ProductID: 1
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(1);
+        }).catch(function (err) {
+            var error = {
+                "message": "Supplied value for column 'ProductName' does not have valid type",
+                "type": "bad_data_type"
+            };
+            expect(err).to.be.an('object').eql(error);
+            done();
         });
     });
 });

@@ -1,18 +1,18 @@
 describe('Test clear', function () {
     it('clear customers using promise', function (done) {
-        Con.clear('Customers').
+        con.connection_.clear('Customers').
         then(function (results) {
             expect(results).to.be.an('undefined');
             done();
         }).
-        then(function (err) {
+        catch(function (err) {
             done(err);
         })
     });
 
     it('select all Customers', function (done) {
-        Con.select({
-            From: 'Customers'
+        con.connection_.select({
+            from: 'Customers'
         }).
         then(function (results) {
             expect(results).to.be.an('array').length(0);
@@ -23,19 +23,18 @@ describe('Test clear', function () {
         })
     });
 
-    it('clear Orders using without promise', function (done) {
-        Con.clear('Orders', function (results) {
-                expect(results).to.be.an('undefined');
-                done();
-            },
-            function (err) {
-                done(err);
-            });
+    it('clear Orders', function (done) {
+        con.connection_.clear('Orders').then(function (results) {
+            expect(results).to.be.an('undefined');
+            done();
+        }).catch(function (err) {
+            done(err);
+        });
     });
 
     it('select all Orders', function (done) {
-        Con.select({
-            From: 'Orders'
+        con.connection_.select({
+            from: 'Orders'
         }).
         then(function (results) {
             expect(results).to.be.an('array').length(0);

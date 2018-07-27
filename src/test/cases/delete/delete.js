@@ -1,395 +1,466 @@
-describe('Test delete Api', function () {
-    it('delete with where', function (done) {
+describe('Test remove Api', function () {
+    it('remove with where', function (done) {
         var Count;
-        Con.select({
-            From: 'Customers',
-            Where: {
+        con.connection_.select({
+            from: 'Customers',
+            where: {
                 Country: 'Mexico'
-            },
-            OnSuccess: function (results) {
-                Count = results.length
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            Count = results.length
+        }).catch(function (err) {
+            done(err);
         })
 
-        Con.delete({
-            From: 'Customers',
-            Where: {
+        con.connection_.remove({
+            from: 'Customers',
+            where: {
                 Country: 'Mexico'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(Count);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (err) {
+            done(err);
         })
     });
 
-    it('delete without ignore case', function (done) {
-
+    it('remove without ignore case', function (done) {
         var Count;
-        Con.select({
-            From: 'Customers',
-            Where: {
+        con.connection_.select({
+            from: 'Customers',
+            where: {
                 Country: 'mexico'
-            },
-            OnSuccess: function (results) {
-                Count = results.length;
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            Count = results.length;
+        }).catch(function (err) {
+            done(err);
         })
 
-        Con.delete({
-            From: 'Customers',
-            Where: {
+        con.connection_.remove({
+            from: 'Customers',
+            where: {
                 Country: 'mexico'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(Count);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (err) {
+            done(err);
         })
     });
 
-    it('delete with ignore case', function (done) {
+    it('remove with ignore case', function (done) {
 
         var Count;
-        Con.select({
-            From: 'Customers',
-            Where: {
+        con.connection_.select({
+            from: 'Customers',
+            where: {
                 Country: 'meXico'
-            },
-            OnSuccess: function (results) {
-                Count = results.length;
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            Count = results.length;
+        }).catch(function (err) {
+            done(err);
         })
 
-        Con.delete({
-            From: 'Customers',
-            IgnoreCase: true,
-            Where: {
+        con.connection_.remove({
+            from: 'Customers',
+            ignoreCase: true,
+            where: {
                 Country: 'meXico'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(Count);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (err) {
+            done(err);
         })
     });
 
-    it('delete with or', function (done) {
+    it('remove with or', function (done) {
 
         var Count;
-        Con.select({
-            From: 'Customers',
-            Where: {
+        con.connection_.select({
+            from: 'Customers',
+            where: {
                 Country: 'Mexico',
-                Or: {
+                or: {
                     City: 'Madrid'
                 }
-            },
-            OnSuccess: function (results) {
-                Count = results.length;
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            Count = results.length;
+        }).catch(function (err) {
+            done(err);
         })
 
-        Con.delete({
-            From: 'Customers',
-            Where: {
+        con.connection_.remove({
+            from: 'Customers',
+            where: {
                 Country: 'Mexico',
-                Or: {
+                or: {
                     City: 'Madrid'
                 }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(Count);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (err) {
+            done(err);
         })
     });
 
-    it('delete with in', function (done) {
+    it('remove with in', function (done) {
 
         var Count;
-        Con.select({
-            From: 'Customers',
-            Where: {
+        con.connection_.select({
+            from: 'Customers',
+            where: {
+                Country: { in: ['Germany', 'France', 'UK']
+                }
+            }
+        }).then(function (results) {
+            Count = results.length;
+        }).catch(function (err) {
+            done(err);
+        })
+
+        con.connection_.remove({
+            from: 'Customers',
+            where: {
+                Country: { in: ['Germany', 'France', 'UK']
+                }
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (err) {
+            done(err);
+        })
+    });
+
+    it('remove with operator - != (for string)', function (done) {
+        var count;
+        con.connection_.count({
+            from: 'Customers',
+            where: {
                 Country: {
-                    In: ['Germany', 'France', 'UK']
+                    '!=': 'Mexico'
                 }
-            },
-            OnSuccess: function (results) {
-                Count = results.length;
-            },
-            OnError: function (err) {
-                done(err);
             }
-        })
-
-        Con.delete({
-            From: 'Customers',
-            Where: {
-                Country: {
-                    In: ['Germany', 'France', 'UK']
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(Count);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
-    it('delete with operator - >', function (done) {
-
-        var Count;
-        Con.select({
-            From: 'Products',
-            Where: {
-                Price: {
-                    ">": 20
-                }
-            },
-            OnSuccess: function (results) {
-                Count = results.length;
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-
-        Con.delete({
-            From: 'Products',
-            Where: {
-                Price: {
-                    ">": 20
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(Count);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
-    it('delete with operator - >=', function (done) {
-
-        var Count;
-        Con.select({
-            From: 'Products',
-            Where: {
-                Price: {
-                    ">=": 20
-                }
-            },
-            OnSuccess: function (results) {
-                Count = results.length;
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-
-        Con.delete({
-            From: 'Products',
-            Where: {
-                Price: {
-                    ">=": 20
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(Count);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
-    it('delete with operator - <', function (done) {
-
-        var Count;
-        Con.select({
-            From: 'Products',
-            Where: {
-                Price: {
-                    "<": 20
-                }
-            },
-            OnSuccess: function (results) {
-                Count = results.length;
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-
-        Con.delete({
-            From: 'Products',
-            Where: {
-                Price: {
-                    "<": 20
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(Count);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
-    it('delete with operator - <=', function (done) {
-        var Count;
-        Con.select({
-            From: 'Products',
-            Where: {
-                Price: {
-                    "<=": 20
-                }
-            },
-            OnSuccess: function (results) {
-                Count = results.length;
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-
-        Con.delete({
-            From: 'Products',
-            Where: {
-                Price: {
-                    "<=": 20
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(Count);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
-    it('delete with operator - between', function (done) {
-        var Count;
-        Con.select({
-            From: 'Products',
-            Where: {
-                Price: {
-                    "-": {
-                        Low: 10,
-                        High: 20
-                    }
-                }
-            },
-            OnSuccess: function (results) {
-                Count = results.length;
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-
-        Con.delete({
-            From: 'Products',
-            Where: {
-                Price: {
-                    "-": {
-                        Low: 10,
-                        High: 20
-                    }
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(Count);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
-    it('delete with like', function (done) {
-        var Count;
-        Con.select({
-            From: 'Customers',
-            Where: {
-                CustomerName: {
-                    Like: '%or%'
-                }
-            },
-            OnSuccess: function (results) {
-                Count = results.length;
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-
-        Con.delete({
-            From: 'Customers',
-            Where: {
-                CustomerName: {
-                    Like: '%or%'
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(Count);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
-        })
-    });
-
-    it('delete all - using promise', function (done) {
-        var Count;
-        Con.count({
-            From: 'Customers',
-            OnSuccess: function (results) {
-                Count = results;
-            },
-            OnError: function (err) {
-                done(err);
-            }
+        }).then(function (results) {
+            count = results;
+        }).catch(function (err) {
+            done(err);
         });
-        Con.delete({
-            From: 'Customers'
+
+        con.connection_.remove({
+            from: 'Customers',
+            where: {
+                Country: {
+                    '!=': 'Mexico'
+                }
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(count);
+            done();
+        }).catch(function (err) {
+            done(err);
+        });
+    });
+
+    it('remove with operator - != (for number)', function (done) {
+        var count;
+        con.connection_.count({
+            from: 'Products',
+            where: {
+                Price: {
+                    '!=': 20
+                }
+            }
+        }).then(function (results) {
+            count = results;
+        }).catch(function (err) {
+            done(err);
+        })
+
+        con.connection_.remove({
+            from: 'Products',
+            where: {
+                Price: {
+                    '!=': 20
+                }
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(count);
+            done();
+        }).catch(function (err) {
+            done(err);
+        })
+    });
+
+    it('remove with operator - >', function (done) {
+
+        var Count;
+        con.connection_.select({
+            from: 'Products',
+            where: {
+                Price: {
+                    ">": 20
+                }
+            }
+        }).then(function (results) {
+            Count = results.length;
+        }).catch(function (results) {
+            done(err);
+        })
+
+        con.connection_.remove({
+            from: 'Products',
+            where: {
+                Price: {
+                    ">": 20
+                }
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (results) {
+            done(err);
+        })
+    });
+
+    it('remove with operator - >=', function (done) {
+
+        var Count;
+        con.connection_.select({
+            from: 'Products',
+            where: {
+                Price: {
+                    ">=": 20
+                }
+            }
+        }).then(function (results) {
+            Count = results.length;
+        }).catch(function (results) {
+            done(err);
+        })
+
+        con.connection_.remove({
+            from: 'Products',
+            where: {
+                Price: {
+                    ">=": 20
+                }
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (results) {
+            done(err);
+        })
+    });
+
+    it('remove with operator - <', function (done) {
+
+        var Count;
+        con.connection_.select({
+            from: 'Products',
+            where: {
+                Price: {
+                    "<": 20
+                }
+            }
+        }).then(function (results) {
+            Count = results.length;
+        }).catch(function (results) {
+            done(err);
+        })
+
+        con.connection_.remove({
+            from: 'Products',
+            where: {
+                Price: {
+                    "<": 20
+                }
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (results) {
+            done(err);
+        })
+    });
+
+    it('remove with operator - <=', function (done) {
+        var Count;
+        con.connection_.select({
+            from: 'Products',
+            where: {
+                Price: {
+                    "<=": 20
+                }
+            }
+        }).then(function (results) {
+            Count = results.length;
+        }).catch(function (results) {
+            done(err);
+        })
+
+        con.connection_.remove({
+            from: 'Products',
+            where: {
+                Price: {
+                    "<=": 20
+                }
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (results) {
+            done(err);
+        })
+    });
+
+    it('remove with operator - between', function (done) {
+        var Count;
+        con.connection_.select({
+            from: 'Products',
+            where: {
+                Price: {
+                    "-": {
+                        low: 10,
+                        high: 20
+                    }
+                }
+            }
+        }).then(function (results) {
+            Count = results.length;
+        }).catch(function (results) {
+            done(err);
+        })
+
+        con.connection_.remove({
+            from: 'Products',
+            where: {
+                Price: {
+                    "-": {
+                        low: 10,
+                        high: 20
+                    }
+                }
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (results) {
+            done(err);
+        })
+    });
+
+    it('remove with like- "%or%"', function (done) {
+        var Count;
+        con.connection_.select({
+            from: 'Customers',
+            where: {
+                CustomerName: {
+                    like: '%or%'
+                }
+            }
+        }).then(function (results) {
+            Count = results.length;
+        }).catch(function (results) {
+            done(err);
+        })
+
+        con.connection_.remove({
+            from: 'Customers',
+            where: {
+                CustomerName: {
+                    like: '%or%'
+                }
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (results) {
+            done(err);
+        })
+    });
+
+    it('remove with like- "%or"', function (done) {
+        var Count;
+        con.connection_.select({
+            from: 'Customers',
+            where: {
+                CustomerName: {
+                    like: '%or'
+                }
+            }
+        }).then(function (results) {
+            Count = results.length;
+            con.connection_.remove({
+                from: 'Customers',
+                where: {
+                    CustomerName: {
+                        like: '%or'
+                    }
+                }
+            }).then(function (results) {
+                expect(results).to.be.an('number').to.equal(Count);
+                done();
+            }).catch(function (results) {
+                done(err);
+            })
+        }).catch(function (results) {
+            done(err);
+        });
+
+    });
+
+    it('remove with like- "or%"', function (done) {
+        var Count;
+        con.connection_.select({
+            from: 'Customers',
+            where: {
+                CustomerName: {
+                    like: 'or%'
+                }
+            }
+        }).then(function (results) {
+            Count = results.length;
+        }).catch(function (results) {
+            done(err);
+        })
+
+        con.connection_.remove({
+            from: 'Customers',
+            where: {
+                CustomerName: {
+                    like: 'or%'
+                }
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).catch(function (results) {
+            done(err);
+        })
+    });
+
+    it('remove all - using promise', function (done) {
+        var Count;
+        con.connection_.count({
+            from: 'Customers'
+        }).then(function (results) {
+            Count = results;
+        }).catch(function (results) {
+            done(err);
+        });
+        con.connection_.remove({
+            from: 'Customers'
         }).
         then(function (results) {
             expect(results).to.be.an('number').to.equal(Count);
@@ -399,5 +470,19 @@ describe('Test delete Api', function () {
             done(err);
         });
 
+    });
+
+    it('wrong table test - using promise', function (done) {
+        con.connection_.remove({
+            from: 'Cusdtomers'
+        }).
+        catch(function (err) {
+            var error = {
+                "message": "Table 'Cusdtomers' does not exist",
+                "type": "table_not_exist"
+            };
+            expect(err).to.be.an('object').eql(error);
+            done();
+        });
     });
 });

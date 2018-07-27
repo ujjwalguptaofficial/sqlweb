@@ -1,440 +1,268 @@
-var Con = new JsStore.Instance();
-var sqlWebObj = new sqlWebObj.Instance();
+var con = new SqlWeb.Instance();
 // JsStore.enableLog();
 
 function initDb() {
     console.log('initiate database');
-    JsStore.isDbExist('Demo', function (exist) {
-            console.log('db exist :' + exist);
-            if (exist) {
-                Con.openDb('Demo', onDbInit);
-            } else {
-                Con.createDb(DataBase, function () {
-                    console.log('Database created');
-                    onDbInit();
-                });
-                // insertIntoDb();
+    con.connection_.isDbExist('Demo').then(function (exist) {
+        console.log('db exist :' + exist);
+        if (exist) {
+            con.connection_.openDb('Demo').then(onDbInit);
+        } else {
+            con.connection_.createDb(getDbSchema()).then(function () {
+                console.log('Database created');
+                onDbInit();
+            });
+        }
+    }).catch(function (err) {
+        console.log(err);
+        //alert(err.Message);
+    });
+}
+
+function getDbSchema() {
+    var Column = JsStore.Column;
+    var COL_OPTION = JsStore.COL_OPTION;
+    var DATA_TYPE = JsStore.DATA_TYPE;
+
+    var customers = {
+        name: 'Customers',
+        columns: [{
+                name: "CustomerID",
+                primaryKey: true,
+                autoIncrement: true
+            },
+            {
+                name: "CustomerName",
+                notNull: true,
+                dataType: DATA_TYPE.String
+            },
+            {
+                name: "ContactName",
+                notNull: true,
+                dataType: DATA_TYPE.String
+            },
+            {
+                name: "Address",
+                notNull: true,
+                dataType: 'string',
+                advTextSearch: true
+            },
+            {
+                name: "City",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "PostalCode",
+                dataType: 'string'
+            },
+            {
+                name: "Country",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "Email",
+                dataType: 'string',
+                enableSearch: false
             }
-        },
-        function (err) {
-            console.log(err);
-            //alert(err.Message);
-        });
-}
+        ]
+    };
 
-var Customers = {
-    Name: 'Customers',
-    Columns: [{
-            Name: "CustomerID",
-            PrimaryKey: true,
-            AutoIncrement: true
-        },
-        {
-            Name: "CustomerName",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "ContactName",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "Address",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "City",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "PostalCode",
-            DataType: 'string'
-        },
-        {
-            Name: "Country",
-            NotNull: true,
-            DataType: 'string'
-        }
-    ]
-};
-
-var Categories = {
-    Name: 'Categories',
-    Columns: [{
-            Name: "CategoryID",
-            PrimaryKey: true,
-            AutoIncrement: true
-        },
-        {
-            Name: "CategoryName",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "Description",
-            NotNull: true,
-            DataType: 'string'
-        }
-    ]
-}
-
-var Employees = {
-    Name: 'Employees',
-    Columns: [{
-            Name: "EmployeeID",
-            PrimaryKey: true,
-            AutoIncrement: true
-        },
-        {
-            Name: "LastName",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "BirthDate",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "Photo",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "Notes",
-            DataType: 'string'
-        }
-    ]
-}
-
-var OrderDetails = {
-    Name: 'OrderDetails',
-    Columns: [{
-            Name: "OrderDetailID",
-            PrimaryKey: true,
-            AutoIncrement: true
-        },
-        {
-            Name: "OrderID",
-            NotNull: true,
-            DataType: 'number'
-        },
-        {
-            Name: "ProductID",
-            NotNull: true,
-            DataType: 'number'
-        },
-        {
-            Name: "Quantity",
-            NotNull: true,
-            DataType: 'number'
-        }
-    ]
-}
-
-var Orders = {
-    Name: 'Orders',
-    Columns: [{
-            Name: "OrderID",
-            PrimaryKey: true
-        },
-        {
-            Name: "CustomerID",
-            NotNull: true,
-            DataType: 'number'
-        },
-        {
-            Name: "EmployeeID",
-            NotNull: true,
-            DataType: 'number'
-        },
-        {
-            Name: "OrderDate",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "ShipperID",
-            NotNull: true,
-            DataType: 'number'
-        }
-    ]
-}
-
-var Products = {
-    Name: 'Products',
-    Columns: [{
-            Name: "ProductID",
-            PrimaryKey: true,
-            AutoIncrement: true
-        },
-        {
-            Name: "ProductName",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "SupplierID",
-            NotNull: true,
-            DataType: 'number'
-        },
-        {
-            Name: "CategoryID",
-            NotNull: true,
-            DataType: 'number'
-        },
-        {
-            Name: "Unit",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "Price",
-            NotNull: true,
-            DataType: 'number'
-        }
-    ]
-}
-
-var Shippers = {
-    Name: 'Shippers',
-    Columns: [{
-            Name: "ShipperID",
-            PrimaryKey: true,
-            AutoIncrement: true
-        },
-        {
-            Name: "ShipperName",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "Phone",
-            NotNull: true,
-            DataType: 'string'
-        }
-    ]
-}
-
-var Suppliers = {
-    Name: 'Suppliers',
-    Columns: [{
-            Name: "SupplierID",
-            PrimaryKey: true,
-            AutoIncrement: true
-        },
-        {
-            Name: "SupplierName",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "ContactName",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "Address",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "City",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "PostalCode",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "Country",
-            NotNull: true,
-            DataType: 'string'
-        },
-        {
-            Name: "Phone",
-            NotNull: true,
-            DataType: 'string'
-        }
-    ]
-}
-
-var DataBase = {
-        Name: "Demo",
-        Tables: [Customers, Categories, Employees, OrderDetails, Orders, Products, Shippers, Suppliers]
-    },
-    TableInsertCount = 0;
-
-function onDataInserted() {
-    ++TableInsertCount;
-    if (TableInsertCount == 8) {
-        setStatusMsg('All data inserted');
-        onDbInit();
+    var categories = {
+        name: 'Categories',
+        columns: [{
+                name: "CategoryID",
+                primaryKey: true,
+                autoIncrement: true
+            },
+            {
+                name: "CategoryName",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "Description",
+                notNull: true,
+                dataType: 'string'
+            }
+        ]
     }
-}
 
-function insertIntoDb() {
-    insertCustomers();
-    insertCategories();
-    insertEmployees();
-    insertOrderDetails();
-    insertOrders();
-    insertProducts();
-    insertShippers();
-    insertSuppliers();
-}
 
-function setStatusMsg(msg) {
-    console.log(msg);
-}
 
-function insertCustomers() {
-    $.getJSON("static/Customers.json", function (results) {
-        setStatusMsg('Inserting data into table Customers');
-        Con.insert({
-            Into: 'Customers',
-            Values: results,
-            OnSuccess: function (rowsInserted) {
-                var Msg = rowsInserted + " rows inserted for table customers";
-                setStatusMsg(Msg);
-                onDataInserted();
+    var employees = {
+        name: 'Employees',
+        columns: [
+            new Column('employeeId').options([COL_OPTION.PrimaryKey, COL_OPTION.AutoIncrement]),
+            new Column('lastName').options([COL_OPTION.NotNull]).setDataType(DATA_TYPE.String),
+            new Column('birthDate').options([COL_OPTION.NotNull]).setDataType(DATA_TYPE.DateTime),
+            new Column('photo').options([COL_OPTION.NotNull]).setDataType(DATA_TYPE.String),
+            new Column('notes').setDataType(DATA_TYPE.String),
+            new Column('state').options([COL_OPTION.NotNull]).setDataType(DATA_TYPE.String),
+            new Column('jobSuspendedFlag').options([COL_OPTION.NotNull]).setDataType(DATA_TYPE.Number)
+        ]
+    }
+
+    var orderDetails = {
+        name: 'OrderDetails',
+        columns: [{
+                name: "OrderDetailID",
+                primaryKey: true,
+                autoIncrement: true
             },
-            OnError: function (err) {
-                Console.error(err);
-            }
-        })
-    })
-}
-
-function insertCategories() {
-    $.getJSON("static/Categories.json", function (results) {
-        setStatusMsg('Inserting data into table Categories');
-        Con.insert({
-            Into: 'Categories',
-            Values: results,
-            OnSuccess: function (rowsInserted) {
-                var Msg = rowsInserted + " rows inserted for table Categories";
-                setStatusMsg(Msg);
-                onDataInserted();
+            {
+                name: "OrderID",
+                notNull: true,
+                dataType: DATA_TYPE.Number
             },
-            OnError: function (err) {
-                Console.error(err);
-            }
-        })
-    })
-}
-
-function insertEmployees() {
-    $.getJSON("static/Employees.json", function (results) {
-        setStatusMsg('Inserting data into table Employees');
-        Con.insert({
-            Into: 'Employees',
-            Values: results,
-            OnSuccess: function (rowsInserted) {
-                var Msg = rowsInserted + " rows inserted for table Employees";
-                setStatusMsg(Msg);
-                onDataInserted();
+            {
+                name: "ProductID",
+                notNull: true,
+                dataType: DATA_TYPE.Number
             },
-            OnError: function (err) {
-                Console.error(err);
+            {
+                name: "Quantity",
+                notNull: true,
+                dataType: 'number'
             }
-        })
-    })
-}
+        ]
+    }
 
-function insertOrderDetails() {
-    $.getJSON("static/OrderDetails.json", function (results) {
-        setStatusMsg('Inserting data into table OrderDetails');
-        Con.insert({
-            Into: 'OrderDetails',
-            Values: results,
-            OnSuccess: function (rowsInserted) {
-                var Msg = rowsInserted + " rows inserted for table OrderDetails";
-                setStatusMsg(Msg);
-                onDataInserted();
+    var orders = {
+        name: 'Orders',
+        columns: [{
+                name: "OrderID",
+                primaryKey: true
             },
-            OnError: function (err) {
-                Console.error(err);
-            }
-        })
-    })
-}
-
-
-function insertOrders() {
-    $.getJSON("static/Orders.json", function (results) {
-        setStatusMsg('Inserting data into table Orders');
-        Con.insert({
-            Into: 'Orders',
-            Values: results,
-            SkipDataCheck: true,
-            OnSuccess: function (rowsInserted) {
-                var Msg = rowsInserted + " rows inserted for table Orders";
-                setStatusMsg(Msg);
-                onDataInserted();
+            {
+                name: "CustomerID",
+                notNull: true,
+                dataType: 'number'
             },
-            OnError: function (err) {
-                Console.error(err);
+            {
+                name: "EmployeeID",
+                notNull: true,
+                dataType: 'number'
+            },
+            {
+                name: "OrderDate",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "ShipperID",
+                notNull: true,
+                dataType: 'number'
             }
-        })
-    })
+        ]
+    }
+
+    var products = {
+        name: 'Products',
+        columns: [{
+                name: "ProductID",
+                primaryKey: true,
+                autoIncrement: true
+            },
+            {
+                name: "ProductName",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "SupplierID",
+                notNull: true,
+                dataType: 'number'
+            },
+            {
+                name: "CategoryID",
+                notNull: true,
+                dataType: 'number'
+            },
+            {
+                name: "Unit",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "Price",
+                notNull: true,
+                dataType: 'number'
+            }
+        ]
+    }
+
+    var shippers = {
+        name: 'Shippers',
+        columns: [{
+                name: "ShipperID",
+                primaryKey: true,
+                autoIncrement: true
+            },
+            {
+                name: "ShipperName",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "Phone",
+                notNull: true,
+                dataType: 'string'
+            }
+        ]
+    }
+
+    var suppliers = {
+        name: 'Suppliers',
+        columns: [{
+                name: "SupplierID",
+                primaryKey: true,
+                autoIncrement: true
+            },
+            {
+                name: "SupplierName",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "ContactName",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "Address",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "City",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "PostalCode",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "Country",
+                notNull: true,
+                dataType: 'string'
+            },
+            {
+                name: "Phone",
+                notNull: true,
+                dataType: 'string'
+            }
+        ]
+    }
+
+    var dataBase = {
+        name: "Demo",
+        tables: [customers, categories, employees, orderDetails, orders, products, shippers, suppliers
+        ]
+    };
+    return dataBase;
 }
 
-function insertProducts() {
-    $.getJSON("static/Products.json", function (results) {
-        setStatusMsg('Inserting data into table Products');
-        Con.insert({
-            Into: 'Products',
-            Values: results,
-            OnSuccess: function (rowsInserted) {
-                var Msg = rowsInserted + " rows inserted for table Products";
-                setStatusMsg(Msg);
-                onDataInserted();
-            },
-            OnError: function (err) {
-                Console.error(err);
-            }
-        })
-    })
-}
-
-function insertShippers() {
-    $.getJSON("static/Shippers.json", function (results) {
-        setStatusMsg('Inserting data into table Shippers');
-        Con.insert({
-            Into: 'Shippers',
-            Values: results,
-            OnSuccess: function (rowsInserted) {
-                var Msg = rowsInserted + " rows inserted for table Shippers";
-                setStatusMsg(Msg);
-                onDataInserted();
-            },
-            OnError: function (err) {
-                Console.error(err);
-            }
-        })
-    })
-}
-
-function insertSuppliers() {
-    $.getJSON("static/Suppliers.json", function (results) {
-        setStatusMsg('Inserting data into table Suppliers');
-        Con.insert({
-            Into: 'Suppliers',
-            Values: results,
-            OnSuccess: function (rowsInserted) {
-                var Msg = rowsInserted + " rows inserted for table Suppliers";
-                setStatusMsg(Msg);
-                onDataInserted();
-            },
-            OnError: function (err) {
-                Console.error(err);
-            }
-        })
-    })
-}

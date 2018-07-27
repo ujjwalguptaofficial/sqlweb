@@ -1,13 +1,12 @@
 describe('Test update Api', function () {
 
     it('update with where - using promise', function (done) {
-        Con.update({
-            In: "Customers",
-            Set: {
+        con.connection_.update({ in: "Customers",
+            set: {
                 ContactName: 'Ujjwal',
                 City: 'Bhubaneswar'
             },
-            Where: {
+            where: {
                 CustomerID: 1
             }
         }).
@@ -20,350 +19,515 @@ describe('Test update Api', function () {
         })
     });
 
-    it('update with like', function (done) {
-        Con.update({
-            In: 'Customers',
-            Where: {
+    it('wrong table test', function (done) {
+        con.connection_.update({ in: "Customerss",
+            set: {
+                ContactName: 'Ujjwal',
+                City: 'Bhubaneswar'
+            },
+            where: {
+                CustomerID: 1
+            }
+        }).
+        then(function (results) {
+            done(results);
+        }).catch(function (err) {
+            var error = {
+                "message": "Table 'Customerss' does not exist",
+                "type": "table_not_exist"
+            };
+            expect(err).to.be.an('object').eql(error);
+            done();
+        })
+    });
+
+    it('update without set option', function (done) {
+        con.connection_.update({ in: "Customerss",
+            where: {
+                CustomerID: 1
+            }
+        }).
+        catch(function (err) {
+            var error = {
+                "message": "supplied value is not object",
+                "type": "not_object"
+            };
+            expect(err).to.be.an('object').eql(error);
+            done();
+        })
+    });
+
+    it('update with invalid set data', function (done) {
+        con.connection_.update({ in: "Customers",
+            where: {
+                CustomerID: 1
+            },
+            set: 'sss'
+        }).
+        catch(function (err) {
+            var error = {
+                "message": "supplied value is not object",
+                "type": "not_object"
+            };
+            expect(err).to.be.an('object').eql(error);
+            done();
+        })
+    });
+
+    it('update with like -"%or%', function (done) {
+        con.connection_.update({ in: 'Customers',
+            where: {
                 CustomerName: {
-                    Like: '%or%'
+                    like: '%or%'
                 }
             },
-            Set: {
+            set: {
                 Country: 'india'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(11);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(11);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
+        })
+    });
+
+    it('update with like -"o%', function (done) {
+        con.connection_.update({ in: 'Customers',
+            where: {
+                CustomerName: {
+                    like: 'o%'
+                }
+            },
+            set: {
+                Country: 'india'
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(3);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
+        })
+    });
+
+    it('update with like -"%o', function (done) {
+        con.connection_.update({ in: 'Customers',
+            where: {
+                CustomerName: {
+                    like: '%o'
+                }
+            },
+            set: {
+                Country: 'india'
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(6);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
+        })
+    });
+
+    it('update with like', function (done) {
+        con.connection_.update({ in: 'Customers',
+            where: {
+                CustomerName: {
+                    like: '%or%'
+                }
+            },
+            set: {
+                Country: 'india'
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(11);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('update without ignore case', function (done) {
-        Con.update({
-            In: "Customers",
-            Set: {
+        con.connection_.update({ in: "Customers",
+            set: {
                 ContactName: 'Ujjwal',
                 City: 'bhubaneswar'
             },
-            Where: {
+            where: {
                 City: 'BhUbaneSwar'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(0);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(0);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('update with ignore case', function (done) {
-        Con.update({
-            In: "Customers",
-            IgnoreCase: true,
-            Set: {
+        var count;
+        con.connection_.count({
+            from: 'Customers',
+            ignoreCase: true,
+            set: {
                 ContactName: 'Ujjwal',
                 City: 'bhubaneswar'
             },
-            Where: {
+            where: {
                 City: 'bHuBaneSwar'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(3);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            count = results;
+        }).
+        catch(function (err) {
+            done(err);
+        });
+
+        con.connection_.update({ in: "Customers",
+            ignoreCase: true,
+            set: {
+                ContactName: 'Ujjwal',
+                City: 'bhubaneswar'
+            },
+            where: {
+                City: 'bHuBaneSwar'
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(count);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('select with or', function (done) {
-        Con.select({
-            From: 'Customers',
-            Where: {
+        con.connection_.select({
+            from: 'Customers',
+            where: {
                 Country: 'Mexico',
-                Or: {
+                or: {
                     City: 'Madrid'
                 }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(6);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('array').length(6);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('update with or', function (done) {
-        Con.update({
-            In: 'Customers',
-            Where: {
+        con.connection_.update({ in: 'Customers',
+            where: {
                 Country: 'Mexico',
-                Or: {
+                or: {
                     City: 'Madrid'
                 }
             },
-            Set: {
+            set: {
                 City: 'madrid'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(6);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
-        })
-    });
-
-    it('select with in', function (done) {
-        Con.select({
-            From: 'Customers',
-            Where: {
-                Country: {
-                    In: ['Germany', 'France', 'UK']
-                }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(24);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
-            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(6);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('update with in', function (done) {
-        Con.update({
-            In: 'Customers',
-            Where: {
-                Country: {
-                    In: ['Germany', 'France', 'UK']
+        var Count;
+        con.connection_.select({
+            from: 'Customers',
+            where: {
+                Country: { in: ['Germany', 'France', 'UK']
+                }
+            }
+        }).then(function (results) {
+            Count = results.length;
+        }).
+        catch(function (err) {
+            done(err);
+        })
+        con.connection_.update({ in: 'Customers',
+            where: {
+                Country: { in: ['Germany', 'France', 'UK']
                 }
             },
-            Set: {
+            set: {
                 ContactName: 'Ujjwal',
                 City: 'bhubaneswar'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(24);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(Count);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
+    it('update with operator - != (for string)', function (done) {
+        var count;
+        con.connection_.count({
+            from: 'Customers',
+            where: {
+                Country: {
+                    '!=': 'Mexico'
+                }
+            }
+        }).then(function (results) {
+            count = results;
+        }).
+        catch(function (err) {
+            done(err);
+        });
+
+        con.connection_.update({ in: 'Customers',
+            where: {
+                Country: {
+                    '!=': 'Mexico'
+                }
+            },
+            set: {
+                ContactName: 'Ujjwsal',
+                City: 'bhubaneswsar'
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(count);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
+        });
+    });
+
+    it('remove with operator - != (for number)', function (done) {
+        var count;
+        con.connection_.count({
+            from: 'Products',
+            where: {
+                Price: {
+                    '!=': 20
+                }
+            }
+        }).then(function (results) {
+            count = results;
+        }).
+        catch(function (err) {
+            done(err);
+        })
+
+        con.connection_.update({ in: 'Products',
+            where: {
+                Price: {
+                    '!=': 20
+                }
+            },
+            set: {
+                ContactName: 'Ujjwal',
+                City: 'bhubaneswar'
+            }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(count);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
+        })
+    });
 
     it('select with operator - >', function (done) {
-        Con.select({
-            From: 'Products',
-            Where: {
+        con.connection_.select({
+            from: 'Products',
+            where: {
                 Price: {
                     ">": 20
                 }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(37);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('array').length(37);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('update with operator - >', function (done) {
-        Con.update({
-            In: 'Products',
-            Where: {
+        con.connection_.update({ in: 'Products',
+            where: {
                 Price: {
                     ">": 20
                 }
             },
-            Set: {
+            set: {
                 ProductName: 'Cofee'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(37);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(37);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('select with operator - >=', function (done) {
-        Con.select({
-            From: 'Products',
-            Where: {
+        con.connection_.select({
+            from: 'Products',
+            where: {
                 Price: {
                     ">=": 20
                 }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(38);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('array').length(38);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('update with operator - >=', function (done) {
-        Con.update({
-            In: 'Products',
-            Where: {
+        con.connection_.update({ in: 'Products',
+            where: {
                 Price: {
                     ">=": 20
                 }
             },
-            Set: {
+            set: {
                 ProductName: 'Whisky'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(38);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(38);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('select with operator - <', function (done) {
-        Con.select({
-            From: 'Products',
-            Where: {
+        con.connection_.select({
+            from: 'Products',
+            where: {
                 Price: {
                     "<": 20
                 }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(39);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('array').length(39);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('update with operator - <', function (done) {
-        Con.update({
-            In: 'Products',
-            Where: {
+        con.connection_.update({ in: 'Products',
+            where: {
                 Price: {
                     "<": 20
                 }
             },
-            Set: {
+            set: {
                 ProductName: 'Tea'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(39);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(39);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('select with operator - <=', function (done) {
-        Con.select({
-            From: 'Products',
-            Where: {
+        con.connection_.select({
+            from: 'Products',
+            where: {
                 Price: {
                     "<=": 20
                 }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(40);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('array').length(40);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('update with operator - <=', function (done) {
-        Con.update({
-            In: 'Products',
-            Where: {
+        con.connection_.update({ in: 'Products',
+            where: {
                 Price: {
                     "<=": 20
                 }
             },
-            Set: {
+            set: {
                 ProductName: 'Candy'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(40);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(40);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('select with operator - between', function (done) {
-        Con.select({
-            From: 'Products',
-            Where: {
+        con.connection_.select({
+            from: 'Products',
+            where: {
                 Price: {
                     "-": {
-                        Low: 10,
-                        High: 20
+                        low: 10,
+                        high: 20
                     }
                 }
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('array').length(29);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('array').length(29);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
 
     it('update with operator - between', function (done) {
-        Con.update({
-            In: 'Products',
-            Where: {
+        con.connection_.update({ in: 'Products',
+            where: {
                 Price: {
                     "-": {
-                        Low: 10,
-                        High: 20
+                        low: 10,
+                        high: 20
                     }
                 }
             },
-            Set: {
+            set: {
                 ProductName: 'Chocolate'
-            },
-            OnSuccess: function (results) {
-                expect(results).to.be.an('number').to.equal(29);
-                done();
-            },
-            OnError: function (err) {
-                done(err);
             }
+        }).then(function (results) {
+            expect(results).to.be.an('number').to.equal(29);
+            done();
+        }).
+        catch(function (err) {
+            done(err);
         })
     });
-
-
 });

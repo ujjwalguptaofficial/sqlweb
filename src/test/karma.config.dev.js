@@ -1,47 +1,30 @@
-process.env.CHROME_BIN = require('puppeteer').executablePath()
+process.env.CHROME_BIN = require('puppeteer').executablePath();
+var files = require('./files');
 module.exports = function (config) {
     config.set({
-        basePath: '',
+        basePath: '../',
         frameworks: ['mocha', 'chai'],
         client: {
             mocha: {
                 timeout: 10000 // 6 seconds - upped from 2 seconds
             }
         },
-        files: [
-
-            'scripts/jquery-3.2.1.min.js',
-            'scripts/jsstore.js',
-            '../output/sqljs.js',
-            'cases/create/*.js',
-            'cases/insert/*.js',
-            'cases/tmp.js',
-            // 'cases/count/*.js',
-            'cases/select/*.js',
-            // 'cases/update/*.js',
-            // 'cases/delete/*.js',
-            // 'cases/helper/*.js',
-            // 'cases/clear/*.js',
-            {
-                pattern: 'static/*.json',
-                included: false,
-                served: true,
-            }
-        ],
+        files: ['output/sqlweb.js', ...files.list_of_files],
         proxies: {
-            '/static/': '/base/static/',
-            '/cases/': '/base/cases/'
+            '/test/': '/base/test/',
+            '/output/': '/base/output/'
         },
         reporters: ['mocha'],
         port: 9876, // karma web server port
         colors: true,
         logLevel: config.LOG_INFO,
-        browsers: ['ChromeHeadless'],
+        browsers: ['HeadlessChrome'],
         customLaunchers: {
             HeadlessChrome: {
                 base: 'ChromeHeadless',
                 flags: [
                     '--no-sandbox',
+                    '--disable-setuid-sandbox',
                     '--headless',
                     '--disable-gpu',
                     '--disable-translate',
@@ -50,7 +33,8 @@ module.exports = function (config) {
             }
         },
         autoWatch: false,
-        // concurrency: Infinity
+        // concurrency: Infinity,
+        // singleRun: false,
         singleRun: true,
         browserNoActivityTimeout: 120000,
     })
