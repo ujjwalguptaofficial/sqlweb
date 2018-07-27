@@ -1,140 +1,106 @@
-query= selectQuery/updateQuery;
+query = selectQuery
 
-selectQuery="select"_ ("*"_)? "from"_ table:tableName _* where:whereQry? {return { api:'select', data:{ from:table, where:where } }}
-
-updateQuery="update"_"in"_ table:tableName {return {qry:'update',in:table}}
-
-whereQry="where" _* item: whereItems* {return item};
-
-whereItems = item:(whereItemsType1/whereItemsType2) _* op:joinQuery? {if(op=='|') {return {or:item}} else return item}
-
-whereItemsType1 = fWItem:firstWhereItem jWItem:joinedWhereItem*  {
-    var temp=fWItem;
-   jWItem.forEach(function(columnValue){
-       var key =  Object.keys(columnValue)[0];
-        if(temp[key]==null){
-            if(typeof columnValue=='object'){
-                temp[key]=columnValue[key];
-            }
-            else{
-                temp[key]=columnValue;
-            }
-        }
-        else
-        {
-            if(key=='or'){
-                var orKey = Object.keys(columnValue[key])[0] ;
-                temp[key][orKey]=columnValue[key][orKey];
-             }
-            else
-            {
-                if(temp[key].in){
-                     temp[key].in.push(columnValue[key])
-                }
-                else
-                {
-                    // if (typeof columnValue[key]=='object'){
-
-                    // }
-                    // else
-                    // {
-                        var value = [temp[key],columnValue[key]];
-                        if(typeof temp[key]!=='object'){
-                            temp[key]={['in']:value};
-                        }       
-                        else
-                        {
-                            temp[key].in=value;
-                        }
-                    // }
-                   
-                }
-            }
-        }
-    });
-    return temp; 
+selectQuery = api:"select"_ ("*"_)? "from"_ table:tableName _* where:whereQry {
+return {
+ api:api,
+ data:{
+ 	from:table,
+    where:where
+ }
+}
 }
 
-whereItemsType2 = "(" _* fWItem:firstWhereItem jWItem:joinedWhereItem* _* ")"  {
-    var temp=fWItem;
-   jWItem.forEach(function(columnValue){
-       var key =  Object.keys(columnValue)[0];
-        if(temp[key]==null){
-            if(typeof columnValue=='object'){
-                temp[key]=columnValue[key];
-            }
-            else{
-                temp[key]=columnValue;
-            }
-        }
-        else
-        {
-            if(key=='or'){
-                var orKey = Object.keys(columnValue[key])[0] ;
-                temp[key][orKey]=columnValue[key][orKey];
-             }
-            else
-            {
-                if(temp[key].in){
-                     temp[key].in.push(columnValue[key])
-                }
-                else
-                {
-                    // if (typeof columnValue[key]=='object'){
-
-                    // }
-                    // else
-                    // {
-                        var value = [temp[key],columnValue[key]];
-                        if(typeof temp[key]!=='object'){
-                            temp[key]={['in']:value};
-                        }       
-                        else
-                        {
-                            temp[key].in=value;
-                        }
-                    // }
-                   
-                }
-            }
-        }
-    });
-    return temp; 
+whereQry="where" _ where : whereitems {
+	return where;
 }
 
-firstWhereItem = item:whereItem {return item};
+whereitems = item1:(whereQryWithoutParanthesis/whereQryWithParanthesis) item2:joinWhereItems*{
+	if(item2!=null){
+    	item2.forEach(item=>{
+        	if(Array.isArray(item)){
+              item.forEach(subItem=>{
+                  item1.push(subItem);
+              });
+            }
+            else{
+            	item1.push(item)
+            }
+        	
+        });
+    }
+    return item1;
+}
 
-joinedWhereItem = op:joinQuery item:whereItem { if(op=='|') {return {or:item}} else return item};
 
-whereItem = col:column _* eq:(equalQuery/inQuery/likeQuery/notEqualQuery) _* {return {[col]: eq}; }
+joinWhereItems = _ op:JoinOp _* where:(whereQryWithoutParanthesis/whereQryWithParanthesis) {
+	if(op==='|'){
+    	var obj={};
+        where.forEach(val=>{
+            obj={...obj,...val}
+        });
+    	return {
+        	or:obj
+        }
+    }
+    return where;
+}
 
-joinQuery =  op:(And/Or) _ {return op;}
- 
-equalQuery = "=" _* val:value {return val}
+//whereQryWithoutParanthesis = whereItem;
 
-notEqualQuery = "!="_* val:value {return {'!=':val}}
+whereQryWithoutParanthesis = fw: firstWhere jw:joinWhereItem* {
+	if(jw==null){
+    	return fw
+    }
+    else{
+     	jw.push(fw);	
+        return jw;
+    }
+}
 
-likeQuery ="like" _ f:"%"* _* val:value _* l:"%"* {return {'like':f+val+l}}
+whereQryWithParanthesis = "(" _*  fw: firstWhere jw:joinWhereItem* _* ")" {
+	if(jw==null){
+    	return fw
+    }
+    else{
+     	jw.push(fw);	
+        return jw;
+    }
+}
 
-inQuery ="in" _* "(" _* val:inQueryValue _* ")" { return {'in':val} }
+firstWhere = whereItem
 
-inQueryValue = fv:value mv:inQueryBetweenValue* { var value = [fv].concat(mv); return value;}
+joinWhereItem = _ op:JoinOp _ item:whereItem {
+	if(op==='|'){
+    	return {
+        	or: item
+        }
+    }
+    return item;
+}
 
-inQueryBetweenValue = _* "," val:value _* {return val}
+whereItem = col:column _* "=" _* val:value { 
+	return {
+    	[col]:val
+	}
+}
 
 tableName "table name" = Word
 
-value "column value"= val:WordAndNumber+ {var value=val.join(""); var number = Number(value); if(isNaN(number)) return value; else return number;}
+value "column value"= val:ColumnValue+ {var value=val.join(""); var number = Number(value); if(isNaN(number)) return value; else return number;}
 
 column "column" = Word;
+
+JoinOp= And/Or;
 
 And = "&";
 
 Or = "|";
 
+ColumnValue=[a-zA-Z0-9@]
+
 Word = l:Letter+ {return l.join("");}
 
-WordAndNumber = [a-zA-Z0-9@]
+WordAndNumber = [a-zA-Z0-9]
 
 Letter = [a-zA-Z]
 
