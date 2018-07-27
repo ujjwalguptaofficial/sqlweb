@@ -1,13 +1,13 @@
 query = selectQuery
 
 selectQuery = api:"select"_ ("*"_)? "from"_ table:tableName _* where:whereQry {
-return {
- api:api,
- data:{
- 	from:table,
-    where:where
- }
-}
+  return {
+     api:api,
+     data:{
+        from:table,
+        where:where
+     }
+  }
 }
 
 whereQry="where" _ where : whereitems {
@@ -78,15 +78,35 @@ joinWhereItem = _ op:JoinOp _ item:whereItem {
     return item;
 }
 
-whereItem = col:column _* "=" _* val:value { 
+whereItem = simpleItem/likeItem
+
+simpleItem = col:column _* "=" _* val:value { 
 	return {
     	[col]:val
 	}
 }
 
+likeItem = col:column _* "like" _* '%'_* val:value _* '%'{ 
+	return {
+    	[col]:{
+        	like:val
+        }
+	}
+}
+
 tableName "table name" = Word
 
-value "column value"= val:ColumnValue+ {var value=val.join(""); var number = Number(value); if(isNaN(number)) return value; else return number;}
+value "column value"= val:ColumnValue+ {
+  var value=val.join("");
+  if(value[0]=== "'" && value[value.length-1] === "'"){
+  	return value.substr(1,value.length-2);
+  }
+  var number = Number(value); 
+  if(isNaN(number)) 
+  	return value; 
+  else 
+  	return number;
+}
 
 column "column" = Word;
 
@@ -96,7 +116,7 @@ And = "&";
 
 Or = "|";
 
-ColumnValue=[a-zA-Z0-9@]
+ColumnValue=[a-zA-Z0-9@']
 
 Word = l:Letter+ {return l.join("");}
 
