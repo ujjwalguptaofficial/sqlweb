@@ -86,13 +86,17 @@ simpleItem = col:column _* "=" _* val:value {
 	}
 }
 
-likeItem = col:column _* "like" _* '%'_* val:value _* '%'{ 
+inItem = 
+
+likeItem = col:column _* "like" _* val:likeType { 
 	return {
     	[col]:{
-        	like:val
+        	like:val.join('')
         }
 	}
 }
+
+likeType = (('%'_* value _* '%')/('%'_* value)/(value _* '%'))
 
 tableName "table name" = Word
 
