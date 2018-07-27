@@ -78,7 +78,7 @@ joinWhereItem = _ op:JoinOp _ item:whereItem {
     return item;
 }
 
-whereItem = simpleItem/likeItem
+whereItem = simpleItem/likeItem/inItem
 
 simpleItem = col:column _* "=" _* val:value { 
 	return {
@@ -86,7 +86,20 @@ simpleItem = col:column _* "=" _* val:value {
 	}
 }
 
-inItem = 
+inItem = col:column _* "in" _* "(" _* 
+first:value _* 
+betweens:inBetweenParanthesisItem* 
+last:value _* ")" { 
+	return {
+    	[col]:{
+        	in:[first,...betweens,last]
+        }
+	}
+}
+
+inBetweenParanthesisItem = "," _* val:value ","{
+	return val;
+} 
 
 likeItem = col:column _* "like" _* val:likeType { 
 	return {
