@@ -1,13 +1,23 @@
 query = selectQuery
 
-selectQuery = api:"select"_ ("*"_)? "from"_ table:tableName _* where:whereQry {
+selectQuery = api:"select"_ ("*"_)? "from"_ table:tableName _* where:whereQry _* skipVal:skip? _* limitVal:limit? {
   return {
      api:api,
      data:{
         from:table,
-        where:where
+        where:where,
+        skip:skipVal,
+        limit:limitVal
      }
   }
+}
+
+skip= "skip" _* val:Number {
+	return val;
+}
+
+limit= "limit" _* val:Number {
+	return val;
 }
 
 whereQry="where" _ where : whereitems {
