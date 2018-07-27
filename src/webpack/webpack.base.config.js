@@ -4,7 +4,7 @@ const banner = require('./../license');
 
 module.exports = [{
     name: "sqlweb",
-    entry: "./src/codes/main/index.js",
+    entry: "./src/code/index.ts",
     module: {
         rules: [{
             test: /\.ts$/,

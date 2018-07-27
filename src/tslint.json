@@ -79,6 +79,7 @@
       "always",
       "ignore-bound-class-methods"
     ],
+    // "switch-default": true,
     "triple-equals": [
       true,
       "allow-null-check"

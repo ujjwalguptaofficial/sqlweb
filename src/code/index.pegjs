@@ -118,13 +118,13 @@ likeQuery ="like" _ f:"%"* _* val:value _* l:"%"* {return {'like':f+val+l}}
 
 inQuery ="in" _* "(" _* val:inQueryValue _* ")" { return {'in':val} }
 
-inQueryValue = fv:value mv:inQueryBetweenValue* { var value = fv+mv; return value.split('"')}
+inQueryValue = fv:value mv:inQueryBetweenValue* { var value = [fv].concat(mv); return value;}
 
 inQueryBetweenValue = _* "," val:value _* {return val}
 
 tableName "table name" = Word
 
-value "column value"= val:WordAndNumber+ {return val.join("");}
+value "column value"= val:WordAndNumber+ {var value=val.join(""); var number = Number(value); if(isNaN(number)) return value; else return number;}
 
 column "column" = Word;
 
@@ -134,7 +134,7 @@ Or = "|";
 
 Word = l:Letter+ {return l.join("");}
 
-WordAndNumber = [a-zA-Z0-9]
+WordAndNumber = [a-zA-Z0-9@]
 
 Letter = [a-zA-Z]
 
