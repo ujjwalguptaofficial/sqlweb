@@ -1,8 +1,6 @@
 describe('Test Select Api', function () {
     it('select all', function (done) {
-        con.connection_.select({
-            from: 'Customers'
-        }).
+        con.runQuery('select * from Customers').
         then(function (results) {
             expect(results).to.be.an('array').length(93);
             done();
@@ -13,9 +11,7 @@ describe('Test Select Api', function () {
     });
 
     it('wrong table test', function (done) {
-        con.connection_.select({
-            from: 'Customer'
-        }).
+        con.runQuery('select from Customer').
         catch(function (err) {
             console.log(err);
             var error = {
@@ -28,10 +24,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with skip', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            skip: 10
-        }).
+        con.runQuery('select from Customers skip 10').
         then(function (results) {
             expect(results).to.be.an('array').length(83);
             done();
@@ -41,34 +34,8 @@ describe('Test Select Api', function () {
         })
     });
 
-    // it('EnableSearch column test', function (done) {
-    //     con.connection_.select({
-    //         from: 'Customers',
-    //         where: {
-    //             Email: 'uk@gmail.com'
-    //         }
-    //     }).
-    //     then(function (results) {
-    //         done(results);
-    //     }).
-    //     catch(function (err) {
-    //         console.log(err);
-    //         var error = {
-    //             "message": "Search is turned off for the Column 'Email'",
-    //             "type": "enable_search_off"
-    //         };
-    //         expect(err).to.be.an('object').eql(error);
-    //         done();
-    //     })
-    // });
-
     it('select with where', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                Country: 'Mexico'
-            }
-        }).
+        con.runQuery('select * from Customers where Country=Mexico').
         then(function (results) {
             expect(results).to.be.an('array').length(5);
             done();

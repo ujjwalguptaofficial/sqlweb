@@ -1,5 +1,6 @@
 import * as parser from './../output/parser';
 import { Util } from './util';
+import { Query } from '.';
 
 declare var JsStore;
 export class Instance {
@@ -13,14 +14,21 @@ export class Instance {
         return Util.isString(value);
     }
 
-    runQuery(query) {
-        let result;
-        if (this.isString_(query) === true) {
-            result = parser.parse(query);
+    runQuery(query: string | Query) {
+        try {
+            let result;
+            if (this.isString_(query) === true) {
+                result = parser.parse(query);
+            }
+            else {
+                result = (query as Query).query_;
+            }
+            return this.connection_[result.api](result.data);
         }
-        else {
-            result = query;
+        catch (ex) {
+            return new Promise((resolve, reject) => {
+                reject(ex);
+            });
         }
-        return this.connection_[result.api](result.data);
     }
 }

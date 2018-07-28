@@ -10,8 +10,9 @@
     <script src="scripts/bootstrap.js"></script>
     <link rel="stylesheet" href="style/font-awesome.min.css" />
     <script src="scripts/jsstore.js "></script>
+    <script src="scripts/sqlweb.js"></script>
     <script>
-        var connection = new JsStore.Instance(new Worker('scripts/jsstore.worker.js')),
+        var connection = new SqlWeb.Instance('scripts/jsstore.worker.js'),
             StudentId;
         window.onload = function () {
             initiateDb();
@@ -20,9 +21,9 @@
 
         function initiateDb() {
             var DbName = "Students";
-            connection.isDbExist(DbName).then(function (isExist) {
+            connection.connection_.isDbExist(DbName).then(function (isExist) {
                 if (isExist) {
-                    connection.openDb(DbName);
+                    connection.connection_.openDb(DbName);
                 } else {
                     window.location.href = "index.html";
                 }
@@ -36,26 +37,24 @@
             StudentId = getQsValueByName('id');
             //check if Query string param exist
             if (StudentId) {
-                connection.select({
-                    from: 'Student',
-                    where: {
-                        Id: Number(StudentId)
-                    }
-                }).then(function (results) {
-                    if (results.length > 0) {
-                        var Student = results[0];
-                        $('#txtName').val(Student.Name);
-                        $("input[name='Gender'][value=" + Student.Gender + "]").prop('checked', true);
-                        $('#txtCountry').val(Student.Country);
-                        $('#txtCity').val(Student.City)
-                    } else {
-                        alert('Invalid student id');
-                    }
+                var query = new SqlWeb.Query('select * from Student where Id=@id');
+                query.map('@id', Number(StudentId));
+                connection.runQuery(query)
+                    .then(function (results) {
+                        if (results.length > 0) {
+                            var Student = results[0];
+                            $('#txtName').val(Student.Name);
+                            $("input[name='Gender'][value=" + Student.Gender + "]").prop('checked', true);
+                            $('#txtCountry').val(Student.Country);
+                            $('#txtCity').val(Student.City)
+                        } else {
+                            alert('Invalid student id');
+                        }
 
-                }).catch(function (err) {
-                    console.log(err);
-                    alert(err.message);
-                })
+                    }).catch(function (err) {
+                        console.log(err);
+                        alert(err.message);
+                    })
             }
         }
 
@@ -75,7 +74,7 @@
                 Country: $('#txtCountry').val(),
                 City: $('#txtCity').val()
             };
-            connection.update({ in: 'Student',
+            connection.connection_.update({ in: 'Student',
                 set: Value,
                 where: {
                     Id: Number(StudentId)
@@ -99,7 +98,7 @@
                 City: $('#txtCity').val()
             };
 
-            connection.insert({
+            connection.connection_.insert({
                 into: "Student",
                 values: [Value]
             }).then(function (rowsAdded) {

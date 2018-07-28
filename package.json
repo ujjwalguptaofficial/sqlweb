@@ -9,7 +9,7 @@
     "lint": "tslint src/codes/**/*.ts",
     "test:dev": "karma start src/test/karma.config.dev.js",
     "test:prod": "karma start src/test/karma.config.prod.js",
-    "build:dev": "npm run lint && npm run webpack:dev",
+    "build:dev": "npm run lint && npm run build && npm run test:dev",
     "build:prod": "npm run webpack:prod && npm run test:prod",
     "build:ci": "npm run build:dev && npm run build:prod",
     "webpack:dev": "webpack --config src/webpack/webpack.dev.config.js",

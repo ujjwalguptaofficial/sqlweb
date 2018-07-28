@@ -1,6 +1,6 @@
 query = selectQuery
 
-selectQuery = api:"select"_ ("*"_)? "from"_ table:tableName _* where:whereQry _* skipVal:skip? _* limitVal:limit? {
+selectQuery = api:"select"_ ("*"_)? "from"_ table:tableName _* where:whereQry? _* skipVal:skip? _* limitVal:limit? {
   return {
      api:api,
      data:{
