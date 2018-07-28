@@ -1,23 +1,60 @@
 query = selectQuery
 
-selectQuery = api:"select"_ ("*"_)? "from"_ table:tableName _* where:whereQry? _* skipVal:skip? _* limitVal:limit? {
+selectQuery = api:"select"_ ("*"_)? "from"_ table:tableName _* where:whereQry? _* 
+option:(skip/limit/distinct/ignoreCase)* {
+  var skip=null;
+  var limit=null;
+  var ignoreCase =false;
+  var distinct = false;
+  option.forEach(val=>{
+  	var key = Object.keys(val)[0];
+    switch(key){
+    	case 'skip':
+         	skip= val[key]; break;
+        case 'limit':
+            limit= val[key]; break;
+        case 'ignoreCase':
+        	ignoreCase = val[key]; break;
+        case 'distinct':
+        	distinct = val[key]; break;
+    }
+  });
   return {
      api:api,
      data:{
         from:table,
         where:where,
-        skip:skipVal,
-        limit:limitVal
+        skip:skip,
+        limit:limit,
+        ignoreCase: ignoreCase,
+        distinct : distinct
      }
   }
 }
 
-skip= "skip" _* val:Number {
-	return val;
+distinct= "distinct" _? {
+	return {
+    	distinct: true
+    };
 }
 
-limit= "limit" _* val:Number {
-	return val;
+ignoreCase= "ignoreCase" _? {
+	return {
+    	ignoreCase: true
+    };
+}
+
+
+skip= "skip" _ val:Number _? {
+	return {
+    	skip: val
+    };
+}
+
+limit= "limit" _ val:Number _? {
+	return {
+    	limit: val
+    };
 }
 
 whereQry="where" _ where : whereitems {

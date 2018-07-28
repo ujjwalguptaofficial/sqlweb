@@ -46,12 +46,7 @@ describe('Test Select Api', function () {
     });
 
     it('select without ignore case', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                Country: 'mexico'
-            }
-        }).
+        con.runQuery("select from Customers where Country='mexico'").
         then(function (results) {
             expect(results).to.be.an('array').length(0);
             done();
@@ -62,13 +57,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with ignore case', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            ignoreCase: true,
-            where: {
-                Country: 'meXico'
-            }
-        }).
+        con.runQuery("select * from Customers where Country='meXico' ignoreCase").
         then(function (results) {
             expect(results).to.be.an('array').length(5);
             done();
@@ -79,14 +68,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with ignore case with a number type', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            ignoreCase: true,
-            where: {
-                Country: 'meXico',
-                CustomerID: 3
-            }
-        }).
+        con.runQuery("select * from Customers where Country='meXico' &  CustomerID=3 ignoreCase").
         then(function (results) {
             expect(results).to.be.an('array').length(1);
             done();
