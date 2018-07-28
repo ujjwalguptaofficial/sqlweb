@@ -78,17 +78,8 @@ describe('Test Select Api', function () {
         })
     });
 
-    it('select with ignore case with a number type and object value', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            ignoreCase: true,
-            where: {
-                Country: 'meXico',
-                CustomerID: {
-                    '!=': 3
-                }
-            }
-        }).
+    it('select with ignore case with a number type and not equal to value', function (done) {
+        con.runQuery("select * from Customers where Country='meXico' &  CustomerID != 3 ignoreCase").
         then(function (results) {
             expect(results).to.be.an('array').length(4);
             done();
@@ -99,14 +90,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with distinct', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            distinct: true,
-            ignoreCase: true,
-            where: {
-                City: 'bhubaneswar'
-            }
-        }).
+        con.runQuery("select * from Customers where City='bhubaneswar' distinct ignoreCase").
         then(function (results) {
             expect(results).to.be.an('array').length(1);
             done();
@@ -117,15 +101,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with or', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                Country: 'Mexico',
-                or: {
-                    City: 'Madrid'
-                }
-            }
-        }).
+        con.runQuery("select * from Customers where Country='Mexico' | City= Madrid ").
         then(function (results) {
             expect(results).to.be.an('array').length(8);
             done();
@@ -136,13 +112,14 @@ describe('Test Select Api', function () {
     });
 
     it('select with in', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                Country: { in: ['Germany', 'France', 'UK']
-                }
-            }
-        }).
+        con.runQuery("select * from Customers where Country in ('Germany', 'France', 'UK') ").
+        // con.connection_.select({
+        //     from: 'Customers',
+        //     where: {
+        //         Country: { in: ['Germany', 'France', 'UK']
+        //         }
+        //     }
+        // }).
         then(function (results) {
             expect(results).to.be.an('array').length(29);
             done();

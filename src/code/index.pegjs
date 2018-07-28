@@ -78,7 +78,6 @@ whereitems = item1:(whereQryWithoutParanthesis/whereQryWithParanthesis) item2:jo
     return item1;
 }
 
-
 joinWhereItems = _ op:JoinOp _* where:(whereQryWithoutParanthesis/whereQryWithParanthesis) {
 	if(op==='|'){
     	var obj={};
@@ -92,14 +91,12 @@ joinWhereItems = _ op:JoinOp _* where:(whereQryWithoutParanthesis/whereQryWithPa
     return where;
 }
 
-//whereQryWithoutParanthesis = whereItem;
-
 whereQryWithoutParanthesis = fw: firstWhere jw:joinWhereItem* {
 	if(jw==null){
     	return fw
     }
     else{
-     	jw.push(fw);	
+     	jw.splice(0,0,fw);	
         return jw;
     }
 }
@@ -125,11 +122,19 @@ joinWhereItem = _ op:JoinOp _ item:whereItem {
     return item;
 }
 
-whereItem = simpleItem/likeItem/inItem
+whereItem = equalToItem/likeItem/inItem/notEqualToItem
 
-simpleItem = col:column _* "=" _* val:value { 
+equalToItem = col:column _* "=" _* val:value { 
 	return {
     	[col]:val
+	}
+}
+
+notEqualToItem = col:column _* "!=" _* val:value { 
+	return {
+    	[col]:{
+        	'!=':val
+        }
 	}
 }
 
