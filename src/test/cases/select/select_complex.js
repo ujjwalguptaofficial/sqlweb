@@ -1,17 +1,7 @@
 describe('Test select complex case', function () {
     it('select with multiple or', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                Country: 'Mexico',
-                or: {
-                    City: 'Madrid',
-                    Address: {
-                        like: '%a%'
-                    }
-                }
-            }
-        }).then(function (results) {
+        con.runQuery('select from Customers where Country=Mexico | (City=Madrid | Address like %a%)').
+        then(function (results) {
             expect(results).to.be.an('array').length(73);
             done();
         }).catch(function (err) {

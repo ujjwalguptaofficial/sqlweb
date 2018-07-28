@@ -166,11 +166,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with GroupBy', function (done) {
-        con.runQuery("select * from Customers where group by like %o ").
-        con.connection_.select({
-            from: 'Customers',
-            groupBy: "Country"
-        }).
+        con.runQuery("select * from Customers group by Country").
         then(function (results) {
             expect(results).to.be.an('array').length(22);
             done();

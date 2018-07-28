@@ -1,6 +1,6 @@
 query = selectQuery
 
-selectQuery = api:"select"_ ("*"_)? "from"_ table:tableName _* where:whereQry? _* 
+selectQuery = api: (S E L E C T) _ ("*"_)? F R O M _ table:tableName _* where:whereQry? _* 
 option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
@@ -26,7 +26,7 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
     }
   });
   return {
-     api:api,
+     api:api.join(''),
      data:{
         from:table,
         where:where,
@@ -40,7 +40,7 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   }
 }
 
-groupBy = "group"_"by"_ first:column rest:groupByRestValue* _* {
+groupBy = G R O U P _ B Y _ first:column rest:groupByRestValue* _* {
 	return {
     	groupBy:[first,...rest]
     } ;
@@ -59,7 +59,7 @@ orderBy= by:orderByValue type:orderByType?{
     };
 }
 
-orderByValue = "order" _ "by"_ by:column {
+orderByValue = O R D E R _ B Y _ by:column {
 	return by;
 }
 
@@ -67,32 +67,32 @@ orderByType = _ type: OrderByTypes _* {
 	return type;
 }
 
-distinct= "distinct" _? {
+distinct= D I S T I N C T _? {
 	return {
     	distinct: true
     };
 }
 
-ignoreCase= "ignoreCase" _? {
+ignoreCase= I G N O R E C A S E _? {
 	return {
     	ignoreCase: true
     };
 }
 
 
-skip= "skip" _ val:Number _? {
+skip= S K I P _ val:Number _? {
 	return {
     	skip: val
     };
 }
 
-limit= "limit" _ val:Number _? {
+limit= L I M I T _ val:Number _? {
 	return {
     	limit: val
     };
 }
 
-whereQry="where" _ where : whereitems {
+whereQry= W H E R E _ where : whereitems {
 	return where;
 }
 
@@ -173,7 +173,7 @@ notEqualToItem = col:column _* "!=" _* val:value {
 	}
 }
 
-inItem = col:column _* "in" _* "(" _* 
+inItem = col:column _* I N _* "(" _* 
 first:value _* 
 betweens:inBetweenParanthesisItem* ")" { 
 	return {
@@ -187,7 +187,7 @@ inBetweenParanthesisItem = "," _* val:value _*{
 	return val;
 } 
 
-likeItem = col:column _* "like" _* val:likeType { 
+likeItem = col:column _* L I K E _* val:likeType { 
 	return {
     	[col]:{
         	like:val.join('')
@@ -235,3 +235,30 @@ Digit=[0-9]
 
 Ws "Whitespace" = [ \t]
 _ "One or more whitespaces" = space:Ws+ {return null;}
+
+A = [aA];
+B= [bB];
+C = [cC];
+D= [dD];
+E = [eE];
+F = [fF];
+G = [gG];
+H =[hH];
+I =[iI];
+J =[jJ];
+K =[kK];
+L =[lL];
+M =[mM];
+N =[nN];
+O = [oO];
+P =[pP];
+Q= [qQ];
+R =[rR];
+S =[sS];
+T = [tT];
+U =[uU];
+V = [vV];
+W =[wW];
+X =[xX];
+Y = [yY];
+Z =[zZ];
