@@ -26,7 +26,7 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
     }
   });
   return {
-     api:api.join(''),
+     api:api.join('').toLowerCase(),
      data:{
         from:table,
         where:where,
@@ -40,11 +40,13 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   }
 }
 
-groupBy = G R O U P _ B Y _ first:column rest:groupByRestValue* _* {
+groupBy = GROUP _ BY _ first:column rest:groupByRestValue* _* {
 	return {
     	groupBy:[first,...rest]
     } ;
 }
+
+GROUP "group" = G R O U P
 
 groupByRestValue = _* "," _* val:column _*{
 	return val;
@@ -59,38 +61,50 @@ orderBy= by:orderByValue type:orderByType?{
     };
 }
 
-orderByValue = O R D E R _ B Y _ by:column {
+orderByValue = ORDER _ BY _ by:column {
 	return by;
 }
+
+ORDER "order" = O R D E R
+
+BY "by" = B Y
 
 orderByType = _ type: OrderByTypes _* {
 	return type;
 }
 
-distinct= D I S T I N C T _? {
+distinct= DISTINCT _? {
 	return {
     	distinct: true
     };
 }
 
-ignoreCase= I G N O R E C A S E _? {
+DISTINCT "distinct" = D I S T I N C T
+
+ignoreCase= IGNORECASE _? {
 	return {
     	ignoreCase: true
     };
 }
 
+IGNORECASE "ignoreCase" = I G N O R E C A S E
 
-skip= S K I P _ val:Number _? {
+
+skip = SKIP _ val:Number _? {
 	return {
     	skip: val
     };
 }
 
-limit= L I M I T _ val:Number _? {
+SKIP "skip" = S K I P
+
+limit= LIMIT _ val:Number _? {
 	return {
     	limit: val
     };
 }
+
+LIMIT "limit" = L I M I T
 
 whereQry= W H E R E _ where : whereitems {
 	return where;
