@@ -166,6 +166,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with GroupBy', function (done) {
+        con.runQuery("select * from Customers where group by like %o ").
         con.connection_.select({
             from: 'Customers',
             groupBy: "Country"
@@ -180,13 +181,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with order by', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            Order: {
-                by: 'Country',
-                type: "desc"
-            }
-        }).
+        con.runQuery("select * from Customers order by Country desc").
         then(function (results) {
             expect(results).to.be.an('array').length(93);
             done();
@@ -197,14 +192,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with order by,limit 5, deep eql', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            order: {
-                by: 'Country',
-                type: "desc"
-            },
-            limit: 5
-        }).
+        con.runQuery("select * from Customers order by Country desc limit 5").
         then(function (results) {
             var datas = [{
                 "CustomerID": 47,

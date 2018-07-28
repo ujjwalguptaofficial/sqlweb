@@ -1,11 +1,13 @@
 query = selectQuery
 
 selectQuery = api:"select"_ ("*"_)? "from"_ table:tableName _* where:whereQry? _* 
-option:(skip/limit/distinct/ignoreCase)* {
+option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
   var ignoreCase =false;
   var distinct = false;
+  var order = null;
+  var groupBy = null;
   option.forEach(val=>{
   	var key = Object.keys(val)[0];
     switch(key){
@@ -17,6 +19,10 @@ option:(skip/limit/distinct/ignoreCase)* {
         	ignoreCase = val[key]; break;
         case 'distinct':
         	distinct = val[key]; break;
+        case 'order':
+        	order = val[key]; break;
+         case 'groupBy':
+        	groupBy = val[key]; break;
     }
   });
   return {
@@ -27,9 +33,38 @@ option:(skip/limit/distinct/ignoreCase)* {
         skip:skip,
         limit:limit,
         ignoreCase: ignoreCase,
-        distinct : distinct
+        distinct : distinct,
+        order:order,
+        groupBy:groupBy
      }
   }
+}
+
+groupBy = "group"_"by"_ first:column rest:groupByRestValue* _* {
+	return {
+    	groupBy:[first,...rest]
+    } ;
+}
+
+groupByRestValue = _* "," _* val:column _*{
+	return val;
+} 
+
+orderBy= by:orderByValue type:orderByType?{
+	return {
+    	order: {
+        	by:by,
+            type: type
+        }
+    };
+}
+
+orderByValue = "order" _ "by"_ by:column {
+	return by;
+}
+
+orderByType = _ type: OrderByTypes _* {
+	return type;
 }
 
 distinct= "distinct" _? {
@@ -179,6 +214,8 @@ value "column value"= val:ColumnValue+ {
 column "column" = Word;
 
 JoinOp= And/Or;
+
+OrderByTypes "order type" = "asc"/"desc" ;
 
 And = "&";
 
