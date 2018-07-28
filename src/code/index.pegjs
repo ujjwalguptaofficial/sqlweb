@@ -140,16 +140,15 @@ notEqualToItem = col:column _* "!=" _* val:value {
 
 inItem = col:column _* "in" _* "(" _* 
 first:value _* 
-betweens:inBetweenParanthesisItem* 
-last:value _* ")" { 
+betweens:inBetweenParanthesisItem* ")" { 
 	return {
     	[col]:{
-        	in:[first,...betweens,last]
+        	in:[first,...betweens]
         }
 	}
 }
 
-inBetweenParanthesisItem = "," _* val:value ","{
+inBetweenParanthesisItem = "," _* val:value _*{
 	return val;
 } 
 

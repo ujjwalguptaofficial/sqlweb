@@ -113,13 +113,6 @@ describe('Test Select Api', function () {
 
     it('select with in', function (done) {
         con.runQuery("select * from Customers where Country in ('Germany', 'France', 'UK') ").
-        // con.connection_.select({
-        //     from: 'Customers',
-        //     where: {
-        //         Country: { in: ['Germany', 'France', 'UK']
-        //         }
-        //     }
-        // }).
         then(function (results) {
             expect(results).to.be.an('array').length(29);
             done();
@@ -130,14 +123,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like -"%or%"', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                CustomerName: {
-                    like: '%or%'
-                }
-            }
-        }).
+        con.runQuery("select * from Customers where CustomerName like %or% ").
         then(function (results) {
             expect(results).to.be.an('array').length(11);
             done();
@@ -148,14 +134,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like - "o%"', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                CustomerName: {
-                    like: 'o%'
-                }
-            }
-        }).
+        con.runQuery("select * from Customers where CustomerName like o% ").
         then(function (results) {
             var expected_id_list = [54, 55, 56];
             var id_list = [];
@@ -171,14 +150,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like - "%o"', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                CustomerName: {
-                    like: '%o'
-                }
-            }
-        }).
+        con.runQuery("select * from Customers where CustomerName like %o ").
         then(function (results) {
             var expected_id_list = [15, 21, 29, 46, 69, 73];
             var id_list = [];
