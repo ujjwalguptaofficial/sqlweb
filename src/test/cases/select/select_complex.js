@@ -71,21 +71,6 @@ describe('Test select complex case', function () {
     });
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexico' and (City='London' or Address like '%a%')", function (done) {
-        // con.connection_.select({
-        //     from: 'Customers',
-        //     where: [{
-        //             Country: 'Mexico'
-        //         },
-        //         {
-        //             City: 'London',
-        //             or: {
-        //                 Address: {
-        //                     like: '%a%'
-        //                 }
-        //             }
-        //         }
-        //     ]
-        // })
         con.runQuery("SELECT * FROM Customers WHERE Country='Mexico' & (City='London' | Address like %a%)").
         then(function (results) {
             var expected_id_list = [2, 3, 13, 58, 80];
@@ -101,21 +86,8 @@ describe('Test select complex case', function () {
     });
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexizfdfco' and (City='London' or Address like '%a%')", function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: [{
-                    Country: 'Mexizfdfco'
-                },
-                {
-                    City: 'London',
-                    or: {
-                        Address: {
-                            like: '%a%'
-                        }
-                    }
-                }
-            ]
-        }).then(function (results) {
+        con.runQuery("SELECT * FROM Customers WHERE Country='Mexizfdfco' & (City='London' | Address like %a%)").
+        then(function (results) {
             expect(results).to.be.an('array').length(0);
             done();
         }).catch(function (err) {
@@ -124,21 +96,9 @@ describe('Test select complex case', function () {
     });
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexico' or (City='London' and Address like '%a%')", function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: [{
-                    Country: 'Mexico'
-                },
-                {
-                    or: {
-                        City: 'London',
-                        Address: {
-                            like: '%a%'
-                        }
-                    }
-                }
-            ]
-        }).then(function (results) {
+
+        con.runQuery("SELECT * FROM Customers WHERE Country='Mexico' | (City='London' & Address like %a%)").
+        then(function (results) {
             var expected_id_list = [2, 3, 4, 11, 13, 16, 58, 72, 80];
             var id_list = [];
             results.forEach(element => {
@@ -152,21 +112,8 @@ describe('Test select complex case', function () {
     });
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexico' or (City='London' and Address like '%adsfvbbbb%')", function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: [{
-                    Country: 'Mexico'
-                },
-                {
-                    or: {
-                        City: 'London',
-                        Address: {
-                            like: '%adsfvbbbb%'
-                        }
-                    }
-                }
-            ]
-        }).then(function (results) {
+        con.runQuery("SELECT * FROM Customers WHERE Country='Mexico' | (City='London' & Address like %adsfvbbbb%)").
+        then(function (results) {
             var expected_id_list = [2, 3, 13, 58, 80];
             var id_list = [];
             results.forEach(element => {
@@ -181,26 +128,8 @@ describe('Test select complex case', function () {
 
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexico' and (City='London' or Address like '%a%') and ContactName like '%a%'", function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: [{
-                    Country: 'Mexico'
-                },
-                {
-                    City: 'London',
-                    or: {
-                        Address: {
-                            like: '%a%'
-                        }
-                    }
-                },
-                {
-                    ContactName: {
-                        like: '%a%'
-                    }
-                }
-            ]
-        }).then(function (results) {
+        con.runQuery("SELECT * FROM Customers WHERE Country='Mexico' & (City='London' | Address liKe %a%) & ContactName like %a%").
+        then(function (results) {
             expect(results).to.be.an('array').length(4);
             done();
         }).catch(function (err) {
@@ -209,28 +138,8 @@ describe('Test select complex case', function () {
     });
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexico' and (City='London' or Address like '%a%') or ContactName like 'a%'", function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: [{
-                    Country: 'Mexico'
-                },
-                {
-                    City: 'London',
-                    or: {
-                        Address: {
-                            like: '%a%'
-                        }
-                    }
-                },
-                {
-                    or: {
-                        ContactName: {
-                            like: 'a%'
-                        }
-                    }
-                }
-            ]
-        }).then(function (results) {
+        con.runQuery("SELECT * FROM Customers WHERE Country='Mexico' & (City='London' | Address like %a%) | ContactName like a%").
+        then(function (results) {
             expect(results).to.be.an('array').length(13);
             done();
         }).catch(function (err) {
@@ -239,14 +148,7 @@ describe('Test select complex case', function () {
     });
 
     it("select * from employees where jobSuspendedFlag=0 && state in('Working', 'Diagnostics', 'FinalTest')", function (done) {
-        con.connection_.select({
-            from: 'Employees',
-            where: {
-                jobSuspendedFlag: 0,
-                state: { in: ['Working', 'Diagnostics', 'FinalTest']
-                }
-            }
-        }).
+        con.runQuery("select * from Employees where jobSuspendedFlag=0 & state in('Working', 'Diagnostics', 'FinalTest')").
         then(function (results) {
             expect(results).to.be.an('array').length(15);
             done();

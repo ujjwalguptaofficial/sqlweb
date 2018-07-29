@@ -112,6 +112,7 @@ whereQry= W H E R E _ where : whereitems {
 
 whereitems = item1:(whereQryWithoutParanthesis/whereQryWithParanthesis) item2:joinWhereItems*{
 	if(item2!=null){
+    console.log(item2);
     	item2.forEach(item=>{
         	if(Array.isArray(item)){
               item.forEach(subItem=>{
@@ -121,22 +122,29 @@ whereitems = item1:(whereQryWithoutParanthesis/whereQryWithParanthesis) item2:jo
             else{
             	item1.push(item)
             }
-        	
         });
     }
     return item1;
 }
 
 joinWhereItems = _ op:JoinOp _* where:(whereQryWithoutParanthesis/whereQryWithParanthesis) {
-	if(op==='|'){
+	
+    if(op==='|'){
     	var obj={};
-        where.forEach(val=>{
-            obj={...obj,...val}
-        });
+        if(Array.isArray(where)){
+          where.forEach(val=>{
+              obj={...obj,...val}
+          });
+        }
+        else{
+        	obj = where;
+        }
+         console.log(obj)
     	return {
         	or:obj
         }
     }
+   
     return where;
 }
 
@@ -152,11 +160,24 @@ whereQryWithoutParanthesis = fw: firstWhere jw:joinWhereItem* {
 
 whereQryWithParanthesis = "(" _*  fw: firstWhere jw:joinWhereItem* _* ")" {
 	if(jw==null){
-    	return fw
+    	return fw;
     }
     else{
-     	jw.push(fw);	
-        return jw;
+    	var query= fw;
+        jw.forEach(qry=>{
+        	var key = Object.keys(qry)[0];
+        	if(key==='or'){
+            	if(query.or==null){
+                	query.or={};
+                }
+                var orKey = Object.keys(qry[key])[0];
+                query.or[orKey]= qry[key][orKey];
+            }
+            else{
+            	query[key]=qry[key];
+            }
+        })
+        return query;
     }
 }
 
