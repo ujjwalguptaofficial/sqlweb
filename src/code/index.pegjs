@@ -92,7 +92,7 @@ limit= LIMIT _ val:Number _? {
     };
 }
 
-whereQry= W H E R E _ where : whereitems {
+whereQry= WHERE _ where : whereitems {
 	return where;
 }
 
@@ -184,7 +184,7 @@ joinWhereItem = _ op:JoinOp _ item:whereItem {
     return item;
 }
 
-whereItem = equalToItem/likeItem/inItem/notEqualToItem
+whereItem = equalToItem/likeItem/inItem/operatorItem/betweenItem
 
 equalToItem = col:column _* "=" _* val:value { 
 	return {
@@ -192,15 +192,26 @@ equalToItem = col:column _* "=" _* val:value {
 	}
 }
 
-notEqualToItem = col:column _* "!=" _* val:value { 
+operatorItem = col:column _* op:(("!=")/(">=")/("<=")/(">")/("<")) _* val:value { 
 	return {
     	[col]:{
-        	'!=':val
+        	[op]:val
         }
 	}
 }
 
-inItem = col:column _* I N _* "(" _* 
+betweenItem = col:column _* BETWEEN _* "(" _* low:value _* "," _* high: value _* ")" {
+	return {
+    	[col]:{
+            '-':{
+                low : low,
+                high : high
+            }
+        }
+	}
+}
+
+inItem = col:column _* IN _* "(" _* 
 first:value _* 
 betweens:inBetweenParanthesisItem* ")" { 
 	return {
@@ -214,7 +225,7 @@ inBetweenParanthesisItem = "," _* val:value _*{
 	return val;
 } 
 
-likeItem = col:column _* L I K E _* val:likeType { 
+likeItem = col:column _* LIKE _* val:likeType { 
 	return {
     	[col]:{
         	like:val.join('')
@@ -236,6 +247,12 @@ value "column value"= val:ColumnValue+ {
   	return number;
 }
 
+BETWEEN "between" = B E T W E E N
+
+IN "in" = I N
+
+LIKE "like" = L I K E
+
 SELECT "select" = S E L E C T
 
 IGNORECASE "ignoreCase" = I G N O R E C A S E
@@ -253,6 +270,8 @@ GROUP "group" = G R O U P
 LIMIT "limit" = L I M I T
 
 SKIP "skip" = S K I P
+
+WHERE "where"= W H E R E
 
 tableName "table name" = Word
 
