@@ -1,6 +1,6 @@
 query = selectQuery
 
-selectQuery = api: (S E L E C T) _ ("*"_)? F R O M _ table:tableName _* where:whereQry? _* 
+selectQuery = api: (SELECT) _ ("*"_)? FROM _ table:tableName _* where:whereQry? _* 
 option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
@@ -46,8 +46,6 @@ groupBy = GROUP _ BY _ first:column rest:groupByRestValue* _* {
     } ;
 }
 
-GROUP "group" = G R O U P
-
 groupByRestValue = _* "," _* val:column _*{
 	return val;
 } 
@@ -65,10 +63,6 @@ orderByValue = ORDER _ BY _ by:column {
 	return by;
 }
 
-ORDER "order" = O R D E R
-
-BY "by" = B Y
-
 orderByType = _ type: OrderByTypes _* {
 	return type;
 }
@@ -79,16 +73,11 @@ distinct= DISTINCT _? {
     };
 }
 
-DISTINCT "distinct" = D I S T I N C T
-
 ignoreCase= IGNORECASE _? {
 	return {
     	ignoreCase: true
     };
 }
-
-IGNORECASE "ignoreCase" = I G N O R E C A S E
-
 
 skip = SKIP _ val:Number _? {
 	return {
@@ -96,7 +85,6 @@ skip = SKIP _ val:Number _? {
     };
 }
 
-SKIP "skip" = S K I P
 
 limit= LIMIT _ val:Number _? {
 	return {
@@ -104,15 +92,12 @@ limit= LIMIT _ val:Number _? {
     };
 }
 
-LIMIT "limit" = L I M I T
-
 whereQry= W H E R E _ where : whereitems {
 	return where;
 }
 
 whereitems = item1:(whereQryWithoutParanthesis/whereQryWithParanthesis) item2:joinWhereItems*{
 	if(item2!=null){
-    console.log(item2);
     	item2.forEach(item=>{
         	if(Array.isArray(item)){
               item.forEach(subItem=>{
@@ -139,8 +124,7 @@ joinWhereItems = _ op:JoinOp _* where:(whereQryWithoutParanthesis/whereQryWithPa
         else{
         	obj = where;
         }
-         console.log(obj)
-    	return {
+        return {
         	or:obj
         }
     }
@@ -232,8 +216,6 @@ likeItem = col:column _* L I K E _* val:likeType {
 
 likeType = (('%'_* value _* '%')/('%'_* value)/(value _* '%'))
 
-tableName "table name" = Word
-
 value "column value"= val:ColumnValue+ {
   var value=val.join("");
   if(value[0]=== "'" && value[value.length-1] === "'"){
@@ -245,6 +227,26 @@ value "column value"= val:ColumnValue+ {
   else 
   	return number;
 }
+
+SELECT "select" = S E L E C T
+
+IGNORECASE "ignoreCase" = I G N O R E C A S E
+
+DISTINCT "distinct" = D I S T I N C T
+
+ORDER "order" = O R D E R
+
+BY "by" = B Y
+
+FROM "from" = F R O M
+
+GROUP "group" = G R O U P
+
+LIMIT "limit" = L I M I T
+
+SKIP "skip" = S K I P
+
+tableName "table name" = Word
 
 column "column" = Word;
 
