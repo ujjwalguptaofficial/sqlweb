@@ -1,6 +1,6 @@
 query = selectQuery
 
-selectQuery = api: (SELECT) _ ("*"_)? FROM _ table:tableName _* where:whereQry? _* 
+selectQuery = api: SELECT _ aggr:aggregateQry ? FROM _ table:tableName _* where:whereQry? _* 
 option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
@@ -8,6 +8,7 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var distinct = false;
   var order = null;
   var groupBy = null;
+  var aggregate = aggr;
   option.forEach(val=>{
   	var key = Object.keys(val)[0];
     switch(key){
@@ -35,9 +36,56 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
         ignoreCase: ignoreCase,
         distinct : distinct,
         order:order,
-        groupBy:groupBy
+        groupBy:groupBy,
+        aggregate : aggr
      }
   }
+}
+
+aggregateQry = ("*"_)/ aggr: aggregate _ {
+	return aggr[0];
+}
+
+aggregate = AGGREGATE _* "[" _* first: aggregateType _* rest: inBetweenAggregateColumn* _* "]" {
+	rest.splice(0,0,first);
+    return rest;
+}
+
+aggregateType = minAggregate/ maxAggregate/avgAggregate/countAggregate/sumAggregate
+
+maxAggregate = MAX _* "(" _* first: column _* rest:inBetweenParanthesisColumn* _* ")" {
+	rest.splice(0,0,first);
+    return {
+    	max : rest
+    }
+}
+
+minAggregate = MIN _* "(" _* first: column _* rest:inBetweenParanthesisColumn* _* ")" {
+	rest.splice(0,0,first);
+    return {
+    	min : rest
+    }
+}
+
+avgAggregate = AVG _* "(" _* first: column _* rest:inBetweenParanthesisColumn* _* ")" {
+	rest.splice(0,0,first);
+    return {
+    	avg : rest
+    }
+}
+
+countAggregate = COUNT _* "(" _* first: column _* rest:inBetweenParanthesisColumn* _* ")" {
+	rest.splice(0,0,first);
+    return {
+    	count : rest
+    }
+}
+
+sumAggregate = SUM _* "(" _* first: column _* rest:inBetweenParanthesisColumn* _* ")" {
+	rest.splice(0,0,first);
+    return {
+    	sum : rest
+    }
 }
 
 groupBy = GROUP _ BY _ first:column rest:groupByRestValue* _* {
@@ -221,6 +269,14 @@ betweens:inBetweenParanthesisItem* ")" {
 	}
 }
 
+inBetweenParanthesisColumn = "," _* val:column _*{
+	return val;
+} 
+
+inBetweenAggregateColumn = "," _* val:aggregateType _*{
+	return val;
+} 
+
 inBetweenParanthesisItem = "," _* val:value _*{
 	return val;
 } 
@@ -246,6 +302,18 @@ value "column value"= val:ColumnValue+ {
   else 
   	return number;
 }
+
+MIN "min" = M I N
+
+MAX "max" = M A X
+
+AVG "avg" =  A V G
+
+COUNT "count" = C O U N T
+
+SUM "sum" =  S U M
+
+AGGREGATE "aggregate" = A G G R E G A T E
 
 BETWEEN "between" = B E T W E E N
 
