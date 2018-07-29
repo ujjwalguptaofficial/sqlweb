@@ -384,17 +384,25 @@ function peg$parse(input, options) {
       	return where;
       },
       peg$c15 = function(item1, item2) {
-      	if(item2!=null){
-          	item2.forEach(item=>{
-              	if(Array.isArray(item)){
-                    item.forEach(subItem=>{
-                        item1.push(subItem);
-                    });
-                  }
-                  else{
-                  	item1.push(item)
-                  }
-              });
+      	if(!Array.isArray(item1)){
+          	item1=[item1];
+          }
+          if(item2!=null){
+          	var pushInItem1=(item)=>{
+               	item1.push(item);
+              }
+              if(Array.isArray(item1)){
+              	item2.forEach(item=>{
+                    if(Array.isArray(item)){
+                      item.forEach(subItem=>{
+                          pushInItem1(subItem);
+                      });
+                    }
+                    else{
+                        pushInItem1(item)
+                    }
+                });
+              }
           }
           return item1;
       },
