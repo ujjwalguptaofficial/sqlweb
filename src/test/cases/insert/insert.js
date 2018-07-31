@@ -4,9 +4,7 @@ function randomDate(start, end) {
 
 describe('Test insert', function () {
     it('wrong table test', function (done) {
-        con.connection_.insert({
-            into: 'Customer'
-        }).
+        con.runQuery("insert into Customer values=@val").
         catch(function (err) {
             console.log(err);
             var error = {
@@ -68,15 +66,24 @@ describe('Test insert', function () {
 
     it('insert Shippers ', function (done) {
         $.getJSON("test/static/Shippers.json", function (results) {
-            con.connection_.insert({
-                into: 'Shippers',
-                values: results
-            }).then(function (results) {
-                expect(results).to.be.an('number').to.equal(3);
-                done();
-            }).catch(function (err) {
-                done(err);
+            // con.connection_.insert({
+            //     into: 'Shippers',
+            //     values: results
+            // }).
+            var countInsert = 0;
+            results.forEach(function (result) {
+                var value = JSON.stringify(result).replace(/\\"/g, '');
+                var query = "insert into Shippers values (" + value + ")";
+                console.log(query);
+                con.runQuery(query).then(function (rowsInserted) {
+                    countInsert += rowsInserted;
+                    if (countInsert === results.length) {
+                        expect(results).to.be.an('number').to.equal(3);
+                        done();
+                    }
+                }).catch(done);
             });
+
         });
     });
 

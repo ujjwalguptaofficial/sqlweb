@@ -18,8 +18,29 @@ function saveAsFile(filePath, content) {
     })
 }
 
+const getFilesContent = function (files) {
+    var contents = "";
+    files.forEach(file => {
+        var content = getFileContent(file);
+        contents += content;
+    });
+
+    return contents;
+};
+
 generateParser = function () {
-    var grammar = getFileContent('src/code/index.pegjs');
+    // var grammar = getFileContent('src/code/index.pegjs');
+    var grammar = getFilesContent(
+        [
+            'src/code/grammar/index.pegjs',
+            'src/code/grammar/insert.pegjs',
+            'src/code/grammar/count.pegjs',
+            'src/code/grammar/select.pegjs',
+            'src/code/grammar/common.pegjs',
+            'src/code/grammar/constant.pegjs'
+        ]);
+    //console.log(grammar);
+    saveAsFile('./src/output/grammar.pegjs', grammar);
     var content = peg.generate(grammar, {
         optimize: "speed",
         output: 'source',

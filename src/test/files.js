@@ -5,7 +5,7 @@ exports.list_of_files = [
     'test/scripts/dbhelper.js',
     'test/cases/insert/*.js',
     'test/cases/select/*.js',
-    // 'test/cases/count/*.js',
+    'test/cases/count/*.js',
     // 'test/cases/transaction/*.js',
     // 'test/cases/update/*.js',
     // 'test/cases/delete/*.js',

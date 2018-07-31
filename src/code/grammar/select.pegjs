@@ -1,6 +1,6 @@
-query = selectQuery
 
-selectQuery = api: SELECT _ aggr:aggregateQry ? FROM _ table:tableName _* where:whereQry? _* 
+
+selectQuery = SELECT _ aggr:aggregateQry ? FROM _ table:tableName _* where:whereQry? _* 
 option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
@@ -27,7 +27,7 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
     }
   });
   return {
-     api:api.join('').toLowerCase(),
+     api:'select',
      data:{
         from:table,
         where:where,
@@ -303,94 +303,4 @@ value "column value"= val:ColumnValue+ {
   	return number;
 }
 
-MIN "min" = M I N
 
-MAX "max" = M A X
-
-AVG "avg" =  A V G
-
-COUNT "count" = C O U N T
-
-SUM "sum" =  S U M
-
-AGGREGATE "aggregate" = A G G R E G A T E
-
-BETWEEN "between" = B E T W E E N
-
-IN "in" = I N
-
-LIKE "like" = L I K E
-
-SELECT "select" = S E L E C T
-
-IGNORECASE "ignoreCase" = I G N O R E C A S E
-
-DISTINCT "distinct" = D I S T I N C T
-
-ORDER "order" = O R D E R
-
-BY "by" = B Y
-
-FROM "from" = F R O M
-
-GROUP "group" = G R O U P
-
-LIMIT "limit" = L I M I T
-
-SKIP "skip" = S K I P
-
-WHERE "where"= W H E R E
-
-tableName "table name" = Word
-
-column "column" = Word;
-
-JoinOp= And/Or;
-
-OrderByTypes "order type" = "asc"/"desc" ;
-
-And = "&";
-
-Or = "|";
-
-ColumnValue=[a-zA-Z0-9@']
-
-Word = l:Letter+ {return l.join("");}
-
-WordAndNumber = [a-zA-Z0-9]
-
-Letter = [a-zA-Z]
-
-Number= d:Digit+ {return Number(d.join(""))}
-
-Digit=[0-9]
-
-Ws "Whitespace" = [ \t]
-_ "One or more whitespaces" = space:Ws+ {return null;}
-
-A = [aA];
-B= [bB];
-C = [cC];
-D= [dD];
-E = [eE];
-F = [fF];
-G = [gG];
-H =[hH];
-I =[iI];
-J =[jJ];
-K =[kK];
-L =[lL];
-M =[mM];
-N =[nN];
-O = [oO];
-P =[pP];
-Q= [qQ];
-R =[rR];
-S =[sS];
-T = [tT];
-U =[uU];
-V = [vV];
-W =[wW];
-X =[xX];
-Y = [yY];
-Z =[zZ];

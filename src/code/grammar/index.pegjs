@@ -1,0 +1,2 @@
+query = selectQuery/countQuery/insertQuery ;
+
