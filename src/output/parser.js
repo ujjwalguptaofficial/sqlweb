@@ -953,7 +953,7 @@ function peg$parse(input, options) {
   }
 
   function peg$parseinsertWithParanthesisBetweenVal() {
-    var s0, s1, s2;
+    var s0, s1, s2, s3;
 
     s0 = peg$currPos;
     if (input.charCodeAt(peg$currPos) === 44) {
@@ -964,11 +964,22 @@ function peg$parse(input, options) {
       if (peg$silentFails === 0) { peg$fail(peg$c7); }
     }
     if (s1 !== peg$FAILED) {
-      s2 = peg$parsekeyValueSepByColumn();
+      s2 = [];
+      s3 = peg$parse_();
+      while (s3 !== peg$FAILED) {
+        s2.push(s3);
+        s3 = peg$parse_();
+      }
       if (s2 !== peg$FAILED) {
-        peg$savedPos = s0;
-        s1 = peg$c8(s2);
-        s0 = s1;
+        s3 = peg$parsekeyValueSepByColumn();
+        if (s3 !== peg$FAILED) {
+          peg$savedPos = s0;
+          s1 = peg$c8(s3);
+          s0 = s1;
+        } else {
+          peg$currPos = s0;
+          s0 = peg$FAILED;
+        }
       } else {
         peg$currPos = s0;
         s0 = peg$FAILED;

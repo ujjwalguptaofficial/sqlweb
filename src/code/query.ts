@@ -9,7 +9,7 @@ export class Query {
 
     map(key: string, value: any) {
         var stringifiedValue = JSON.stringify(this.query_);
-        this.query_ = JSON.parse(stringifiedValue.replace('"' + key + '"', value));
+        this.query_ = JSON.parse(stringifiedValue.replace('"' + key + '"', JSON.stringify(value)));
     }
 
     private isString_(value) {

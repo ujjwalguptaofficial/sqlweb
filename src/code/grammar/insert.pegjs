@@ -35,7 +35,7 @@ insertWithParanthesis = "({" _* first:keyValueSepByColumn _* rest:insertWithPara
     return [obj];
 }
 
-insertWithParanthesisBetweenVal = "," val:keyValueSepByColumn {
+insertWithParanthesisBetweenVal = ","_* val:keyValueSepByColumn {
 	return val;
 }
 
