@@ -52,13 +52,9 @@ describe('Test insert', function () {
             results.forEach(function (value) {
                 value.birthDate = new randomDate(startDate, endDate);
             });
-            con.connection_.insert({
-                into: 'Employees',
-                values: results
-            }).
-            // var qry = new SqlWeb.Query('insert into Employees Values=@values');
-            // qry.map("@values", results);
-            // con.runQuery(qry).
+            var qry = new SqlWeb.Query('insert into Employees Values=@values');
+            qry.map("@values", results);
+            con.runQuery(qry).
             then(function (results) {
                 expect(results).to.be.an('number').to.equal(34);
                 done();
@@ -189,19 +185,7 @@ describe('Test insert', function () {
     });
 
     it('EnableSearch column test', function (done) {
-        // var value = {
-        //     CustomerName: "dfb",
-        //     ContactName: "Anders",
-        //     Address: 'ewrgt',
-        //     City: "1123",
-        //     PostalCode: "frfd",
-        //     Country: 'fesgt',
-        //     Email: 1234
-        // }
-        // con.connection_.insert({
-        //     into: 'Customers',
-        //     values: [value]
-        // }).
+
         con.runQuery("insert into Customers values ({CustomerName: 'dfb', ContactName: 'Anders', Address: 'ewrgt', City: '1123', PostalCode: 'frfd', Country: 'fesgt', Email: 1234})").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(3);
