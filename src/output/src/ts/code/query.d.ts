@@ -4,4 +4,5 @@ export declare class Query {
     constructor(qry: string);
     map(key: string, value: any): void;
     private isString_(value);
+    private parseJson_(value);
 }

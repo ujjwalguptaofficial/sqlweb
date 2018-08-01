@@ -5383,11 +5383,21 @@ module.exports = {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Util", function() { return Util; });
+var dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
+var reviver = function (key, value) {
+    if (typeof value === "string" && dateFormat.test(value)) {
+        return new Date(value);
+    }
+    return value;
+};
 var Util = /** @class */ (function () {
     function Util() {
     }
     Util.isString = function (value) {
         return typeof value === 'string';
+    };
+    Util.parseJson = function (value) {
+        return JSON.parse(value, reviver);
     };
     return Util;
 }());
@@ -5413,10 +5423,13 @@ var Query = /** @class */ (function () {
     }
     Query.prototype.map = function (key, value) {
         var stringifiedValue = JSON.stringify(this.query_);
-        this.query_ = JSON.parse(stringifiedValue.replace('"' + key + '"', JSON.stringify(value)));
+        this.query_ = this.parseJson_(stringifiedValue.replace('"' + key + '"', JSON.stringify(value)));
     };
     Query.prototype.isString_ = function (value) {
         return _util__WEBPACK_IMPORTED_MODULE_1__["Util"].isString(value);
+    };
+    Query.prototype.parseJson_ = function (value) {
+        return _util__WEBPACK_IMPORTED_MODULE_1__["Util"].parseJson(value);
     };
     return Query;
 }());

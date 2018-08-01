@@ -9,10 +9,14 @@ export class Query {
 
     map(key: string, value: any) {
         var stringifiedValue = JSON.stringify(this.query_);
-        this.query_ = JSON.parse(stringifiedValue.replace('"' + key + '"', JSON.stringify(value)));
+        this.query_ = this.parseJson_(stringifiedValue.replace('"' + key + '"', JSON.stringify(value)));
     }
 
     private isString_(value) {
         return Util.isString(value);
+    }
+
+    private parseJson_(value) {
+        return Util.parseJson(value);
     }
 }
