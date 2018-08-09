@@ -1,4 +1,4 @@
-query = selectQuery/countQuery/insertQuery ;
+query = selectQuery/countQuery/insertQuery/updateQuery ;
 
 insertQuery = INSERT _ INTO _ table: tableName _* VALUES _* insertValue: valueTypes _* options: insertOptions* {
      var skipDataCheck = false;
@@ -400,6 +400,39 @@ value "column value"= val:ColumnValue+ {
 }
 
 
+updateQuery = UPDATE _ table:tableName _* SET _* set: updateValue _* where:whereQry? _* option:(ignoreCase)* {
+
+    var ignoreCase =false;
+  option.forEach(val=>{
+  	var key = Object.keys(val)[0];
+    switch(key){
+        case 'ignoreCase':
+        	ignoreCase = val[key]; break;
+    }
+  });
+  return {
+     api:'update',
+     data:{
+        in:table,
+        set:set,
+        where:where,
+        ignoreCase: ignoreCase
+     }
+  }
+}
+
+updateValue = first:equalToItem _* rest:updateValueBetweenItem* _* {
+    rest.forEach(val=>{
+        first = {...first,...val}; 
+    });
+    return first;
+}
+
+
+updateValueBetweenItem = "," _* val:equalToItem _*{
+    return val;
+}
+
 tableName "table name" = Word
 
 column "column" = Word;
@@ -412,7 +445,7 @@ And = "&";
 
 Or = "|";
 
-ColumnValue=[a-zA-Z0-9@']
+ColumnValue=[a-zA-Z0-9@_']
 
 Word = l:Letter+ {return l.join("");}
 
@@ -500,3 +533,7 @@ RETURN "return" = R E T U R N ;
 VALUES "values"= V A L U E S ;
 
 SKIPDATACHECK "skipdatacheck" = S K I P D A T A C H E C K ;
+
+UPDATE "update" = U P D A T E;
+
+SET "set" = S E T;

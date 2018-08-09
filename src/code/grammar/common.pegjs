@@ -10,7 +10,7 @@ And = "&";
 
 Or = "|";
 
-ColumnValue=[a-zA-Z0-9@']
+ColumnValue=[a-zA-Z0-9@_']
 
 Word = l:Letter+ {return l.join("");}
 

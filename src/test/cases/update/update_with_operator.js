@@ -7,7 +7,8 @@ describe('Test update with operator option', function () {
             where: {
                 ProductID: 1
             }
-        }).then(function (results) {
+        }).
+        then(function (results) {
             Price = results[0].Price;
         }).catch(function (err) {
             done(err);

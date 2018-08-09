@@ -45,3 +45,7 @@ RETURN "return" = R E T U R N ;
 VALUES "values"= V A L U E S ;
 
 SKIPDATACHECK "skipdatacheck" = S K I P D A T A C H E C K ;
+
+UPDATE "update" = U P D A T E;
+
+SET "set" = S E T;

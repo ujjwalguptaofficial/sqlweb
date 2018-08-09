@@ -1,15 +1,7 @@
 describe('Test update Api', function () {
 
     it('update with where - using promise', function (done) {
-        con.connection_.update({ in: "Customers",
-            set: {
-                ContactName: 'Ujjwal',
-                City: 'Bhubaneswar'
-            },
-            where: {
-                CustomerID: 1
-            }
-        }).
+        con.runQuery("update Customers set ContactName='Ujjwal', City= 'Bhubaneswar' where CustomerID=1").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(1);
             done();
@@ -20,15 +12,7 @@ describe('Test update Api', function () {
     });
 
     it('wrong table test', function (done) {
-        con.connection_.update({ in: "Customerss",
-            set: {
-                ContactName: 'Ujjwal',
-                City: 'Bhubaneswar'
-            },
-            where: {
-                CustomerID: 1
-            }
-        }).
+        con.runQuery("update Customerss set ContactName ='Ujjwal', City = 'Bhubaneswar' where CustomerID=1").
         then(function (results) {
             done(results);
         }).catch(function (err) {
@@ -41,50 +25,9 @@ describe('Test update Api', function () {
         })
     });
 
-    it('update without set option', function (done) {
-        con.connection_.update({ in: "Customerss",
-            where: {
-                CustomerID: 1
-            }
-        }).
-        catch(function (err) {
-            var error = {
-                "message": "supplied value is not object",
-                "type": "not_object"
-            };
-            expect(err).to.be.an('object').eql(error);
-            done();
-        })
-    });
-
-    it('update with invalid set data', function (done) {
-        con.connection_.update({ in: "Customers",
-            where: {
-                CustomerID: 1
-            },
-            set: 'sss'
-        }).
-        catch(function (err) {
-            var error = {
-                "message": "supplied value is not object",
-                "type": "not_object"
-            };
-            expect(err).to.be.an('object').eql(error);
-            done();
-        })
-    });
-
     it('update with like -"%or%', function (done) {
-        con.connection_.update({ in: 'Customers',
-            where: {
-                CustomerName: {
-                    like: '%or%'
-                }
-            },
-            set: {
-                Country: 'india'
-            }
-        }).then(function (results) {
+        con.runQuery('update Customers set Country=india where CustomerName like %or%').
+        then(function (results) {
             expect(results).to.be.an('number').to.equal(11);
             done();
         }).
@@ -94,16 +37,8 @@ describe('Test update Api', function () {
     });
 
     it('update with like -"o%', function (done) {
-        con.connection_.update({ in: 'Customers',
-            where: {
-                CustomerName: {
-                    like: 'o%'
-                }
-            },
-            set: {
-                Country: 'india'
-            }
-        }).then(function (results) {
+        con.runQuery("update Customers set Country=india where CustomerName like o%").
+        then(function (results) {
             expect(results).to.be.an('number').to.equal(3);
             done();
         }).
@@ -113,16 +48,8 @@ describe('Test update Api', function () {
     });
 
     it('update with like -"%o', function (done) {
-        con.connection_.update({ in: 'Customers',
-            where: {
-                CustomerName: {
-                    like: '%o'
-                }
-            },
-            set: {
-                Country: 'india'
-            }
-        }).then(function (results) {
+        con.runQuery("update Customers set Country=india where CustomerName like %o").
+        then(function (results) {
             expect(results).to.be.an('number').to.equal(6);
             done();
         }).
@@ -132,16 +59,8 @@ describe('Test update Api', function () {
     });
 
     it('update with like', function (done) {
-        con.connection_.update({ in: 'Customers',
-            where: {
-                CustomerName: {
-                    like: '%or%'
-                }
-            },
-            set: {
-                Country: 'india'
-            }
-        }).then(function (results) {
+        con.runQuery("update Customers set Country=india where CustomerName like %or%").
+        then(function (results) {
             expect(results).to.be.an('number').to.equal(11);
             done();
         }).
@@ -151,15 +70,8 @@ describe('Test update Api', function () {
     });
 
     it('update without ignore case', function (done) {
-        con.connection_.update({ in: "Customers",
-            set: {
-                ContactName: 'Ujjwal',
-                City: 'bhubaneswar'
-            },
-            where: {
-                City: 'BhUbaneSwar'
-            }
-        }).then(function (results) {
+        con.runQuery("update Customers set ContactName= 'Ujjwal', City= 'bhubaneswar' where City= 'BhUbaneSwar'").
+        then(function (results) {
             expect(results).to.be.an('number').to.equal(0);
             done();
         }).
@@ -170,33 +82,26 @@ describe('Test update Api', function () {
 
     it('update with ignore case', function (done) {
         var count;
-        con.connection_.count({
-            from: 'Customers',
-            ignoreCase: true,
-            set: {
-                ContactName: 'Ujjwal',
-                City: 'bhubaneswar'
-            },
-            where: {
-                City: 'bHuBaneSwar'
-            }
-        }).then(function (results) {
+        con.runQuery("count from Customers where City= 'BhUbaneSwar' ignoreCase").
+        then(function (results) {
             count = results;
         }).
         catch(function (err) {
             done(err);
         });
 
-        con.connection_.update({ in: "Customers",
-            ignoreCase: true,
-            set: {
-                ContactName: 'Ujjwal',
-                City: 'bhubaneswar'
-            },
-            where: {
-                City: 'bHuBaneSwar'
-            }
-        }).then(function (results) {
+        // con.connection_.update({ in: "Customers",
+        //     ignoreCase: true,
+        //     set: {
+        //         ContactName: 'Ujjwal',
+        //         City: 'bhubaneswar'
+        //     },
+        //     where: {
+        //         City: 'bHuBaneSwar'
+        //     }
+        // }).
+        con.runQuery("update Customers set ContactName= 'Ujjwal', City= 'bhubaneswar' where City= 'BhUbaneSwar' ignoreCase").
+        then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
         }).
@@ -205,37 +110,20 @@ describe('Test update Api', function () {
         })
     });
 
-    it('select with or', function (done) {
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                Country: 'Mexico',
-                or: {
-                    City: 'Madrid'
-                }
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('array').length(6);
+    it('update with or', function (done) {
+        var selectCount;
+        con.runQuery("select from Customers where Country=Mexico | City=Madrid").
+        then(function (results) {
+            selectCount = results.length;
             done();
         }).
         catch(function (err) {
             done(err);
         })
-    });
 
-    it('update with or', function (done) {
-        con.connection_.update({ in: 'Customers',
-            where: {
-                Country: 'Mexico',
-                or: {
-                    City: 'Madrid'
-                }
-            },
-            set: {
-                City: 'madrid'
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('number').to.equal(6);
+        con.runQuery("update Customers sEt City=madrid where Country=Mexico | City=Madrid").
+        then(function (results) {
+            expect(results).to.be.an('number').to.equal(selectCount);
             done();
         }).
         catch(function (err) {
@@ -245,28 +133,16 @@ describe('Test update Api', function () {
 
     it('update with in', function (done) {
         var Count;
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                Country: { in: ['Germany', 'France', 'UK']
-                }
-            }
-        }).then(function (results) {
+        con.runQuery("select * from Customers where Country in ('Germany', 'France', 'UK')").
+        then(function (results) {
             Count = results.length;
         }).
         catch(function (err) {
             done(err);
         })
-        con.connection_.update({ in: 'Customers',
-            where: {
-                Country: { in: ['Germany', 'France', 'UK']
-                }
-            },
-            set: {
-                ContactName: 'Ujjwal',
-                City: 'bhubaneswar'
-            }
-        }).then(function (results) {
+
+        con.runQuery("Update Customers set ContactName= 'Ujjwal',City= 'bhubaneswar' where Country in ('Germany', 'France', 'UK')").
+        then(function (results) {
             expect(results).to.be.an('number').to.equal(Count);
             done();
         }).
@@ -277,31 +153,16 @@ describe('Test update Api', function () {
 
     it('update with operator - != (for string)', function (done) {
         var count;
-        con.connection_.count({
-            from: 'Customers',
-            where: {
-                Country: {
-                    '!=': 'Mexico'
-                }
-            }
-        }).then(function (results) {
+        con.runQuery("count * from Customers where Country!=Mexico").
+        then(function (results) {
             count = results;
         }).
         catch(function (err) {
             done(err);
         });
 
-        con.connection_.update({ in: 'Customers',
-            where: {
-                Country: {
-                    '!=': 'Mexico'
-                }
-            },
-            set: {
-                ContactName: 'Ujjwsal',
-                City: 'bhubaneswsar'
-            }
-        }).then(function (results) {
+        con.runQuery("update Customers set ContactName= 'Ujjwsal',City= 'bhubaneswsar' where Country!=Mexico").
+        then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
         }).
@@ -312,31 +173,16 @@ describe('Test update Api', function () {
 
     it('remove with operator - != (for number)', function (done) {
         var count;
-        con.connection_.count({
-            from: 'Products',
-            where: {
-                Price: {
-                    '!=': 20
-                }
-            }
-        }).then(function (results) {
+        con.runQuery("count * from Products where Price!=20").
+        then(function (results) {
             count = results;
         }).
         catch(function (err) {
             done(err);
         })
 
-        con.connection_.update({ in: 'Products',
-            where: {
-                Price: {
-                    '!=': 20
-                }
-            },
-            set: {
-                ContactName: 'Ujjwal',
-                City: 'bhubaneswar'
-            }
-        }).then(function (results) {
+        con.runQuery("updatE Products set ContactName= 'Ujjwal',City= 'bhubaneswar' where Price!=20").
+        then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
         }).
@@ -345,52 +191,21 @@ describe('Test update Api', function () {
         })
     });
 
-    it('select with operator - >', function (done) {
-        con.connection_.select({
-            from: 'Products',
-            where: {
-                Price: {
-                    ">": 20
-                }
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('array').length(37);
-            done();
-        }).
-        catch(function (err) {
-            done(err);
-        })
-    });
 
     it('update with operator - >', function (done) {
-        con.connection_.update({ in: 'Products',
-            where: {
-                Price: {
-                    ">": 20
-                }
-            },
-            set: {
-                ProductName: 'Cofee'
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('number').to.equal(37);
-            done();
+        var count;
+        con.runQuery("select From Products where Price>20").
+        then(function (results) {
+            count = results.length;
+            expect(results).to.be.an('array').length(37);
         }).
         catch(function (err) {
             done(err);
         })
-    });
 
-    it('select with operator - >=', function (done) {
-        con.connection_.select({
-            from: 'Products',
-            where: {
-                Price: {
-                    ">=": 20
-                }
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('array').length(38);
+        con.runQuery("update Products set ProductName= 'Cofee' where Price>20").
+        then(function (results) {
+            expect(results).to.be.an('number').to.equal(count);
             done();
         }).
         catch(function (err) {
@@ -399,34 +214,19 @@ describe('Test update Api', function () {
     });
 
     it('update with operator - >=', function (done) {
-        con.connection_.update({ in: 'Products',
-            where: {
-                Price: {
-                    ">=": 20
-                }
-            },
-            set: {
-                ProductName: 'Whisky'
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('number').to.equal(38);
-            done();
+        var count;
+        con.runQuery("select From Products where Price>=20").
+        then(function (results) {
+            count = results.length;
+            expect(results).to.be.an('array').length(38);
         }).
         catch(function (err) {
             done(err);
         })
-    });
 
-    it('select with operator - <', function (done) {
-        con.connection_.select({
-            from: 'Products',
-            where: {
-                Price: {
-                    "<": 20
-                }
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('array').length(39);
+        con.runQuery("update Products set ProductName= 'Whisky' where Price>=20").
+        then(function (results) {
+            expect(results).to.be.an('number').to.equal(count);
             done();
         }).
         catch(function (err) {
@@ -435,16 +235,17 @@ describe('Test update Api', function () {
     });
 
     it('update with operator - <', function (done) {
-        con.connection_.update({ in: 'Products',
-            where: {
-                Price: {
-                    "<": 20
-                }
-            },
-            set: {
-                ProductName: 'Tea'
-            }
-        }).then(function (results) {
+
+        con.runQuery("select From Products where Price<20").
+        then(function (results) {
+            expect(results).to.be.an('array').length(39);
+        }).
+        catch(function (err) {
+            done(err);
+        })
+
+        con.runQuery("update Products  set ProductName='Tea' where Price<20").
+        then(function (results) {
             expect(results).to.be.an('number').to.equal(39);
             done();
         }).
@@ -453,55 +254,21 @@ describe('Test update Api', function () {
         })
     });
 
-    it('select with operator - <=', function (done) {
-        con.connection_.select({
-            from: 'Products',
-            where: {
-                Price: {
-                    "<=": 20
-                }
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('array').length(40);
-            done();
-        }).
-        catch(function (err) {
-            done(err);
-        })
-    });
-
     it('update with operator - <=', function (done) {
-        con.connection_.update({ in: 'Products',
-            where: {
-                Price: {
-                    "<=": 20
-                }
-            },
-            set: {
-                ProductName: 'Candy'
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('number').to.equal(40);
-            done();
+        var count;
+
+        con.runQuery("select From Products where Price<=20").
+        then(function (results) {
+            count = results.length;
+            expect(results).to.be.an('array').length(40);
         }).
         catch(function (err) {
             done(err);
         })
-    });
 
-    it('select with operator - between', function (done) {
-        con.connection_.select({
-            from: 'Products',
-            where: {
-                Price: {
-                    "-": {
-                        low: 10,
-                        high: 20
-                    }
-                }
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('array').length(29);
+        con.runQuery("update Products  set ProductName='Candy' where Price<=20").
+        then(function (results) {
+            expect(results).to.be.an('number').to.equal(count);
             done();
         }).
         catch(function (err) {
@@ -510,20 +277,19 @@ describe('Test update Api', function () {
     });
 
     it('update with operator - between', function (done) {
-        con.connection_.update({ in: 'Products',
-            where: {
-                Price: {
-                    "-": {
-                        low: 10,
-                        high: 20
-                    }
-                }
-            },
-            set: {
-                ProductName: 'Chocolate'
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('number').to.equal(29);
+        var count;
+        con.runQuery("select * from Products where Price between (10,20)").
+        then(function (results) {
+            count = results.length;
+            expect(results).to.be.an('array').length(29);
+        }).
+        catch(function (err) {
+            done(err);
+        })
+
+        con.runQuery("update Products set ProductName= Chocolate where Price between (10,20)").
+        then(function (results) {
+            expect(results).to.be.an('number').to.equal(count);
             done();
         }).
         catch(function (err) {

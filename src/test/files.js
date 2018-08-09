@@ -7,7 +7,7 @@ exports.list_of_files = [
     'test/cases/select/*.js',
     'test/cases/count/*.js',
     // 'test/cases/transaction/*.js',
-    // 'test/cases/update/*.js',
+    'test/cases/update/*.js',
     // 'test/cases/delete/*.js',
     // 'test/cases/helper/*.js',
     // 'test/cases/clear/*.js',
