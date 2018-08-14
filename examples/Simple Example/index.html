@@ -32,12 +32,16 @@
         };
 
         function deleteData(studentId) {
-            connection.connection_.remove({
-                from: 'Student',
-                where: {
-                    Id: Number(studentId)
-                }
-            }).then(function (rowsDeleted) {
+            // connection.connection_.remove({
+            //     from: 'Student',
+            //     where: {
+            //         Id: Number(studentId)
+            //     }
+            // }).
+            var query = new SqlWeb.Query("Remove from Student where Id=@studentId");
+            query.map("@studentId", Number(studentId));
+            connection.runQuery(query).
+            then(function (rowsDeleted) {
                 console.log(rowsDeleted + ' rows deleted');
                 if (rowsDeleted > 0) {
                     showTableData();

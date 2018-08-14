@@ -1,2 +1,2 @@
-query = selectQuery/countQuery/insertQuery/updateQuery ;
+query = selectQuery/countQuery/insertQuery/updateQuery/removeQuery ;
 

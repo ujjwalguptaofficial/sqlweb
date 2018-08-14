@@ -49,3 +49,7 @@ SKIPDATACHECK "skipdatacheck" = S K I P D A T A C H E C K ;
 UPDATE "update" = U P D A T E;
 
 SET "set" = S E T;
+
+REMOVE "remove" = R E M O V E;
+
+

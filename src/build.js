@@ -34,6 +34,7 @@ generateParser = function () {
         [
             'src/code/grammar/index.pegjs',
             'src/code/grammar/insert.pegjs',
+            'src/code/grammar/remove.pegjs',
             'src/code/grammar/count.pegjs',
             'src/code/grammar/select.pegjs',
             'src/code/grammar/update.pegjs',

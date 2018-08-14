@@ -1,24 +1,16 @@
 describe('Test remove Api', function () {
     it('remove with where', function (done) {
-        var Count;
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                Country: 'Mexico'
-            }
-        }).then(function (results) {
-            Count = results.length
+        var count;
+        con.runQuery('count from Customers where Country = Mexico').
+        then(function (results) {
+            count = results
         }).catch(function (err) {
             done(err);
         })
 
-        con.connection_.remove({
-            from: 'Customers',
-            where: {
-                Country: 'Mexico'
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('number').to.equal(Count);
+        con.runQuery("remove from Customers where Country = Mexico").
+        then(function (results) {
+            expect(results).to.be.an('number').to.equal(count);
             done();
         }).catch(function (err) {
             done(err);
@@ -26,25 +18,17 @@ describe('Test remove Api', function () {
     });
 
     it('remove without ignore case', function (done) {
-        var Count;
-        con.connection_.select({
-            from: 'Customers',
-            where: {
-                Country: 'mexico'
-            }
-        }).then(function (results) {
-            Count = results.length;
+        var count;
+        con.runQuery("count from Customers where Country = mexico ignoreCase").
+        then(function (results) {
+            count = results;
         }).catch(function (err) {
             done(err);
         })
 
-        con.connection_.remove({
-            from: 'Customers',
-            where: {
-                Country: 'mexico'
-            }
-        }).then(function (results) {
-            expect(results).to.be.an('number').to.equal(Count);
+        con.runQuery("remove from Customers where Country = mexico ignoreCase").
+        then(function (results) {
+            expect(results).to.be.an('number').to.equal(count);
             done();
         }).catch(function (err) {
             done(err);
