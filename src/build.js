@@ -29,10 +29,10 @@ const getFilesContent = function (files) {
 };
 
 generateParser = function () {
-    // var grammar = getFileContent('src/code/index.pegjs');
     var grammar = getFilesContent(
         [
             'src/code/grammar/index.pegjs',
+            'src/code/grammar/create.pegjs',
             'src/code/grammar/insert.pegjs',
             'src/code/grammar/remove.pegjs',
             'src/code/grammar/count.pegjs',

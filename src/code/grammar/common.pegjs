@@ -1,5 +1,7 @@
 tableName "table name" = Word
 
+dbName "database name" = Word
+
 column "column" = Word;
 
 JoinOp= And/Or;
