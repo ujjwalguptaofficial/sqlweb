@@ -69,7 +69,7 @@ return = RETURN{
 
 
 
-removeQuery = REMOVE _ ("*"_)? FROM _ table:tableName _* where:whereQry? _* 
+removeQuery = (REMOVE/DELETE) _ ("*"_)? FROM _ table:tableName _* where:whereQry? _* 
 option:(ignoreCase)* {
   var ignoreCase =false;
   option.forEach(val=>{
@@ -564,4 +564,5 @@ SET "set" = S E T;
 
 REMOVE "remove" = R E M O V E;
 
+DELETE "delete" = D E L E T E;
 

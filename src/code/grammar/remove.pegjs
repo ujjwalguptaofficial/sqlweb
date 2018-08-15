@@ -1,6 +1,6 @@
 
 
-removeQuery = REMOVE _ ("*"_)? FROM _ table:tableName _* where:whereQry? _* 
+removeQuery = (REMOVE/DELETE) _* FROM _ table:tableName _* where:whereQry? _* 
 option:(ignoreCase)* {
   var ignoreCase =false;
   option.forEach(val=>{

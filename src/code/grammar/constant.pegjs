@@ -52,4 +52,5 @@ SET "set" = S E T;
 
 REMOVE "remove" = R E M O V E;
 
+DELETE "delete" = D E L E T E;
 
