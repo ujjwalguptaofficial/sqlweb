@@ -1,8 +1,11 @@
-query = selectQuery/countQuery/insertQuery/updateQuery/removeQuery/createQuery ;
+query = selectQuery/countQuery/insertQuery/updateQuery/removeQuery/createQuery/openQuery/isDbExistQuery ;
 
 createQuery = db:createDbQuery tables:createTableQuery* {
 	db.tables=tables
-    return db;
+     return {
+        api:'create',
+        data:db
+    }
 }
 
 createDbQuery = DEFINE _* (DATABASE/DB) _* name:dbName ";"? {
@@ -43,7 +46,6 @@ columnDef = name:column _* options:columnOption* {
         var key = Object.keys(option)[0];
         defaultValue[key] = option[key];
     });
-    //console.log(options)
     return defaultValue;
 }
 
@@ -107,42 +109,7 @@ version = VERSION _* val:Number {
         version:val
     }
 }
-
-VERSION "version" = V E R S I O N;
-
-ENABLESEARCH "enablesearch" = E N A B L E S E A R C H;
-
-MULTIENTRY "multiEntry" =  M U L T I E N T R Y;
-
-PRIMARYKEY "primarykey" = P R I M E R Y K E Y; 
-
-UNIQUE "unique" = U N I Q U E;
-
-STRING "string" = S T R I N G;
-
-NUMBER "number" = N U M B E R;
-
-OBJECT "object" = O B J E C T;
-
-ARRAY "array" =  A R R A Y;
-
-BOOLEAN "boolean" = B O O L E A N;
-
-DATETIME "datetime" = D A T E T I M E;
-
-AUTOINCREMENT "autoincrement" = A U T O I N C R E M E N T;
-
-NOTNULL "notnull" = N O T N U L L;
-
-DEFAULT "default" = D E F A U L T;
-
-DEFINE "define" = D E F I N E;
-
-DATABASE "database" = D A T A B A S E;
-
-TABLE "table" = T A B L E;
-
-DB "db" = D B;insertQuery = INSERT _ INTO _ table: tableName _* VALUES _* insertValue: valueTypes _* options: insertOptions* {
+insertQuery = INSERT _ INTO _ table: tableName _* VALUES _* insertValue: valueTypes _* options: insertOptions* {
      var skipDataCheck = false;
      var returnValue = false;
      options.forEach(val=>{
@@ -599,6 +566,20 @@ updateValueBetweenItem = "," _* val:equalToItem _*{
     return val;
 }
 
+openQuery = OPEN _* name:dbName {
+    return {
+        api:'openDb',
+        data:name
+    }
+}
+
+isDbExistQuery = ISDBEXIST _* name:dbName {
+    return {
+        api:'isDbExist',
+        data:name
+    }
+}
+
 tableName "table name" = Word
 
 dbName "database name" = Word
@@ -710,3 +691,42 @@ REMOVE "remove" = R E M O V E;
 
 DELETE "delete" = D E L E T E;
 
+VERSION "version" = V E R S I O N;
+
+ENABLESEARCH "enablesearch" = E N A B L E S E A R C H;
+
+MULTIENTRY "multiEntry" =  M U L T I E N T R Y;
+
+PRIMARYKEY "primarykey" = P R I M E R Y K E Y; 
+
+UNIQUE "unique" = U N I Q U E;
+
+STRING "string" = S T R I N G;
+
+NUMBER "number" = N U M B E R;
+
+OBJECT "object" = O B J E C T;
+
+ARRAY "array" =  A R R A Y;
+
+BOOLEAN "boolean" = B O O L E A N;
+
+DATETIME "datetime" = D A T E T I M E;
+
+AUTOINCREMENT "autoincrement" = A U T O I N C R E M E N T;
+
+NOTNULL "notnull" = N O T N U L L;
+
+DEFAULT "default" = D E F A U L T;
+
+DEFINE "define" = D E F I N E;
+
+DATABASE "database" = D A T A B A S E;
+
+TABLE "table" = T A B L E;
+
+DB "db" = D B;
+
+ISDBEXIST "isDbExist" = I S D B E X I S T;
+
+OPEN "open" = O P E N;

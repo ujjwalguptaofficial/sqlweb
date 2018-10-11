@@ -1,6 +1,12 @@
 window.__karma__.loaded = function () {};
 window.onload = function () {
-    initDb();
+    // initDb();
+    startTest();
+}
+
+
+function startTest() {
+    window.__karma__.start();
 }
 
 function onDbInit() {

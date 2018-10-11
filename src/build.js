@@ -38,6 +38,8 @@ generateParser = function () {
             'src/code/grammar/count.pegjs',
             'src/code/grammar/select.pegjs',
             'src/code/grammar/update.pegjs',
+            'src/code/grammar/open.pegjs',
+            'src/code/grammar/is_db_exist.pegjs',
             'src/code/grammar/common.pegjs',
             'src/code/grammar/constant.pegjs'
         ]);

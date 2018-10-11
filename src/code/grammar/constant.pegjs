@@ -54,3 +54,42 @@ REMOVE "remove" = R E M O V E;
 
 DELETE "delete" = D E L E T E;
 
+VERSION "version" = V E R S I O N;
+
+ENABLESEARCH "enablesearch" = E N A B L E S E A R C H;
+
+MULTIENTRY "multiEntry" =  M U L T I E N T R Y;
+
+PRIMARYKEY "primarykey" = P R I M E R Y K E Y; 
+
+UNIQUE "unique" = U N I Q U E;
+
+STRING "string" = S T R I N G;
+
+NUMBER "number" = N U M B E R;
+
+OBJECT "object" = O B J E C T;
+
+ARRAY "array" =  A R R A Y;
+
+BOOLEAN "boolean" = B O O L E A N;
+
+DATETIME "datetime" = D A T E T I M E;
+
+AUTOINCREMENT "autoincrement" = A U T O I N C R E M E N T;
+
+NOTNULL "notnull" = N O T N U L L;
+
+DEFAULT "default" = D E F A U L T;
+
+DEFINE "define" = D E F I N E;
+
+DATABASE "database" = D A T A B A S E;
+
+TABLE "table" = T A B L E;
+
+DB "db" = D B;
+
+ISDBEXIST "isDbExist" = I S D B E X I S T;
+
+OPEN "open" = O P E N;

@@ -1,2 +1,2 @@
-query = selectQuery/countQuery/insertQuery/updateQuery/removeQuery/createQuery ;
+query = selectQuery/countQuery/insertQuery/updateQuery/removeQuery/createQuery/openQuery/isDbExistQuery ;
 
