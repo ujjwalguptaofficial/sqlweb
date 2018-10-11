@@ -18,6 +18,7 @@ export class Instance {
         try {
             let result;
             if (this.isString_(query) === true) {
+                query = (query as string).replace(new RegExp('\n', 'g'), '');
                 result = parser.parse(query);
             }
             else {

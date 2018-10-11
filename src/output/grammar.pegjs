@@ -3,7 +3,7 @@ query = selectQuery/countQuery/insertQuery/updateQuery/removeQuery/createQuery/o
 createQuery = db:createDbQuery tables:createTableQuery* {
 	db.tables=tables
      return {
-        api:'create',
+        api:'createDb',
         data:db
     }
 }
@@ -53,7 +53,7 @@ columnOption = option:Column_Options _*{
 	return option;
 }
 
-Column_Options = dataType/autoIncrement/notNull/default/unique/primaryKey/multiEntry/enableSearch;
+Column_Options = dataType/autoIncrement/notNull/default/unique/primaryKey/multiEntry/enableSearch/disableSearch;
 
 autoIncrement = AUTOINCREMENT {
     return {
@@ -74,7 +74,6 @@ default = DEFAULT _* val: ColumnValue {
 }
 
 dataType = type: (STRING/NUMBER/OBJECT/ARRAY/BOOLEAN/DATETIME) {
-    console.log(type)
     return {
         dataType:type.join('').toLowerCase()
     }
@@ -88,7 +87,7 @@ unique = UNIQUE {
 
 primaryKey = PRIMARYKEY {
     return {
-        primarykey:true
+        primaryKey:true
     }
 }
 
@@ -703,7 +702,7 @@ ENABLESEARCH "enablesearch" = E N A B L E S E A R C H;
 
 MULTIENTRY "multiEntry" =  M U L T I E N T R Y;
 
-PRIMARYKEY "primarykey" = P R I M E R Y K E Y; 
+PRIMARYKEY "primarykey" = P R I M A R Y K E Y; 
 
 UNIQUE "unique" = U N I Q U E;
 
@@ -717,7 +716,7 @@ ARRAY "array" =  A R R A Y;
 
 BOOLEAN "boolean" = B O O L E A N;
 
-DATETIME "datetime" = D A T E T I M E;
+DATETIME "date_time" = D A T E "_" T I M E;
 
 AUTOINCREMENT "autoincrement" = A U T O I N C R E M E N T;
 

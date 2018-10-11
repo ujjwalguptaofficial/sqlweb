@@ -1,7 +1,7 @@
 createQuery = db:createDbQuery tables:createTableQuery* {
 	db.tables=tables
      return {
-        api:'create',
+        api:'createDb',
         data:db
     }
 }
@@ -51,7 +51,7 @@ columnOption = option:Column_Options _*{
 	return option;
 }
 
-Column_Options = dataType/autoIncrement/notNull/default/unique/primaryKey/multiEntry/enableSearch;
+Column_Options = dataType/autoIncrement/notNull/default/unique/primaryKey/multiEntry/enableSearch/disableSearch;
 
 autoIncrement = AUTOINCREMENT {
     return {
@@ -72,7 +72,6 @@ default = DEFAULT _* val: ColumnValue {
 }
 
 dataType = type: (STRING/NUMBER/OBJECT/ARRAY/BOOLEAN/DATETIME) {
-    console.log(type)
     return {
         dataType:type.join('').toLowerCase()
     }
@@ -86,7 +85,7 @@ unique = UNIQUE {
 
 primaryKey = PRIMARYKEY {
     return {
-        primarykey:true
+        primaryKey:true
     }
 }
 

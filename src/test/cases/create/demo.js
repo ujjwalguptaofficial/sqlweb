@@ -47,7 +47,7 @@ function getDbSchema() {
                             City notNull string,
                             PostalCode string,
                             Country notNull string,
-                            Email notNull disableSearch,
+                            Email string disableSearch
                          )
                          `
     var tblQueryCategories = `Define table Categories(
@@ -59,7 +59,7 @@ function getDbSchema() {
     var tblQueryEmployees = `Define table Employees(
         employeeId primaryKey autoIncrement,
         lastName notNull string,
-        birthDate notNull DATETIME,
+        birthDate notNull DATE_TIME,
         photo notNull string,
         notes string,
         state NotNUll string,
