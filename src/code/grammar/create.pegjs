@@ -1,7 +1,15 @@
-createQuery = createDbQuery createTableQuery
+createQuery = db:createDbQuery tables:createTableQuery* {
+	db.tables=tables
+    return db;
+}
 
-createDbQuery = DEFINE _* (DATABASE/DB) _* dbName ";"?
-createTableQuery = DEFINE _* (TABLE) _* table:tableName _* "(" _* first:firstColumnDef* all:betweenColumnDef* _* ")" ver:version? ";"? {
+createDbQuery = DEFINE _* (DATABASE/DB) _* name:dbName ";"? {
+	return {
+    	name:name
+    }
+}
+
+createTableQuery = DEFINE _* (TABLE) _* table:tableName _* "(" _* first:firstColumnDef all:betweenColumnDef* _* ")" _* ver:version? ";"? _* {
  all.push(first);
  var versionData = ver==null?null:ver['version'];
  return {
@@ -17,26 +25,31 @@ betweenColumnDef = _* "," _* def: columnDef {
     return def;
 }
 
-columnDef = name:column _* options:columnOptions* {
+columnDef = name:column _* options:columnOption* {
     var defaultValue = {
         name:name,
         unique:false,
-        autoincrement:false,
+        autoIncrement:false,
         default:null,
         notNull:false,
         dataType:null,
-        primarykey:false,
+        primaryKey:false,
         multiEntry:false,
-        enablesearch:true
+        enableSearch:true
     }
     options.forEach(option=>{
         var key = Object.keys(option)[0];
         defaultValue[key] = option[key];
     });
+    //console.log(options)
     return defaultValue;
 }
 
-columnOptions = dataType/autoIncrement/notNull/default/unique/primaryKey/multiEntry/enableSearch;
+columnOption = option:Column_Options _*{
+	return option;
+}
+
+Column_Options = dataType/autoIncrement/notNull/default/unique/primaryKey/multiEntry/enableSearch;
 
 autoIncrement = AUTOINCREMENT {
     return {
@@ -56,9 +69,10 @@ default = DEFAULT _* val: ColumnValue {
     }
 }
 
-dataType = type: STRING/NUMBER/OBJECT/ARRAY/BOOLEAN/DATETIME {
+dataType = type: (STRING/NUMBER/OBJECT/ARRAY/BOOLEAN/DATETIME) {
+    console.log(type)
     return {
-        dataTypes:type
+        dataType:type.join('').toLowerCase()
     }
 }
 
@@ -68,7 +82,7 @@ unique = UNIQUE {
     }
 }
 
-primaryKey = PRIMERYKEY {
+primaryKey = PRIMARYKEY {
     return {
         primarykey:true
     }
@@ -98,7 +112,7 @@ ENABLESEARCH "enablesearch" = E N A B L E S E A R C H;
 
 MULTIENTRY "multiEntry" =  M U L T I E N T R Y;
 
-PRIMERYKEY "primarykey" = P R I M E R Y K E Y; 
+PRIMARYKEY "primarykey" = P R I M E R Y K E Y; 
 
 UNIQUE "unique" = U N I Q U E;
 
