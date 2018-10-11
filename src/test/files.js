@@ -4,7 +4,7 @@ exports.list_of_files = [
     // 'test/scripts/jsstore.js',
     nodeModules + 'jsstore/dist/jsstore.js',
     nodeModules + 'jsstore/dist/jsstore.worker.js',
-    'test/scripts/dbhelper.js',
+    'test/cases/create/*.js',
     'test/cases/insert/*.js',
     'test/cases/select/*.js',
     'test/cases/count/*.js',

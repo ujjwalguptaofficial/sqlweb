@@ -102,6 +102,12 @@ enableSearch = ENABLESEARCH {
     }
 }
 
+disableSearch = DISABLESEARCH {
+    return {
+        enableSearch:false
+    }
+}
+
 version = VERSION _* val:Number {
     return {
         version:val
