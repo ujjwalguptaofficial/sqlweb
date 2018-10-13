@@ -17,16 +17,15 @@ export class Instance {
         return Util.isString(value);
     }
 
-    private parseSql_(value) {
-        return Util.parseSql(value);
+    private parseSql_(query: string) {
+        return Util.parseSql(query);
     }
 
     runQuery(query: string | Query) {
         try {
             let result;
             if (this.isString_(query) === true) {
-                query = (query as string).replace(new RegExp('\n', 'g'), '').trim();
-                result = this.parseSql_(query);
+                result = this.parseSql_(query as string);
             }
             else {
                 result = (query as Query).query_;

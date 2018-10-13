@@ -19,9 +19,10 @@ export class Util {
         return JSON.parse(value, reviver);
     }
 
-    static parseSql(value) {
+    static parseSql(query: string) {
         try {
-            return parser.parse(value);
+            query = query.replace(new RegExp('\n', 'g'), '').trim();
+            return parser.parse(query);
         }
         catch (ex) {
             const err = new LogHelper(ERROR_TYPE.SynTaxError, ex.message).get();
