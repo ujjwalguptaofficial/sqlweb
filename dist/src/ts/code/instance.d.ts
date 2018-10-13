@@ -3,6 +3,7 @@ export declare class Instance {
     private jsStoreCon_;
     constructor(workerPath: any);
     private isString_(value);
+    private parseSql_(query);
     runQuery(query: string | Query): any;
     /**
      * set log status, accepts boolean value
