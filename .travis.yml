@@ -1,9 +1,11 @@
 language: node_js
 node_js:
-  - "7"
+  - "10"
 before_install: 
-    cd Code
+   
 before_script:
     - npm install
 script:
-  - npm run test
+  - npm run build:ci
+after_failure:
+  - ls

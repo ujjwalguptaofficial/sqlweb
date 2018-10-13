@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/ujjwalguptaofficial/JsStore.svg?branch=master)](https://travis-ci.org/ujjwalguptaofficial/JsStore)
+[npm version](https://badge.fury.io/js/sqlweb.svg)](https://badge.fury.io/js/sqlweb)
+[![](https://data.jsdelivr.com/v1/package/npm/sqlweb/badge)](https://www.jsdelivr.com/package/npm/sqlweb)
+
 # SqlWeb
 
 SqlWeb allows you to use sql query for performing database operation in IndexedDB.
