@@ -18,3 +18,4 @@ sqlCon.runQuery('select from Customers');
 
 ```
 
+Please see examples folder for different tools support and real world example.
