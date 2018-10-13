@@ -52,16 +52,10 @@ describe('Multi Entry Test', function () {
     });
 
     it('change db with multientry column', function (done) {
-        con.connection_.isDbExist({
-            dbName: 'MultiEntryTest',
-            table: {
-                name: 'person',
-                version: 2
-            }
-        }).then(function (exist) {
+        con.runQuery('IsDbExist MultiEntryTest table person version 2').then(function (exist) {
             console.log('db exist :' + exist);
             if (exist) {
-                con.connection_.openDb('MultiEntryTest');
+                con('openDb MultiEntryTest');
                 done();
             } else {
                 var Db = MultiEntryTest.getDbSchema();

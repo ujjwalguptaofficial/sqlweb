@@ -1,4 +1,4 @@
-openQuery = OPEN _* name:dbName {
+openQuery = OPENDB _* name:dbName {
     return {
         api:'openDb',
         data:name
