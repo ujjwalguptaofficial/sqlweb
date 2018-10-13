@@ -4,7 +4,7 @@ export class Query {
     query_;
     private topLevelKeys_: string[] = ["skip", "limit"]
     constructor(qry: string) {
-        this.query_ = parser.parse(qry);
+        this.query_ = this.parseSql_(qry);
     }
 
     map(key: string, value: any) {
@@ -18,5 +18,9 @@ export class Query {
 
     private parseJson_(value) {
         return Util.parseJson(value);
+    }
+
+    private parseSql_(value) {
+        return Util.parseSql(value);
     }
 }

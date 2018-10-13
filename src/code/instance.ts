@@ -1,4 +1,4 @@
-import * as parser from './../output/parser';
+
 import { Util } from './util';
 import { Query } from '.';
 import { Config } from './config';
@@ -17,12 +17,16 @@ export class Instance {
         return Util.isString(value);
     }
 
+    private parseSql_(value) {
+        return Util.parseSql(value);
+    }
+
     runQuery(query: string | Query) {
         try {
             let result;
             if (this.isString_(query) === true) {
                 query = (query as string).replace(new RegExp('\n', 'g'), '').trim();
-                result = parser.parse(query);
+                result = this.parseSql_(query);
             }
             else {
                 result = (query as Query).query_;
@@ -30,15 +34,15 @@ export class Instance {
             return this.jsStoreCon_[result.api](result.data);
         }
         catch (ex) {
-            let err;
-            if (ex.name === "SyntaxError") {
-                err = new LogHelper(ERROR_TYPE.SynTaxError, ex.message).get();
-            }
-            else {
-                err = ex;
-            }
+            // let err;
+            // if (ex.name === "SyntaxError") {
+            //     err = new LogHelper(ERROR_TYPE.SynTaxError, ex.message).get();
+            // }
+            // else {
+            //     err = ex;
+            // }
             return new Promise((resolve, reject) => {
-                reject(err);
+                reject(ex);
             });
         }
     }
