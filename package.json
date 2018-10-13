@@ -1,8 +1,9 @@
 {
   "name": "sqlweb",
-  "version": "1.0.1",
-  "description": "sql web is a sql wrapper for indexeddb. It takes query in sql and execute in indexeddb.",
-  "main": "index.js",
+  "version": "1.0.2",
+  "description": "SqlWeb allows you to use sql query for performing database operation in IndexedDB.",
+  "main": "dist/sqlweb.commonjs2.js",
+  "types": "dist/src/ts/codes/main/index.d.ts",
   "scripts": {
     "test": "tsc && karma start test/karma.config.js",
     "build": "node src/build.js && npm run webpack:dev",
@@ -36,7 +37,6 @@
     "karma-mocha": "^1.3.0",
     "karma-mocha-reporter": "^2.2.5",
     "mocha": "^4.0.1",
-    "mv": "^2.1.1",
     "pegjs": "^0.10.0",
     "puppeteer": "^0.13.0",
     "smart-banner-webpack-plugin": "^3.0.1",

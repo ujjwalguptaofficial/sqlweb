@@ -22,4 +22,4 @@ sqlCon.runQuery('select from Customers');
 
 ```
 
-Please see examples folder for different tools support and real world example.
+Please see [examples](https://github.com/ujjwalguptaofficial/sqlweb/tree/master/examples) folder for different tools support and real world example.
