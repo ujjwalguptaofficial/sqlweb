@@ -3,7 +3,7 @@
 SqlWeb allows you to use sql query for performing database operation in IndexedDB.
 
 ## Important
-SqlWeb uses jsstore to run the indexedb query. It is a parser which parse sql query in terms of jsstore and passes to jsstore for further execution.
+SqlWeb uses jsstore to run the indexedb query. SqlWeb parse sql query in terms of jsstore and passes to jsstore for further execution.
 
 ### Example
 
