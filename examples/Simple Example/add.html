@@ -11,108 +11,8 @@
     <link rel="stylesheet" href="style/font-awesome.min.css" />
     <script src="scripts/jsstore.js "></script>
     <script src="scripts/sqlweb.js"></script>
-    <script>
-        var connection = new SqlWeb.Instance('scripts/jsstore.worker.js'),
-            StudentId;
-        window.onload = function () {
-            initiateDb();
-            getStudent();
-        };
-
-        function initiateDb() {
-            var DbName = "Students";
-            connection.connection_.isDbExist(DbName).then(function (isExist) {
-                if (isExist) {
-                    connection.connection_.openDb(DbName);
-                } else {
-                    window.location.href = "index.html";
-                }
-            }).catch(function (err) {
-                console.log(err);
-                alert(err.message);
-            });
-        }
-
-        function getStudent() {
-            StudentId = getQsValueByName('id');
-            //check if Query string param exist
-            if (StudentId) {
-                var query = new SqlWeb.Query('select * from Student where Id=@id');
-                query.map('@id', Number(StudentId));
-                connection.runQuery(query)
-                    .then(function (results) {
-                        if (results.length > 0) {
-                            var Student = results[0];
-                            $('#txtName').val(Student.Name);
-                            $("input[name='Gender'][value=" + Student.Gender + "]").prop('checked', true);
-                            $('#txtCountry').val(Student.Country);
-                            $('#txtCity').val(Student.City)
-                        } else {
-                            alert('Invalid student id');
-                        }
-
-                    }).catch(function (err) {
-                        console.log(err);
-                        alert(err.message);
-                    })
-            }
-        }
-
-        function Submit() {
-            //if student exist means we have to update data
-            if (StudentId) {
-                updateStudent()
-            } else {
-                addStudent();
-            }
-        }
-
-        function updateStudent() {
-            var Value = {
-                Name: $('#txtName').val(),
-                Gender: $("input[name='Gender']:checked").val(),
-                Country: $('#txtCountry').val(),
-                City: $('#txtCity').val()
-            };
-            connection.connection_.update({ in: 'Student',
-                set: Value,
-                where: {
-                    Id: Number(StudentId)
-                }
-            }).then(function (rowsAffected) {
-                alert(rowsAffected + " record Updated");
-                if (rowsAffected > 0) {
-                    window.location.href = "index.html";
-                }
-            }).catch(function (err) {
-                console.log(err);
-                alert(err.message);
-            })
-        }
-
-        function addStudent() {
-            var Value = {
-                Name: $('#txtName').val(),
-                Gender: $("input[name='Gender']:checked").val(),
-                Country: $('#txtCountry').val(),
-                City: $('#txtCity').val()
-            };
-
-            connection.connection_.insert({
-                into: "Student",
-                values: [Value]
-            }).then(function (rowsAdded) {
-                alert(rowsAdded + " record Added");
-                window.location.href = "index.html";
-            }).catch(function (err) {
-                console.log(err);
-                alert(err.message);
-            })
-
-        }
-    </script>
+    <script src="scripts/add.js"></script>
 </head>
-
 <body>
     <div class="row row-centered">
         <div class="col-xs-11 col-sm-8 col-centered">
@@ -159,19 +59,6 @@
         </div>
     </div>
     <link href="style/main.css " rel="stylesheet " type="text/css " />
-    <script>
-        function getQsValueByName(name, url) {
-            if (!url) {
-                url = window.location.href;
-            }
-            name = name.replace(/[\[\]]/g, "\\$&");
-            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, " "));
-        }
-    </script>
 </body>
 
 </html>

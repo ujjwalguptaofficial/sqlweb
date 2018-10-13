@@ -108,7 +108,7 @@ function getDbSchema() {
         Address notNull string,
         City notNull string,
         PostalCode notNull string,
-        Country notNull string,
+        Country notNull string Default india,
         Phone notNull string
     )
      `

@@ -21,7 +21,7 @@ export class Instance {
         try {
             let result;
             if (this.isString_(query) === true) {
-                query = (query as string).replace(new RegExp('\n', 'g'), '');
+                query = (query as string).replace(new RegExp('\n', 'g'), '').trim();
                 result = parser.parse(query);
             }
             else {
@@ -32,7 +32,7 @@ export class Instance {
         catch (ex) {
             let err;
             if (ex.name === "SyntaxError") {
-                err = new LogHelper(ERROR_TYPE.SynTaxError, ex.message);
+                err = new LogHelper(ERROR_TYPE.SynTaxError, ex.message).get();
             }
             else {
                 err = ex;

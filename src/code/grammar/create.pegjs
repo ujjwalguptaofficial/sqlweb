@@ -47,11 +47,11 @@ columnDef = name:column _* options:columnOption* {
     return defaultValue;
 }
 
-columnOption = option:Column_Options _*{
+columnOption = option:columnOpts _*{
 	return option;
 }
 
-Column_Options = dataType/autoIncrement/notNull/default/unique/primaryKey/multiEntry/enableSearch/disableSearch;
+columnOpts = dataType/autoIncrement/notNull/default/unique/primaryKey/multiEntry/enableSearch/disableSearch;
 
 autoIncrement = AUTOINCREMENT {
     return {
@@ -65,7 +65,7 @@ notNull = NOTNULL {
     }
 }
 
-default = DEFAULT _* val: ColumnValue {
+default = DEFAULT _* val: value {
     return {
         default:val
     }

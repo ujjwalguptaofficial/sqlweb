@@ -2,4 +2,19 @@
 
 SqlWeb allows you to use sql query for performing database operation in IndexedDB.
 
-### this project is not completed. So please dont use this in production. We will remove this instruction asap it is completed.
+## Important
+SqlWeb uses jsstore to run the indexedb query. It is a parser which parse sql query in terms of jsstore and passes to jsstore for further execution.
+
+### Example
+
+```
+var sqlCon = new SqlWeb.Instance('jsstore script path');
+
+//insert into table customers
+sqlCon.runQuery('insert into Customers (id,name) values (1,ujjwal)');
+
+//select all customers
+sqlCon.runQuery('select from Customers');
+
+```
+

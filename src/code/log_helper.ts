@@ -7,7 +7,7 @@ export class LogHelper implements IError {
     message: string;
     private info_: any;
 
-    constructor(type: ERROR_TYPE, info: any = null) {
+    constructor(type: ERROR_TYPE, info?: any) {
         this.type = type;
         this.info_ = info;
         this.message = this.getMsg_();
@@ -38,7 +38,7 @@ export class LogHelper implements IError {
         let errMsg: string;
         switch (this.type) {
             case ERROR_TYPE.SynTaxError:
-                this.message = this.info_;
+                errMsg = this.info_;
                 break;
             default:
                 errMsg = this.message;
