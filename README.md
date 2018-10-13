@@ -11,7 +11,7 @@ SqlWeb uses jsstore to run the indexedb query. It is a parser which parse sql qu
 var sqlCon = new SqlWeb.Instance('jsstore script path');
 
 //insert into table customers
-sqlCon.runQuery('insert into Customers (id,name) values (1,ujjwal)');
+sqlCon.runQuery('insert into Customers ({id: 1,name:ujjwal})');
 
 //select all customers
 sqlCon.runQuery('select from Customers');
