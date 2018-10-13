@@ -92,6 +92,6 @@ DB "db" = D B;
 
 ISDBEXIST "isDbExist" = I S D B E X I S T;
 
-OPEN "open" = O P E N;
+OPENDB "openDb" = O P E N D B;
 
 DISABLESEARCH "disablesearch" = D I S A B L E S E A R C H;

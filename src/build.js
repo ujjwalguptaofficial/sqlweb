@@ -11,11 +11,15 @@ function getFileContent(path) {
 }
 
 function saveAsFile(filePath, content) {
-    //recreate file if exist otherwise create
-    // fs.closeSync(fs.openSync(filePath, 'w'));//
     fs.writeFileSync(filePath, content, {
         encoding: 'utf8'
     })
+}
+
+function createFolderIfNotExist(path) {
+    if (!fs.existsSync(path)) {
+        fs.mkdirSync(path);
+    }
 }
 
 const getFilesContent = function (files) {
@@ -52,5 +56,5 @@ generateParser = function () {
     });
     saveAsFile('./src/output/parser.js', content);
 }
-
+createFolderIfNotExist('./src/output');
 generateParser();
