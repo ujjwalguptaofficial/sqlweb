@@ -1,9 +1,9 @@
 {
   "name": "sqlweb",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "SqlWeb allows you to use sql query for performing database operation in IndexedDB.",
   "main": "dist/sqlweb.commonjs2.js",
-  "types": "dist/src/ts/codes/main/index.d.ts",
+  "types": "dist/src/ts/code/index.d.ts",
   "scripts": {
     "test": "tsc && karma start test/karma.config.js",
     "build": "node src/build.js && npm run webpack:dev",
