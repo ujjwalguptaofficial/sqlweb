@@ -17,7 +17,7 @@ describe('Test transaction', function () {
                 });
             }
         }
-        con.connection_.transaction(transaction_query).then(function (results) {
+        con.jsStoreCon_.transaction(transaction_query).then(function (results) {
             expect(results.customers).to.be.an('array').length(results.count);
             done();
         }).catch(function (err) {
@@ -56,7 +56,7 @@ describe('Test transaction', function () {
 
             }
         }
-        con.connection_.transaction(transaction_query).then(function (results) {
+        con.jsStoreCon_.transaction(transaction_query).then(function (results) {
             expect(results.customers).to.be.an('array').length(results.countCustomer);
             expect(results.orderDetails).to.be.an('array').length(results.countOrderDetails);
             done();
@@ -95,7 +95,7 @@ describe('Test transaction', function () {
                 })
             }
         }
-        con.connection_.transaction(transaction_query).then(function (results) {
+        con.jsStoreCon_.transaction(transaction_query).then(function (results) {
             console.log(results)
             expect(results.countNewCustomer).to.be.an('number').equal(results.countOldCustomer + 1);
             done();
@@ -128,7 +128,7 @@ describe('Test transaction', function () {
                 })
             }
         }
-        con.connection_.transaction(transaction_query).then(function (results) {
+        con.jsStoreCon_.transaction(transaction_query).then(function (results) {
             expect(results.updated).to.be.an('number').equal(1);
             done();
         }).catch(function (err) {

@@ -79,7 +79,7 @@ describe('Test count Api', function () {
     });
 
     it('count with operator - >=', function (done) {
-        // con.connection_.count({
+        // con.jsStoreCon_.count({
         //     from: 'Products',
         //     where: {
         //         Price: {

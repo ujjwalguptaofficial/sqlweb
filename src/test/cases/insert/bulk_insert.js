@@ -1,7 +1,7 @@
 describe('Test bulkInsert', function () {
     it('insert OrderDetails', function (done) {
         $.getJSON("test/static/OrderDetails.json", function (results) {
-            con.connection_.bulkInsert({
+            con.jsStoreCon_.bulkInsert({
                 into: 'OrderDetails',
                 values: results,
             }).then(function (results) {
@@ -15,7 +15,7 @@ describe('Test bulkInsert', function () {
     });
 
     it('wrong table test', function (done) {
-        con.connection_.bulkInsert({
+        con.jsStoreCon_.bulkInsert({
             into: 'Custamer'
         }).
         catch(function (err) {
@@ -30,7 +30,7 @@ describe('Test bulkInsert', function () {
     });
 
     it('without value', function (done) {
-        con.connection_.bulkInsert({
+        con.jsStoreCon_.bulkInsert({
             into: 'Customers'
         }).
         catch(function (err) {

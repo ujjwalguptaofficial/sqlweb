@@ -2,7 +2,7 @@ var conWithoutWorker;
 describe('Db Test', function () {
 
     it('getDbList api test', function (done) {
-        con.connection_.getDbList().then(function (result) {
+        con.jsStoreCon_.getDbList().then(function (result) {
             expect(result).to.be.an('array').to.deep.equal(['Demo', 'MultiEntryTest']);
             done();
         }).catch(err => {
@@ -11,8 +11,8 @@ describe('Db Test', function () {
     });
 
     it('getDbList api test after dropping multiIntry Table', function (done) {
-        con.connection_.dropDb().then(function () {
-            con.connection_.getDbList().then(function (result) {
+        con.jsStoreCon_.dropDb().then(function () {
+            con.jsStoreCon_.getDbList().then(function (result) {
                 console.log(result);
                 expect(result).to.be.an('array').to.deep.equal(['Demo']);
                 done();
@@ -34,7 +34,7 @@ describe('Db Test', function () {
     });
 
     it('drop db test', function (done) {
-        con.connection_.dropDb().then(function () {
+        con.jsStoreCon_.dropDb().then(function () {
             done();
         }).catch(function (err) {
             done(err);
@@ -42,7 +42,7 @@ describe('Db Test', function () {
     });
 
     it('getDbList api test after dropping demo', function (done) {
-        con.connection_.getDbList().then(function (result) {
+        con.jsStoreCon_.getDbList().then(function (result) {
             expect(result).to.be.an('array').to.deep.equal([]);
             done();
         }).catch(function (err) {
@@ -64,8 +64,8 @@ describe('Db Test', function () {
     });
 
     it('terminate test', function (done) {
-        con.connection_.terminate().then(function () {
-            if (con.connection_.isDbOpened_ === false) {
+        con.jsStoreCon_.terminate().then(function () {
+            if (con.jsStoreCon_.isDbOpened_ === false) {
                 done();
             } else {
                 done('db is opened after terminate');

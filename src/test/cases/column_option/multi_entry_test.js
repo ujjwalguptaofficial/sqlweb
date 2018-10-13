@@ -1,15 +1,15 @@
 describe('Multi Entry Test', function () {
     it('create db with promise', function (done) {
-        con.connection_.isDbExist('MultiEntryTest').then(function (exist) {
+        con.jsStoreCon_.isDbExist('MultiEntryTest').then(function (exist) {
             console.log('db exist :' + exist);
             if (exist) {
-                con.connection_.openDb('MultiEntryTest').then(function () {
+                con.jsStoreCon_.openDb('MultiEntryTest').then(function () {
                     onDbInit();
                     done();
                 });
 
             } else {
-                con.connection_.createDb(MultiEntryTest.getDbSchema()).then(function (tableList) {
+                con.jsStoreCon_.createDb(MultiEntryTest.getDbSchema()).then(function (tableList) {
                     expect(tableList).to.be.an('array').length(1);
                     console.log('Database created');
                     done();
@@ -22,7 +22,7 @@ describe('Multi Entry Test', function () {
     });
 
     it('insert data into table', function (done) {
-        con.connection_.insert({
+        con.jsStoreCon_.insert({
             into: 'people',
             values: MultiEntryTest.getValues()
         }).
@@ -36,7 +36,7 @@ describe('Multi Entry Test', function () {
     });
 
     it('multientry test without multientry column - select data from array', function (done) {
-        con.connection_.select({
+        con.jsStoreCon_.select({
             from: 'people',
             where: {
                 tags: 'mongo'
@@ -61,7 +61,7 @@ describe('Multi Entry Test', function () {
                 var Db = MultiEntryTest.getDbSchema();
                 Db.tables[0].version = 2;
                 Db.tables[0].columns[1].multiEntry = true;
-                con.connection_.createDb(Db).then(function (tableList) {
+                con.jsStoreCon_.createDb(Db).then(function (tableList) {
                     expect(tableList).to.be.an('array').length(1);
                     console.log('Database created');
                     done();
@@ -73,7 +73,7 @@ describe('Multi Entry Test', function () {
     });
 
     it('insert data into table multiEntryTest', function (done) {
-        con.connection_.insert({
+        con.jsStoreCon_.insert({
             into: 'people',
             values: MultiEntryTest.getValues()
         }).
@@ -87,7 +87,7 @@ describe('Multi Entry Test', function () {
     });
 
     it('multientry test with multientry column - select data from array', function (done) {
-        con.connection_.select({
+        con.jsStoreCon_.select({
             from: 'people',
             where: {
                 tags: 'mongo'
@@ -107,7 +107,7 @@ describe('Multi Entry Test', function () {
             name: "Ray",
             tags: ["apple", "banana", "beer"]
         };
-        con.connection_.insert({
+        con.jsStoreCon_.insert({
             into: 'people',
             values: [value]
         }).
@@ -127,7 +127,7 @@ describe('Multi Entry Test', function () {
             name: "Ray",
             tags: "apple"
         };
-        con.connection_.insert({
+        con.jsStoreCon_.insert({
             into: 'people',
             values: [value]
         }).

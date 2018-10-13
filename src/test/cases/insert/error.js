@@ -1,5 +1,5 @@
 // it('insert without values Option', function (done) {
-//     // con.connection_.insert({
+//     // con.jsStoreCon_.insert({
 //     //     into: 'Customers'
 //     // }).
 //     var qry = new SqlWeb.Query('insert into Suppliers Values=@values return');

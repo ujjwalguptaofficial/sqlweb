@@ -55,7 +55,7 @@ describe('Test update complex case', function () {
             }
         ];
         var count;
-        // con.connection_.select({
+        // con.jsStoreCon_.select({
         //     from: 'Products',
         //     where: where_query
         // }).
@@ -68,7 +68,7 @@ describe('Test update complex case', function () {
             done(err);
         })
 
-        // con.connection_.update({ in: 'Products',
+        // con.jsStoreCon_.update({ in: 'Products',
         //     where: where_query,
         //     set: {
         //         ProductName: 'Cofee_Tea'

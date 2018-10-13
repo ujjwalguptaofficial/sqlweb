@@ -1,12 +1,15 @@
 import * as parser from './../output/parser';
 import { Util } from './util';
 import { Query } from '.';
+import { Config } from './config';
+import { LogHelper } from './log_helper';
+import { ERROR_TYPE } from './enums';
 
 declare var JsStore;
 export class Instance {
-    private connection_;
+    private jsStoreCon_;
     constructor(workerPath) {
-        this.connection_ = workerPath == null ? new JsStore.Instance() :
+        this.jsStoreCon_ = workerPath == null ? new JsStore.Instance() :
             new JsStore.Instance(new Worker(workerPath));
     }
 
@@ -24,12 +27,29 @@ export class Instance {
             else {
                 result = (query as Query).query_;
             }
-            return this.connection_[result.api](result.data);
+            return this.jsStoreCon_[result.api](result.data);
         }
         catch (ex) {
+            let err;
+            if (ex.name === "SyntaxError") {
+                err = new LogHelper(ERROR_TYPE.SynTaxError, ex.message);
+            }
+            else {
+                err = ex;
+            }
             return new Promise((resolve, reject) => {
-                reject(ex);
+                reject(err);
             });
         }
+    }
+
+    /**
+     * set log status, accepts boolean value
+     *
+     * @param {boolean} status
+     * @memberof Instance
+     */
+    setLogStatus(status: boolean) {
+        Config.isLogEnabled = status;
     }
 }

@@ -38,7 +38,7 @@ describe('Test remove Api', function () {
     it('remove with ignore case', function (done) {
 
         var count;
-        // con.connection_.select({
+        // con.jsStoreCon_.select({
         //     from: 'Customers',
         //     where: {
         //         Country: 'meXico'
@@ -51,7 +51,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        // con.connection_.remove({
+        // con.jsStoreCon_.remove({
         //     from: 'Customers',
         //     ignoreCase: true,
         //     where: {

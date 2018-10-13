@@ -21,12 +21,12 @@ describe('create demo database', function () {
     });
 });
 
-// con.connection_.isDbExist('Demo').then(function (exist) {
+// con.jsStoreCon_.isDbExist('Demo').then(function (exist) {
 //     console.log('db exist :' + exist);
 //     if (exist) {
-//         con.connection_.openDb('Demo').then(onDbInit);
+//         con.jsStoreCon_.openDb('Demo').then(onDbInit);
 //     } else {
-//         con.connection_.createDb(getDbSchema()).then(function () {
+//         con.jsStoreCon_.createDb(getDbSchema()).then(function () {
 //             console.log('Database created');
 //             onDbInit();
 //         });

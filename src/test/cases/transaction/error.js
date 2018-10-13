@@ -10,7 +10,7 @@ describe('Transaction - error test', function () {
                 });
             }
         }
-        con.connection_.transaction(transaction_query).then(function (results) {
+        con.jsStoreCon_.transaction(transaction_query).then(function (results) {
             expect(results.customers).to.be.an('array').length(results.count);
             done();
         }).catch(function (err) {
@@ -34,7 +34,7 @@ describe('Transaction - error test', function () {
                 });
             }
         }
-        con.connection_.transaction(transaction_query).then(function (results) {
+        con.jsStoreCon_.transaction(transaction_query).then(function (results) {
             expect(results.customers).to.be.an('array').length(results.count);
             done();
         }).catch(function (err) {
@@ -78,7 +78,7 @@ describe('Transaction - error test', function () {
 
             }
         }
-        con.connection_.transaction(transaction_query).then(function (results) {
+        con.jsStoreCon_.transaction(transaction_query).then(function (results) {
             expect(results.customers).to.be.an('array').length(results.countCustomer);
             expect(results.orderDetails).to.be.an('array').length(results.countOrderDetails);
             done();
@@ -122,7 +122,7 @@ describe('Transaction - error test', function () {
                 })
             }
         }
-        con.connection_.transaction(transaction_query).then(function (results) {
+        con.jsStoreCon_.transaction(transaction_query).then(function (results) {
             console.log(results)
             expect(results.countNewCustomer).to.be.an('number').equal(results.countOldCustomer + 1);
             done();
@@ -161,7 +161,7 @@ describe('Transaction - error test', function () {
             }
         }
         var customer;
-        con.connection_.select({
+        con.jsStoreCon_.select({
             from: 'Customers',
             where: {
                 CustomerID: 5
@@ -171,10 +171,10 @@ describe('Transaction - error test', function () {
         }).catch(function (err) {
             done(err);
         })
-        con.connection_.transaction(transaction_query).then(function (results) {}).catch(function (err) {
+        con.jsStoreCon_.transaction(transaction_query).then(function (results) {}).catch(function (err) {
             done(err);
         })
-        con.connection_.select({
+        con.jsStoreCon_.select({
             from: 'Customers',
             where: {
                 CustomerID: 5
