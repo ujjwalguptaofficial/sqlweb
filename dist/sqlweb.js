@@ -1,5 +1,5 @@
 /*!
- * @license :sqlweb - V1.0.3 - 13/10/2018
+ * @license :sqlweb - V1.0.4 - 13/10/2018
  * https://github.com/ujjwalguptaofficial/sqlweb
  * Copyright (c) 2018 @Ujjwal Gupta; Licensed MIT
  */

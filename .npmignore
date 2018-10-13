@@ -7,3 +7,6 @@ src
 #build tools
 .travis.yml
 .vscode
+
+#definition
+!dist/src

@@ -1,6 +1,6 @@
 {
   "name": "sqlweb",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "SqlWeb allows you to use sql query for performing database operation in IndexedDB.",
   "main": "dist/sqlweb.commonjs2.js",
   "types": "dist/src/ts/code/index.d.ts",
