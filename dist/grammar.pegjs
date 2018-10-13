@@ -601,11 +601,11 @@ tableInfo = TABLE _* table:tableName _* ver:version {
                 }
 }
 
-tableName "table name" = Word
+tableName "table name" = Identifier
 
-dbName "database name" = Word
+dbName "database name" = Identifier
 
-column "column" = Word;
+column "column" = Identifier;
 
 JoinOp= And/Or;
 
@@ -615,7 +615,11 @@ And = "&";
 
 Or = "|";
 
-ColumnValue=[a-zA-Z0-9@_']
+ColumnValue=[a-zA-Z0-9@_'#*!~$+=/|\:.?-]
+
+Identifier "identifier"= val:[a-zA-Z_]+ {
+	return val.join("");
+}
 
 Word = l:Letter+ {return l.join("");}
 
