@@ -43,7 +43,5 @@ describe('Test clear', function () {
         catch(function (err) {
             done(err);
         })
-
     });
-
 });
