@@ -12,7 +12,7 @@ And = "&";
 
 Or = "|";
 
-ColumnValue=[a-zA-Z0-9@_']
+ColumnValue=[a-zA-Z0-9@_'#*!~$+=/|\:.?-]
 
 Identifier "identifier"= val:[a-zA-Z_]+ {
 	return val.join("");
