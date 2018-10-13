@@ -12,5 +12,5 @@ if (mm < 10) {
 var today = dd + '/' + mm + '/' + yyyy;
 
 exports.banner = `@license :${package.name} - V${package.version} - ${today}
-https://github.com/ujjwalguptaofficial/JsStore
+https://github.com/ujjwalguptaofficial/sqlweb
 Copyright (c) ${yyyy} @Ujjwal Gupta; Licensed ${package.license}`;

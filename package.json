@@ -1,6 +1,6 @@
 {
   "name": "sqlweb",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "sql web is a sql wrapper for indexeddb. It takes query in sql and execute in indexeddb.",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,8 @@
     "build:ci": "npm run build:dev && npm run build:prod",
     "webpack:dev": "webpack --config src/webpack/webpack.dev.config.js",
     "webpack:prod": "webpack --config src/webpack/webpack.prod.config.js",
-    "deploy": "npm run build:ci"
+    "move:deploy_file": "node src/deploy_helper.js",
+    "deploy": "npm run build:ci && npm run move:deploy_file"
   },
   "repository": {
     "type": "git",
@@ -28,12 +29,14 @@
   "homepage": "https://github.com/ujjwalguptaofficial/sqlweb#readme",
   "devDependencies": {
     "chai": "^4.1.2",
+    "fs-extra": "^7.0.0",
     "karma": "^1.7.1",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-mocha": "^1.3.0",
     "karma-mocha-reporter": "^2.2.5",
     "mocha": "^4.0.1",
+    "mv": "^2.1.1",
     "pegjs": "^0.10.0",
     "puppeteer": "^0.13.0",
     "smart-banner-webpack-plugin": "^3.0.1",
