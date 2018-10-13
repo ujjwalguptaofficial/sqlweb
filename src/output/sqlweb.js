@@ -1,5 +1,5 @@
 /*!
- * @license :sqlweb - V1.0.0 - 12/10/2018
+ * @license :sqlweb - V1.0.0 - 13/10/2018
  * https://github.com/ujjwalguptaofficial/JsStore
  * Copyright (c) 2018 @Ujjwal Gupta; Licensed MIT
  */

@@ -81,6 +81,7 @@ describe('Test update Api', function () {
     });
 
     it('update with ignore case', function (done) {
+        debugger;
         var count;
         con.runQuery("count from Customers where City= 'BhUbaneSwar' ignoreCase").
         then(function (results) {
@@ -90,16 +91,6 @@ describe('Test update Api', function () {
             done(err);
         });
 
-        // con.connection_.update({ in: "Customers",
-        //     ignoreCase: true,
-        //     set: {
-        //         ContactName: 'Ujjwal',
-        //         City: 'bhubaneswar'
-        //     },
-        //     where: {
-        //         City: 'bHuBaneSwar'
-        //     }
-        // }).
         con.runQuery("update Customers set ContactName= 'Ujjwal', City= 'bhubaneswar' where City= 'BhUbaneSwar' ignoreCase").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
@@ -109,7 +100,7 @@ describe('Test update Api', function () {
             done(err);
         })
     });
-
+    
     it('update with or', function (done) {
         var selectCount;
         con.runQuery("select from Customers where Country=Mexico | City=Madrid").
@@ -171,7 +162,7 @@ describe('Test update Api', function () {
         });
     });
 
-    it('remove with operator - != (for number)', function (done) {
+    it('update with operator - != (for number)', function (done) {
         var count;
         con.runQuery("count * from Products where Price!=20").
         then(function (results) {

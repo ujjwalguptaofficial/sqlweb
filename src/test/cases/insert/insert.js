@@ -143,8 +143,8 @@ describe('Test insert', function () {
         con.runQuery("insert into Shippers values ({ShipperName: 'dsfgb',Phone: 91234})").
         catch(function (err) {
             var error = {
-                "message": "Supplied value for column 'Phone' does not have valid type",
-                "type": "bad_data_type"
+                "message": "Supplied value for column 'Phone' have wrong data type",
+                "type": "wrong_data_type"
             };
             expect(err).to.be.an('object').eql(error);
             done();
@@ -158,8 +158,8 @@ describe('Test insert', function () {
         }).
         catch(function (err) {
             var error = {
-                "message": "Supplied value for column 'Unit' does not have valid type",
-                "type": "bad_data_type"
+                "message": "Supplied value for column 'Unit' have wrong data type",
+                "type": "wrong_data_type"
             };
             expect(err).to.be.an('object').eql(error);
             done();
@@ -193,8 +193,8 @@ describe('Test insert', function () {
         }).
         catch(function (err) {
             var error = {
-                "message": "Supplied value for column 'Email' does not have valid type",
-                "type": "bad_data_type"
+                "message": "Supplied value for column 'Email' have wrong data type",
+                "type": "wrong_data_type"
             };
             expect(err).to.be.an('object').eql(error);
             done();
