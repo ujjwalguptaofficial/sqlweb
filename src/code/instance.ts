@@ -4,8 +4,8 @@ import { Query } from '.';
 import { Config } from './config';
 import { LogHelper } from './log_helper';
 import { ERROR_TYPE } from './enums';
-
 declare var JsStore;
+
 export class Instance {
     private jsStoreCon_;
     constructor(workerPath) {
