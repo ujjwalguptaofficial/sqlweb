@@ -7,7 +7,7 @@
   "dependencies": {
     "jquery": "^3.3.1",
     "jsstore": "^2.5.0",
-    "sqlweb": "^1.0.6"
+    "sqlweb": "^1.0.7"
   },
   "devDependencies": {
     "css-loader": "^0.28.11",
