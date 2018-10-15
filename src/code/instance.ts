@@ -1,4 +1,3 @@
-
 import { Util } from './util';
 import { Query } from '.';
 import { Config } from './config';

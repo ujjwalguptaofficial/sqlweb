@@ -5,7 +5,7 @@ import { Query } from 'sqlweb';
 export class StudentService extends BaseService {
     private tableName_ = "students";
     getStudents() {
-        return this.connection.runQuery(`select from ${this.tableName_}`);
+        return this.connection.runSql(`select from ${this.tableName_}`);
     }
 
     addStudent(student: Student) {
@@ -22,15 +22,15 @@ export class StudentService extends BaseService {
         // const qry = new Query(`insert into ${this.tableName_} values=@values return`);
         // qry.map('@values', [student]);
 
-        return this.connection.runQuery(qry);
+        return this.connection.runSql(qry);
     }
 
     deleteStudent(studentId: number) {
-        return this.connection.runQuery(`remove from ${this.tableName_} where id= ${studentId}`);
+        return this.connection.runSql(`remove from ${this.tableName_} where id= ${studentId}`);
     }
 
     getStudent(studentId: number) {
-        return this.connection.runQuery(`select from ${this.tableName_} where id= ${studentId}`);
+        return this.connection.runSql(`select from ${this.tableName_} where id= ${studentId}`);
     }
 
     updateStudent(studentId: number, updateData) {
@@ -41,6 +41,6 @@ export class StudentService extends BaseService {
         city=${updateData.city} 
         where id=${studentId}`;
 
-        return this.connection.runQuery(qry);
+        return this.connection.runSql(qry);
     }
 }
