@@ -50,5 +50,6 @@
   },
   "peerDependencies": {
     "jsstore": ">=2.7.0"
+    "jsstore": ">=2.7.1"
   }
 }
