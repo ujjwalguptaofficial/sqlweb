@@ -1,4 +1,4 @@
-var connection = new SqlWeb.Instance('scripts/jsstore.worker.js'),
+var connection = new JsStore.Instance(new Worker('scripts/jsstore.worker.js')),
     StudentId;
 window.onload = function () {
     initiateDb();
@@ -7,9 +7,9 @@ window.onload = function () {
 
 function initiateDb() {
     var dbName = "Students";
-    connection.runQuery('ISDBEXIST ' + dbName).then(function (isExist) {
+    connection.runSql('ISDBEXIST ' + dbName).then(function (isExist) {
         if (isExist) {
-            connection.runQuery('OPENDB ' + dbName);
+            connection.runSql('OPENDB ' + dbName);
         } else {
             window.location.href = "index.html";
         }
@@ -25,7 +25,7 @@ function getStudent() {
     if (StudentId) {
         var query = new SqlWeb.Query('select * from Student where Id=@id');
         query.map('@id', Number(StudentId));
-        connection.runQuery(query)
+        connection.runSql(query)
             .then(function (results) {
                 if (results.length > 0) {
                     var Student = results[0];
@@ -60,7 +60,7 @@ function updateStudent() {
     query.map("@country", $('#txtCountry').val());
     query.map("@city", $('#txtCity').val());
     query.map("@id", Number(StudentId));
-    connection.runQuery(query).then(function (rowsAffected) {
+    connection.runSql(query).then(function (rowsAffected) {
         alert(rowsAffected + " record Updated");
         if (rowsAffected > 0) {
             window.location.href = "index.html";
@@ -83,7 +83,7 @@ function addStudent() {
     query.map("@gender", $("input[name='Gender']:checked").val());
     query.map("@country", $('#txtCountry').val());
     query.map("@city", $('#txtCity').val());
-    connection.runQuery(query).then(function (rowsAdded) {
+    connection.runSql(query).then(function (rowsAdded) {
         alert(rowsAdded + " record Added");
         window.location.href = "index.html";
     }).catch(function (err) {
