@@ -1,6 +1,2 @@
-/**
- * set other dependicies
- *
- * @param {*} value
- */
-export declare var use: (value: any) => void;
+import { Query } from ".";
+export declare let parseSql: (query: string | Query) => any;
