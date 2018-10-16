@@ -1,7 +1,7 @@
 describe('Test update complex case', function () {
     it('update with multiple or', function (done) {
         var count;
-        con.runQuery("select * from Products where Price<10 | (SupplierID= 1 & CategoryID= 3)").
+        con.runSql("select * from Products where Price<10 | (SupplierID= 1 & CategoryID= 3)").
         then(function (results) {
             count = results.length;
             done();
@@ -10,7 +10,7 @@ describe('Test update complex case', function () {
             done(err);
         })
 
-        con.runQuery("update Products set ProductName= 'Cofee' where Price<10 | (SupplierID= 1 & CategoryID= 3)").
+        con.runSql("update Products set ProductName= 'Cofee' where Price<10 | (SupplierID= 1 & CategoryID= 3)").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -24,7 +24,7 @@ describe('Test update complex case', function () {
 
         var count;
 
-        con.runQuery("select from Products where  ProductName= 'Cofee' & (Price<10 | SupplierID= 1) ").
+        con.runSql("select from Products where  ProductName= 'Cofee' & (Price<10 | SupplierID= 1) ").
         then(function (results) {
             count = results.length;
             done();
@@ -33,7 +33,7 @@ describe('Test update complex case', function () {
             done(err);
         })
 
-        con.runQuery("update Products set ProductName= 'Tea' where  ProductName= 'Cofee' & (Price<10 | SupplierID= 1) ").
+        con.runSql("update Products set ProductName= 'Tea' where  ProductName= 'Cofee' & (Price<10 | SupplierID= 1) ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -59,7 +59,7 @@ describe('Test update complex case', function () {
         //     from: 'Products',
         //     where: where_query
         // }).
-        con.runQuery("select from Products where  ProductName= 'Tea' | (SupplierID=1 & CategoryID= 3) ").
+        con.runSql("select from Products where  ProductName= 'Tea' | (SupplierID=1 & CategoryID= 3) ").
         then(function (results) {
             count = results.length;
             done();
@@ -74,7 +74,7 @@ describe('Test update complex case', function () {
         //         ProductName: 'Cofee_Tea'
         //     }
         // }).
-        con.runQuery("update Products set ProductName= 'Cofee_Tea' where  ProductName= 'Tea' | (SupplierID=1 & CategoryID= 3) ").
+        con.runSql("update Products set ProductName= 'Cofee_Tea' where  ProductName= 'Tea' | (SupplierID=1 & CategoryID= 3) ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();

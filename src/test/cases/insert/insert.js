@@ -4,7 +4,7 @@ function randomDate(start, end) {
 
 describe('Test insert', function () {
     it('wrong table test', function (done) {
-        con.runQuery("insert into Customer values=@val").
+        con.runSql("insert into Customer values=@val").
         catch(function (err) {
             console.log(err);
             var error = {
@@ -20,7 +20,7 @@ describe('Test insert', function () {
         $.getJSON("test/static/Customers.json", function (results) {
             var qry = new SqlWeb.Query('insert into Customers Values=@values');
             qry.map("@values", results);
-            con.runQuery(qry).
+            con.runSql(qry).
             then(function (results) {
                 expect(results).to.be.an('number').to.equal(93);
                 done();
@@ -35,7 +35,7 @@ describe('Test insert', function () {
         $.getJSON("test/static/Orders.json", function (results) {
             var qry = new SqlWeb.Query('insert into Orders Values=@values');
             qry.map("@values", results);
-            con.runQuery(qry).
+            con.runSql(qry).
             then(function (results) {
                 expect(results).to.be.an('number').to.equal(196);
                 done();
@@ -54,7 +54,7 @@ describe('Test insert', function () {
             });
             var qry = new SqlWeb.Query('insert into Employees Values=@values');
             qry.map("@values", results);
-            con.runQuery(qry).
+            con.runSql(qry).
             then(function (results) {
                 expect(results).to.be.an('number').to.equal(34);
                 done();
@@ -70,7 +70,7 @@ describe('Test insert', function () {
             results.forEach(function (result) {
                 var query = new SqlWeb.Query("insert into Shippers values=@values");
                 query.map("@values", [result]);
-                con.runQuery(query).then(function (rowsInserted) {
+                con.runSql(query).then(function (rowsInserted) {
                     countInsert += rowsInserted;
                     if (countInsert === results.length) {
                         expect(countInsert).to.be.an('number').to.equal(3);
@@ -86,7 +86,7 @@ describe('Test insert', function () {
         $.getJSON("test/static/Products.json", function (results) {
             var qry = new SqlWeb.Query('insert into Products Values=@values skipDataCheck');
             qry.map("@values", results);
-            con.runQuery(qry).
+            con.runSql(qry).
             then(function (results) {
                 expect(results).to.be.an('number').to.equal(77);
                 done();
@@ -100,7 +100,7 @@ describe('Test insert', function () {
         $.getJSON("test/static/Suppliers.json", function (results) {
             var qry = new SqlWeb.Query('insert into Suppliers Values=@values return');
             qry.map("@values", results);
-            con.runQuery(qry).
+            con.runSql(qry).
             then(function (results) {
                 expect(results).to.be.an('array').length(29);
                 done();
@@ -114,7 +114,7 @@ describe('Test insert', function () {
     it('not null test', function (done) {
         var qry = new SqlWeb.Query('insert into Customers Values=@values');
         qry.map("@values", [{}]);
-        con.runQuery(qry).
+        con.runSql(qry).
         catch(function (err) {
             console.log(err);
             var error = {
@@ -127,7 +127,7 @@ describe('Test insert', function () {
     });
 
     it('not null test for last column', function (done) {
-        con.runQuery("insert into Shippers values ({ShipperName: 'dsfgb'})").
+        con.runSql("insert into Shippers values ({ShipperName: 'dsfgb'})").
         catch(function (err) {
             console.log(err);
             var error = {
@@ -140,7 +140,7 @@ describe('Test insert', function () {
     });
 
     it('wrong data type test - string', function (done) {
-        con.runQuery("insert into Shippers values ({ShipperName: 'dsfgb',Phone: 91234})").
+        con.runSql("insert into Shippers values ({ShipperName: 'dsfgb',Phone: 91234})").
         catch(function (err) {
             var error = {
                 "message": "Supplied value for column 'Phone' have wrong data type",
@@ -152,7 +152,7 @@ describe('Test insert', function () {
     });
 
     it('wrong data type test - number', function (done) {
-        con.runQuery("insert into Products values ({ ProductName: 'dfb', SupplierID: 5, CategoryID: 10, Price: '1123', Unit: 12333 })").
+        con.runSql("insert into Products values ({ ProductName: 'dfb', SupplierID: 5, CategoryID: 10, Price: '1123', Unit: 12333 })").
         then(function (result) {
             done(result);
         }).
@@ -172,7 +172,7 @@ describe('Test insert', function () {
             Phone: '91234',
             Address: 'ewrtgb'
         };
-        con.runQuery("insert into Shippers values ({ShipperName: 'dsfgb', Phone: '91234', Address: 'ewrtgb'}) return").
+        con.runSql("insert into Shippers values ({ShipperName: 'dsfgb', Phone: '91234', Address: 'ewrtgb'}) return").
         then(function (results) {
             var returned_value = results[0];
             value['ShipperID'] = returned_value.ShipperID;
@@ -186,7 +186,7 @@ describe('Test insert', function () {
 
     it('EnableSearch column test', function (done) {
 
-        con.runQuery("insert into Customers values ({CustomerName: 'dfb', ContactName: 'Anders', Address: 'ewrgt', City: '1123', PostalCode: 'frfd', Country: 'fesgt', Email: 1234})").
+        con.runSql("insert into Customers values ({CustomerName: 'dfb', ContactName: 'Anders', Address: 'ewrgt', City: '1123', PostalCode: 'frfd', Country: 'fesgt', Email: 1234})").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(3);
             done();

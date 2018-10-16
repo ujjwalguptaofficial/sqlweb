@@ -1,6 +1,6 @@
 describe('Test aggregate option with groupby', function () {
     it('select with agregate - min', function (done) {
-        con.runQuery("Select aggregate[Min(Price)] from Products group by CategoryID").
+        con.runSql("Select aggregate[Min(Price)] from Products group by CategoryID").
         then(function (results) {
             expect(results).to.be.an('array').length(8);
             var ExpectedResult = [4.5, 10, 9.2, 2.5, 7, 7.45, 10, 6];
@@ -15,7 +15,7 @@ describe('Test aggregate option with groupby', function () {
     })
 
     it('select with agregate - max', function (done) {
-        con.runQuery("Select aggregate[maX(Price)] from Products group by CategoryID").
+        con.runSql("Select aggregate[maX(Price)] from Products group by CategoryID").
         then(function (results) {
             expect(results).to.be.an('array').length(8);
             var ExpectedResult = [263.5, 43.9, 81, 55, 38, 123.79, 53, 62.5];
@@ -30,7 +30,7 @@ describe('Test aggregate option with groupby', function () {
     });
 
     it('select with agregate - sum', function (done) {
-        con.runQuery("Select aggregate[sUm(Price)] from Products group by CategoryID").
+        con.runSql("Select aggregate[sUm(Price)] from Products group by CategoryID").
         then(function (results) {
             expect(results).to.be.an('array').length(8);
             var ExpectedResult = [455.75, 276.75, 327.08, 287.3, 141.75, 324.04, 161.85, 248.19];
@@ -45,7 +45,7 @@ describe('Test aggregate option with groupby', function () {
     });
 
     it('select with agregate - count', function (done) {
-        con.runQuery("Select aggregate[counT(Price)] from Products group by CategoryID").
+        con.runSql("Select aggregate[counT(Price)] from Products group by CategoryID").
         then(function (results) {
             expect(results).to.be.an('array').length(8);
             var ExpectedResult = [12, 12, 13, 10, 7, 6, 5, 12];
@@ -60,7 +60,7 @@ describe('Test aggregate option with groupby', function () {
 
     it('select with agregate - avg', function (done) {
         
-        con.runQuery("Select aggregate[Avg(Price)] from Products group by CategoryID").
+        con.runSql("Select aggregate[Avg(Price)] from Products group by CategoryID").
         then(function (results) {
             expect(results).to.be.an('array').length(8);
             var ExpectedResult = [37.979166666666664, 23.0625, 25.16, 28.73, 20.25, 54.00666666666667, 32.37, 20.6825];

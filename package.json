@@ -7,7 +7,7 @@
   "scripts": {
     "test": "tsc && karma start test/karma.config.js",
     "build": "node src/build.js && npm run webpack:dev",
-    "lint": "tslint src/codes/**/*.ts",
+    "lint": "tslint src/code/**/*.ts",
     "test:dev": "karma start src/test/karma.config.dev.js",
     "test:prod": "karma start src/test/karma.config.prod.js",
     "build:dev": "npm run lint && npm run build && npm run test:dev",
@@ -31,7 +31,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "fs-extra": "^7.0.0",
-    "jsstore": "^2.5.0",
+    "jsstore": "^2.7.2",
     "karma": "^1.7.1",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",

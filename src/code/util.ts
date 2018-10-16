@@ -4,17 +4,17 @@ import { ERROR_TYPE } from './enums';
 
 export class Util {
     static isString(value) {
-        return typeof value === 'string'
+        return typeof value === 'string';
     }
 
     static parseJson(value) {
-        const reviver = function (key, value) {
+        const reviver = (key, val) => {
             const dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
-            if (typeof value === "string" && dateFormat.test(value)) {
-                return new Date(value);
+            if (typeof val === "string" && dateFormat.test(val)) {
+                return new Date(val);
             }
 
-            return value;
+            return val;
         };
         return JSON.parse(value, reviver);
     }
