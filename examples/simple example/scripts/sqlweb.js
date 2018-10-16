@@ -1,5 +1,5 @@
 /*!
- * @license :sqlweb - V1.1.0 - 15/10/2018
+ * @license :sqlweb - V1.1.0 - 16/10/2018
  * https://github.com/ujjwalguptaofficial/sqlweb
  * Copyright (c) 2018 @Ujjwal Gupta; Licensed MIT
  */
@@ -159,12 +159,12 @@ var Util = /** @class */ (function () {
         return typeof value === 'string';
     };
     Util.parseJson = function (value) {
-        var reviver = function (key, value) {
+        var reviver = function (key, val) {
             var dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
-            if (typeof value === "string" && dateFormat.test(value)) {
-                return new Date(value);
+            if (typeof val === "string" && dateFormat.test(val)) {
+                return new Date(val);
             }
-            return value;
+            return val;
         };
         return JSON.parse(value, reviver);
     };
@@ -8317,21 +8317,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 
 var parseSql = function (query) {
-    try {
-        var result = void 0;
-        if (_util__WEBPACK_IMPORTED_MODULE_0__["Util"].isString(query) === true) {
-            result = _util__WEBPACK_IMPORTED_MODULE_0__["Util"].parseSql(query);
-        }
-        else {
-            result = query.query_;
-        }
-        return result;
+    var result;
+    if (_util__WEBPACK_IMPORTED_MODULE_0__["Util"].isString(query) === true) {
+        result = _util__WEBPACK_IMPORTED_MODULE_0__["Util"].parseSql(query);
     }
-    catch (ex) {
-        return new Promise(function (resolve, reject) {
-            reject(ex);
-        });
+    else {
+        result = query.query_;
     }
+    return result;
 };
 
 
