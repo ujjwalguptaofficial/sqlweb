@@ -1,15 +1,16 @@
 import {
-    con
+    idbCon
 } from "./idb_service";
 export class BaseService {
 
     constructor() {
         this.dbName = "students_db";
+        this.connection.setLogStatus(true);
         this.initJsStore();
     }
 
     get connection() {
-        return con;
+        return idbCon;
     }
 
     initJsStore() {
