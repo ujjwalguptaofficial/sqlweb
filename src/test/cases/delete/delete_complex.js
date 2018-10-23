@@ -9,7 +9,7 @@ describe('Test remove complex case', function () {
             done(err);
         })
 
-        con.runSql('Remove from Customers where Country=Mexico | (City=Madrid | Address like %a%)').
+        con.runSql('Delete from Customers where Country=Mexico | (City=Madrid | Address like %a%)').
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();

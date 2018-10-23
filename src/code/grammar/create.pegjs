@@ -6,7 +6,7 @@ createQuery = db:createDbQuery tables:createTableQuery* {
     }
 }
 
-createDbQuery = DEFINE _* (DATABASE/DB) _* name:dbName ";"? {
+createDbQuery = DEFINE _* DB _* name:dbName ";"? {
 	return {
     	name:name
     }

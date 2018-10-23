@@ -50,8 +50,6 @@ UPDATE "update" = U P D A T E;
 
 SET "set" = S E T;
 
-REMOVE "remove" = R E M O V E;
-
 DELETE "delete" = D E L E T E;
 
 VERSION "version" = V E R S I O N;
@@ -83,8 +81,6 @@ NOTNULL "notnull" = N O T N U L L;
 DEFAULT "default" = D E F A U L T;
 
 DEFINE "define" = D E F I N E;
-
-DATABASE "database" = D A T A B A S E;
 
 TABLE "table" = T A B L E;
 

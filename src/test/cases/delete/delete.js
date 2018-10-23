@@ -8,7 +8,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        con.runSql("remove from Customers where Country = Sweden").
+        con.runSql("delete from Customers where Country = Sweden").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -26,7 +26,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        con.runSql("remove from Customers where Country = meXico").
+        con.runSql("delete from Customers where Country = meXico").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -38,12 +38,6 @@ describe('Test remove Api', function () {
     it('remove with ignore case', function (done) {
 
         var count;
-        // con.jsStoreCon_.select({
-        //     from: 'Customers',
-        //     where: {
-        //         Country: 'meXico'
-        //     }
-        // }).
         con.runSql("count from Customers where Country = meXico IGnoreCase").
         then(function (results) {
             count = results;
@@ -51,14 +45,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        // con.jsStoreCon_.remove({
-        //     from: 'Customers',
-        //     ignoreCase: true,
-        //     where: {
-        //         Country: 'meXico'
-        //     }
-        // }).
-        con.runSql("remove from Customers where Country = meXico IGnoreCase").
+        con.runSql("delete from Customers where Country = meXico IGnoreCase").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -96,7 +83,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        con.runSql("remove from Customers where Country in ('Germany', 'France', 'UK')").
+        con.runSql("delete from Customers where Country in ('Germany', 'France', 'UK')").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -115,7 +102,7 @@ describe('Test remove Api', function () {
             done(err);
         });
 
-        con.runSql("remove from Customers where Country != Mexico").
+        con.runSql("delete from Customers where Country != Mexico").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -133,7 +120,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        con.runSql("remove from Products where Price!=20").
+        con.runSql("delete from Products where Price!=20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -152,7 +139,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        con.runSql("remove from Products where Price>20").
+        con.runSql("delete from Products where Price>20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -171,7 +158,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        con.runSql("remove from Products where Price>=20").
+        con.runSql("delete from Products where Price>=20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -208,7 +195,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        con.runSql("remove from Products where Price<=20").
+        con.runSql("DELETE from Products where Price<=20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -227,7 +214,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        con.runSql("remove from Products where Price betWeen (10,20)").
+        con.runSql("delete from Products where Price betWeen (10,20)").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -247,7 +234,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        con.runSql("remove from Customers where CustomerName like %or% ").
+        con.runSql("delete from Customers where CustomerName like %or% ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -261,7 +248,7 @@ describe('Test remove Api', function () {
         con.runSql("count from Customers where CustomerName like %or ").
         then(function (results) {
             count = results;
-            con.runSql("remove from Customers where CustomerName like %or ").
+            con.runSql("delete from Customers where CustomerName like %or ").
             then(function (results) {
                 expect(results).to.be.an('number').to.equal(count);
                 done();
@@ -283,7 +270,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        con.runSql("remove from Customers where CustomerName like or% ").
+        con.runSql("delete from Customers where CustomerName like or% ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -300,7 +287,7 @@ describe('Test remove Api', function () {
         }).catch(function (results) {
             done(err);
         });
-        con.runSql("remove from Customers").
+        con.runSql("delete from Customers").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(Count);
             done();
