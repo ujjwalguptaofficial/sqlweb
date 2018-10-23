@@ -46,10 +46,14 @@ aggregateQry = ("*"_)/ aggr: aggregate _ {
 	return aggr[0];
 }
 
-aggregate = AGGREGATE _* "[" _* first: aggregateType _* rest: inBetweenAggregateColumn* _* "]" {
+aggregate = "["first: aggregateType _* rest: inBetweenAggregateColumn* "]" {
 	rest.splice(0,0,first);
     return rest;
 }
+
+inBetweenAggregateColumn = "," _* val:aggregateType _*{
+	return val;
+} 
 
 aggregateType = minAggregate/ maxAggregate/avgAggregate/countAggregate/sumAggregate
 
@@ -270,10 +274,6 @@ betweens:inBetweenParanthesisItem* ")" {
 }
 
 inBetweenParanthesisColumn = "," _* val:column _*{
-	return val;
-} 
-
-inBetweenAggregateColumn = "," _* val:aggregateType _*{
 	return val;
 } 
 
