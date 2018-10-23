@@ -1,5 +1,6 @@
 import * as JsStore from "jsstore";
-import * as SqlWeb from "sqlweb";
+import * as SqlWeb from 'sqlweb';
+JsStore.useSqlWeb(SqlWeb);
 const Worker = require("worker-loader?publicPath=/&name=jsstore.worker.js!jsstore/dist/jsstore.worker.min");
 
 // This will ensure that we are using only one instance. 

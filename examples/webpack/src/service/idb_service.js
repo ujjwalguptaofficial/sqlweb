@@ -1,10 +1,9 @@
 import * as JsStore from 'jsstore';
 import * as SqlWeb from "sqlweb";
-SqlWeb.use(JsStore);
-
 const workerPath = require("file-loader?name=scripts/jsstore.worker.js!../../node_modules/jsstore/dist/jsstore.worker");
+JsStore.useSqlWeb(SqlWeb);
 
 // This will ensure that we are using only one instance. 
 // Otherwise due to multiple instance multiple worker will be created.
-
-export const sqlWebInstance = new SqlWeb.Instance(workerPath);
+const worker = new Worker(workerPath);
+export const con = new JsStore.Instance(worker);

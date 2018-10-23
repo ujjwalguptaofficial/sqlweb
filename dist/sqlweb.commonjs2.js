@@ -1,5 +1,5 @@
 /*!
- * @license :sqlweb - V1.0.7 - 14/10/2018
+ * @license :sqlweb - V1.1.0 - 16/10/2018
  * https://github.com/ujjwalguptaofficial/sqlweb
  * Copyright (c) 2018 @Ujjwal Gupta; Licensed MIT
  */
@@ -96,15 +96,11 @@ module.exports =
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _instance__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Instance", function() { return _instance__WEBPACK_IMPORTED_MODULE_0__["Instance"]; });
+/* harmony import */ var _query__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(1);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Query", function() { return _query__WEBPACK_IMPORTED_MODULE_0__["Query"]; });
 
-/* harmony import */ var _query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Query", function() { return _query__WEBPACK_IMPORTED_MODULE_1__["Query"]; });
-
-/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(8);
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "use", function() { return _global__WEBPACK_IMPORTED_MODULE_2__["use"]; });
-
+/* harmony import */ var _global__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "parseSql", function() { return _global__WEBPACK_IMPORTED_MODULE_1__["parseSql"]; });
 
 
 
@@ -116,56 +112,28 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Instance", function() { return Instance; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Query", function() { return Query; });
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(6);
 
-
-var Instance = /** @class */ (function () {
-    function Instance(workerPath) {
-        this.jsStoreCon_ = workerPath == null ? new JsStore.Instance() :
-            new JsStore.Instance(new Worker(workerPath));
+var Query = /** @class */ (function () {
+    function Query(qry) {
+        this.topLevelKeys_ = ["skip", "limit"];
+        this.query_ = this.parseSql_(qry);
     }
-    Instance.prototype.isString_ = function (value) {
+    Query.prototype.map = function (key, value) {
+        var stringifiedValue = JSON.stringify(this.query_);
+        this.query_ = this.parseJson_(stringifiedValue.replace('"' + key + '"', JSON.stringify(value)));
+    };
+    Query.prototype.isString_ = function (value) {
         return _util__WEBPACK_IMPORTED_MODULE_0__["Util"].isString(value);
     };
-    Instance.prototype.parseSql_ = function (query) {
-        return _util__WEBPACK_IMPORTED_MODULE_0__["Util"].parseSql(query);
+    Query.prototype.parseJson_ = function (value) {
+        return _util__WEBPACK_IMPORTED_MODULE_0__["Util"].parseJson(value);
     };
-    Instance.prototype.runQuery = function (query) {
-        try {
-            var result = void 0;
-            if (this.isString_(query) === true) {
-                result = this.parseSql_(query);
-            }
-            else {
-                result = query.query_;
-            }
-            return this.jsStoreCon_[result.api](result.data);
-        }
-        catch (ex) {
-            // let err;
-            // if (ex.name === "SyntaxError") {
-            //     err = new LogHelper(ERROR_TYPE.SynTaxError, ex.message).get();
-            // }
-            // else {
-            //     err = ex;
-            // }
-            return new Promise(function (resolve, reject) {
-                reject(ex);
-            });
-        }
+    Query.prototype.parseSql_ = function (value) {
+        return _util__WEBPACK_IMPORTED_MODULE_0__["Util"].parseSql(value);
     };
-    /**
-     * set log status, accepts boolean value
-     *
-     * @param {boolean} status
-     * @memberof Instance
-     */
-    Instance.prototype.setLogStatus = function (status) {
-        _config__WEBPACK_IMPORTED_MODULE_1__["Config"].isLogEnabled = status;
-    };
-    return Instance;
+    return Query;
 }());
 
 
@@ -191,12 +159,12 @@ var Util = /** @class */ (function () {
         return typeof value === 'string';
     };
     Util.parseJson = function (value) {
-        var reviver = function (key, value) {
+        var reviver = function (key, val) {
             var dateFormat = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
-            if (typeof value === "string" && dateFormat.test(value)) {
-                return new Date(value);
+            if (typeof val === "string" && dateFormat.test(val)) {
+                return new Date(val);
             }
-            return value;
+            return val;
         };
         return JSON.parse(value, reviver);
     };
@@ -8345,46 +8313,18 @@ var Config = /** @class */ (function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Query", function() { return Query; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "parseSql", function() { return parseSql; });
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
 
-var Query = /** @class */ (function () {
-    function Query(qry) {
-        this.topLevelKeys_ = ["skip", "limit"];
-        this.query_ = this.parseSql_(qry);
+var parseSql = function (query) {
+    var result;
+    if (_util__WEBPACK_IMPORTED_MODULE_0__["Util"].isString(query) === true) {
+        result = _util__WEBPACK_IMPORTED_MODULE_0__["Util"].parseSql(query);
     }
-    Query.prototype.map = function (key, value) {
-        var stringifiedValue = JSON.stringify(this.query_);
-        this.query_ = this.parseJson_(stringifiedValue.replace('"' + key + '"', JSON.stringify(value)));
-    };
-    Query.prototype.isString_ = function (value) {
-        return _util__WEBPACK_IMPORTED_MODULE_0__["Util"].isString(value);
-    };
-    Query.prototype.parseJson_ = function (value) {
-        return _util__WEBPACK_IMPORTED_MODULE_0__["Util"].parseJson(value);
-    };
-    Query.prototype.parseSql_ = function (value) {
-        return _util__WEBPACK_IMPORTED_MODULE_0__["Util"].parseSql(value);
-    };
-    return Query;
-}());
-
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "use", function() { return use; });
-/**
- * set other dependicies
- *
- * @param {*} value
- */
-var use = function (value) {
-    self['JsStore'] = value;
+    else {
+        result = query.query_;
+    }
+    return result;
 };
 
 

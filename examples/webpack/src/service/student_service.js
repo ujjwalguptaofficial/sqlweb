@@ -13,7 +13,7 @@ export class StudentService extends BaseService {
     }
 
     getStudents() {
-        return this.sqlWebObj.runQuery(`select from ${this.tableName}`);
+        return this.connection.runSql(`select from ${this.tableName}`);
     }
 
     addStudent(student) {
@@ -29,15 +29,15 @@ export class StudentService extends BaseService {
         // const qry = new Query(`insert into ${this.tableName} values=@values return`);
         // qry.map('@values', [student]);
 
-        return this.sqlWebObj.runQuery(qry);
+        return this.connection.runSql(qry);
     }
 
     getStudentById(id) {
-        return this.sqlWebObj.runQuery(`select from ${this.tableName} where id= ${id}`);
+        return this.connection.runSql(`select from ${this.tableName} where id= ${id}`);
     }
 
     removeStudent(id) {
-        return this.sqlWebObj.runQuery(`remove from ${this.tableName} where id= ${id}`);
+        return this.connection.runSql(`remove from ${this.tableName} where id= ${id}`);
     }
 
     updateStudentById(id, updateData) {
@@ -48,6 +48,6 @@ export class StudentService extends BaseService {
         city=${updateData.city} 
         where id=${id}`;
 
-        return this.sqlWebObj.runQuery(qry);
+        return this.connection.runSql(qry);
     }
 }

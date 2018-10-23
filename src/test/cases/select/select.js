@@ -1,6 +1,6 @@
 describe('Test Select Api', function () {
     it('select all', function (done) {
-        con.runQuery('select * from Customers').
+        con.runSql('select * from Customers').
         then(function (results) {
             expect(results).to.be.an('array').length(93);
             done();
@@ -11,7 +11,7 @@ describe('Test Select Api', function () {
     });
 
     it('wrong table test', function (done) {
-        con.runQuery('select from Customer').
+        con.runSql('select from Customer').
         catch(function (err) {
             console.log(err);
             var error = {
@@ -24,7 +24,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with skip', function (done) {
-        con.runQuery('select from Customers skip 10').
+        con.runSql('select from Customers skip 10').
         then(function (results) {
             expect(results).to.be.an('array').length(83);
             done();
@@ -35,7 +35,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with where', function (done) {
-        con.runQuery('select * from Customers where Country=Mexico').
+        con.runSql('select * from Customers where Country=Mexico').
         then(function (results) {
             expect(results).to.be.an('array').length(5);
             done();
@@ -46,7 +46,7 @@ describe('Test Select Api', function () {
     });
 
     it('select without ignore case', function (done) {
-        con.runQuery("select from Customers where Country='mexico'").
+        con.runSql("select from Customers where Country='mexico'").
         then(function (results) {
             expect(results).to.be.an('array').length(0);
             done();
@@ -57,7 +57,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with ignore case', function (done) {
-        con.runQuery("select * from Customers where Country='meXico' ignoreCase").
+        con.runSql("select * from Customers where Country='meXico' ignoreCase").
         then(function (results) {
             expect(results).to.be.an('array').length(5);
             done();
@@ -68,7 +68,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with ignore case with a number type', function (done) {
-        con.runQuery("select * from Customers where Country='meXico' &  CustomerID=3 ignoreCase").
+        con.runSql("select * from Customers where Country='meXico' &  CustomerID=3 ignoreCase").
         then(function (results) {
             expect(results).to.be.an('array').length(1);
             done();
@@ -79,7 +79,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with ignore case with a number type and not equal to value', function (done) {
-        con.runQuery("select * from Customers where Country='meXico' &  CustomerID != 3 ignoreCase").
+        con.runSql("select * from Customers where Country='meXico' &  CustomerID != 3 ignoreCase").
         then(function (results) {
             expect(results).to.be.an('array').length(4);
             done();
@@ -90,7 +90,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with distinct', function (done) {
-        con.runQuery("select * from Customers where City='bhubaneswar' distinct ignoreCase").
+        con.runSql("select * from Customers where City='bhubaneswar' distinct ignoreCase").
         then(function (results) {
             expect(results).to.be.an('array').length(1);
             done();
@@ -101,7 +101,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with or', function (done) {
-        con.runQuery("select * from Customers where Country='Mexico' | City= Madrid ").
+        con.runSql("select * from Customers where Country='Mexico' | City= Madrid ").
         then(function (results) {
             expect(results).to.be.an('array').length(8);
             done();
@@ -112,7 +112,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with in', function (done) {
-        con.runQuery("select * from Customers where Country in ('Germany', 'France', 'UK') ").
+        con.runSql("select * from Customers where Country in ('Germany', 'France', 'UK') ").
         then(function (results) {
             expect(results).to.be.an('array').length(29);
             done();
@@ -123,7 +123,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like -"%or%"', function (done) {
-        con.runQuery("select * from Customers where CustomerName like %or% ").
+        con.runSql("select * from Customers where CustomerName like %or% ").
         then(function (results) {
             expect(results).to.be.an('array').length(11);
             done();
@@ -134,7 +134,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like - "o%"', function (done) {
-        con.runQuery("select * from Customers where CustomerName like o% ").
+        con.runSql("select * from Customers where CustomerName like o% ").
         then(function (results) {
             var expected_id_list = [54, 55, 56];
             var id_list = [];
@@ -150,7 +150,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like - "%o"', function (done) {
-        con.runQuery("select * from Customers where CustomerName like %o ").
+        con.runSql("select * from Customers where CustomerName like %o ").
         then(function (results) {
             var expected_id_list = [15, 21, 29, 46, 69, 73];
             var id_list = [];
@@ -166,7 +166,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with GroupBy', function (done) {
-        con.runQuery("select * from Customers group by Country").
+        con.runSql("select * from Customers group by Country").
         then(function (results) {
             expect(results).to.be.an('array').length(22);
             done();
@@ -177,7 +177,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with order by', function (done) {
-        con.runQuery("select * from Customers order by Country desc").
+        con.runSql("select * from Customers order by Country desc").
         then(function (results) {
             expect(results).to.be.an('array').length(93);
             done();
@@ -188,7 +188,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with order by,limit 5, deep eql', function (done) {
-        con.runQuery("select * from Customers order by Country desc limit 5").
+        con.runSql("select * from Customers order by Country desc limit 5").
         then(function (results) {
             var datas = [{
                 "CustomerID": 47,

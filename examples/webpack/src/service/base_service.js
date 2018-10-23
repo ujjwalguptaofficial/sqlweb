@@ -1,5 +1,5 @@
 import {
-    sqlWebInstance
+    con
 } from "./idb_service";
 export class BaseService {
 
@@ -8,18 +8,18 @@ export class BaseService {
         this.initJsStore();
     }
 
-    get sqlWebObj() {
-        return sqlWebInstance;
+    get connection() {
+        return con;
     }
 
     initJsStore() {
-        this.sqlWebObj.runQuery(`ISDBEXIST ${this.dbName}`).then((isExist) => {
+        this.connection.runSql(`ISDBEXIST ${this.dbName}`).then((isExist) => {
             if (isExist) {
                 const qry = 'OPENDB ' + this.dbName;
-                this.sqlWebObj.runQuery(qry);
+                this.connection.runSql(qry);
             } else {
                 const qry = this.getDbQuery();
-                this.sqlWebObj.runQuery(qry);
+                this.connection.runSql(qry);
             }
         }).catch(err => {
             console.error(err);

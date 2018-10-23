@@ -4,7 +4,7 @@
 //     // }).
 //     var qry = new SqlWeb.Query('insert into Suppliers Values=@values return');
 //     qry.map("@values", results);
-//     con.runQuery(qry).
+//     con.runSql(qry).
 //     catch(function (err) {
 //         console.log(err);
 //         var error = {

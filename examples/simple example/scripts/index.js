@@ -1,4 +1,4 @@
-var connection = new SqlWeb.Instance('scripts/jsstore.worker.js');
+var connection = new JsStore.Instance(new Worker('scripts/jsstore.worker.js'));
 window.onload = function () {
     initiateDb();
     $('#btnAddStudent').click(function () {
@@ -20,7 +20,7 @@ window.onload = function () {
 function deleteData(studentId) {
     var query = new SqlWeb.Query("REMOVE FROM Student WHERE Id=@studentId");
     query.map("@studentId", Number(studentId));
-    connection.runQuery(query).
+    connection.runSql(query).
     then(function (rowsDeleted) {
         console.log(rowsDeleted + ' rows deleted');
         if (rowsDeleted > 0) {
@@ -34,15 +34,15 @@ function deleteData(studentId) {
 
 function initiateDb() {
     var dbName = "Students";
-    connection.runQuery('ISDBEXIST ' + dbName).then(function (isExist) {
+    connection.runSql('ISDBEXIST ' + dbName).then(function (isExist) {
         if (isExist) {
-            connection.runQuery('OPENDB ' + dbName).then(function () {
+            connection.runSql('OPENDB ' + dbName).then(function () {
                 console.log('db opened');
             });
             showTableData();
         } else {
             var dbQuery = getDbQuery();
-            connection.runQuery(dbQuery).then(function (tables) {
+            connection.runSql(dbQuery).then(function (tables) {
                 console.log(tables);
             });
             insertStudents();
@@ -58,7 +58,7 @@ function insertStudents() {
     var students = getStudents();
     var query = new SqlWeb.Query('INSERT INTO Student values=@val');
     query.map("@val", students);
-    connection.runQuery(query).then(function (rowsAdded) {
+    connection.runSql(query).then(function (rowsAdded) {
         if (rowsAdded > 0) {
             alert('Successfully added');
         }
@@ -84,7 +84,7 @@ function getDbQuery() {
 
 //This function refreshes the table
 function showTableData() {
-    connection.runQuery('select * from Student').then(function (students) {
+    connection.runSql('select * from Student').then(function (students) {
         var HtmlString = "";
         students.forEach(function (student) {
             HtmlString += "<tr ItemId=" + student.Id + "><td>" +

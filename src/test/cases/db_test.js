@@ -26,7 +26,7 @@ describe('Db Test', function () {
     });
 
     it('open db test', function (done) {
-        con.runQuery('open Demo').then(function () {
+        con.runSql('open Demo').then(function () {
             done();
         }).catch(function (err) {
             done(err);
@@ -51,7 +51,7 @@ describe('Db Test', function () {
     });
 
     it('open db test - invalid db', function (done) {
-        con.runQuery('open invalid_db').then(function (results) {
+        con.runSql('open invalid_db').then(function (results) {
             done();
         }).catch(err => {
             var error = {

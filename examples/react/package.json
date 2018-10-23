@@ -12,16 +12,17 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "jsstore": "^2.5.0",
+    "jsstore": "^2.7.2",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
-    "sqlweb": "^1.0.7"
+    "sqlweb": "^1.1.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.4",
     "babel-preset-env": "^1.6.1",
     "babel-preset-react": "^6.24.1",
+    "html-webpack-plugin": "^3.2.0",
     "webpack": "^4.6.0",
     "webpack-cli": "^2.0.15",
     "webpack-dev-server": "^3.1.3",

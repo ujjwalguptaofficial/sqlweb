@@ -4,7 +4,7 @@ window.onload = function () {
     startTest();
 }
 
-var con = new SqlWeb.Instance();
+var con = new JsStore.Instance();
 function startTest() {
     window.__karma__.start();
 }

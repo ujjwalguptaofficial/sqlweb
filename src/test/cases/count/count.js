@@ -1,6 +1,6 @@
 describe('Test count Api', function () {
     it('count all', function (done) {
-        con.runQuery("count * from Customers").
+        con.runSql("count * from Customers").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(93);
             done();
@@ -12,7 +12,7 @@ describe('Test count Api', function () {
     });
 
     it('count with where', function (done) {
-        con.runQuery("count * from Customers where Country=Mexico").
+        con.runSql("count * from Customers where Country=Mexico").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(5);
             done();
@@ -23,7 +23,7 @@ describe('Test count Api', function () {
     });
 
     it('count without ignore case', function (done) {
-        con.runQuery("count * from Customers where Country=mexico").
+        con.runSql("count * from Customers where Country=mexico").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(0);
             done();
@@ -35,7 +35,7 @@ describe('Test count Api', function () {
 
     it('count with ignore case', function (done) {
 
-        con.runQuery("count * from Customers where Country=mexico IgnoreCase").
+        con.runSql("count * from Customers where Country=mexico IgnoreCase").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(5);
             done();
@@ -46,7 +46,7 @@ describe('Test count Api', function () {
     });
 
     it('count with or', function (done) {
-        con.runQuery("count from Customers where Country=Mexico | City=Madrid").
+        con.runSql("count from Customers where Country=Mexico | City=Madrid").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(8);
             done();
@@ -57,7 +57,7 @@ describe('Test count Api', function () {
     });
 
     it('count with in', function (done) {
-        con.runQuery("cOunt from Customers wHere Country in ('Germany', 'France', 'UK') ").
+        con.runSql("cOunt from Customers wHere Country in ('Germany', 'France', 'UK') ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(29);
             done();
@@ -68,7 +68,7 @@ describe('Test count Api', function () {
     });
 
     it('count with operator - >', function (done) {
-        con.runQuery("Count * from Products wHere Price>20").
+        con.runSql("Count * from Products wHere Price>20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(37);
             done();
@@ -87,7 +87,7 @@ describe('Test count Api', function () {
         //         }
         //     }
         // }).
-        con.runQuery("Count * from Products wHere Price>=20").
+        con.runSql("Count * from Products wHere Price>=20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(38);
             done();
@@ -99,7 +99,7 @@ describe('Test count Api', function () {
 
     it('count with operator - <', function (done) {
 
-        con.runQuery("Count * from Products wHere Price < 20").
+        con.runSql("Count * from Products wHere Price < 20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(39);
             done();
@@ -111,7 +111,7 @@ describe('Test count Api', function () {
 
     it('count with operator - <=', function (done) {
 
-        con.runQuery("Count * from Products wHere Price <= 20").
+        con.runSql("Count * from Products wHere Price <= 20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(40);
             done();
@@ -123,7 +123,7 @@ describe('Test count Api', function () {
 
     it('select with operator - != (for string)', function (done) {
 
-        con.runQuery("Count * from Customers wHere Country !=Mexico").
+        con.runSql("Count * from Customers wHere Country !=Mexico").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(88);
             done();
@@ -134,7 +134,7 @@ describe('Test count Api', function () {
     });
 
     it('select with operator - != (for number)', function (done) {
-        con.runQuery("Count * from Products wHere Price != 20").
+        con.runSql("Count * from Products wHere Price != 20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(76);
             done();
@@ -145,7 +145,7 @@ describe('Test count Api', function () {
     });
 
     it('count with operator - between', function (done) {
-        con.runQuery("Count * from Products wHere Price betWeen (10,20)").
+        con.runSql("Count * from Products wHere Price betWeen (10,20)").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(29);
             done();
@@ -157,7 +157,7 @@ describe('Test count Api', function () {
 
     it('count with like', function (done) {
 
-        con.runQuery("Count * from Customers where CustomerName like %or% ").
+        con.runSql("Count * from Customers where CustomerName like %or% ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(11);
             done();
@@ -168,7 +168,7 @@ describe('Test count Api', function () {
     });
 
     it('select with like - "o%"', function (done) {
-        con.runQuery("Count * from Customers where CustomerName like o% ").
+        con.runSql("Count * from Customers where CustomerName like o% ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(3);
             done();
@@ -179,7 +179,7 @@ describe('Test count Api', function () {
     });
 
     it('select with like - "%o"', function (done) {
-        con.runQuery("Count * from Customers where CustomerName like %o ").
+        con.runSql("Count * from Customers where CustomerName like %o ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(6);
             done();
@@ -190,7 +190,7 @@ describe('Test count Api', function () {
     });
 
     it('wrong table test', function (done) {
-        con.runQuery("Count * from Cusdtomers ").
+        con.runSql("Count * from Cusdtomers ").
         catch(function (err) {
             var error = {
                 "message": "Table 'Cusdtomers' does not exist",

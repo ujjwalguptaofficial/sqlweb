@@ -16,13 +16,13 @@ export class BaseService {
      * @memberof IdbService
      */
     initDatabase() {
-        this.connection.runQuery(`ISDBEXIST ${this.dbName_}`).then((ifExist: boolean) => {
+        this.connection.runSql(`ISDBEXIST ${this.dbName_}`).then((ifExist: boolean) => {
             if (ifExist) {
-                this.connection.runQuery(`OPENDB ${this.dbName_}`);
+                this.connection.runSql(`OPENDB ${this.dbName_}`);
             }
             else {
                 const qry = this.getDbQuery_();
-                this.connection.runQuery(qry);
+                this.connection.runSql(qry);
             }
         }).catch((err: IError) => {
             console.error(err);
