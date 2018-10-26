@@ -70,7 +70,7 @@ describe('Test operator', function () {
     });
 
     it('select with operator - "<" and ">" ', function (done) {
-        con.runSql("select * from Products wheRe Price >10 & Price<20").
+        con.runSql("select * from Products wheRe Price >10 && Price<20").
         then(function (results) {
             expect(results).to.be.an('array').length(25);
             done();

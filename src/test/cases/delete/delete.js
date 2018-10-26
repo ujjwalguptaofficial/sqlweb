@@ -57,14 +57,14 @@ describe('Test remove Api', function () {
     it('remove with or', function (done) {
 
         var count;
-        con.runSql("Count * from Customers where Country=Mexico | City=Madrid").
+        con.runSql("Count * from Customers where Country=Mexico || City=Madrid").
         then(function (results) {
             count = results;
         }).catch(function (err) {
             done(err);
         })
 
-        con.runSql("deLete from Customers where Country=Mexico | City=Madrid").
+        con.runSql("deLete from Customers where Country=Mexico || City=Madrid").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();

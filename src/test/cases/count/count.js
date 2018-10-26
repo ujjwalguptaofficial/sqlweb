@@ -46,7 +46,7 @@ describe('Test count Api', function () {
     });
 
     it('count with or', function (done) {
-        con.runSql("count from Customers where Country=Mexico | City=Madrid").
+        con.runSql("count from Customers where Country=Mexico || City=Madrid").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(8);
             done();

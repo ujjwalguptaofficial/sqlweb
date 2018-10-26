@@ -1,6 +1,6 @@
 describe('Test select complex case', function () {
     it('select with multiple or', function (done) {
-        con.runSql('select from Customers where Country=Mexico | (City=Madrid | Address like %a%)').
+        con.runSql('select from Customers where Country=Mexico || (City=Madrid || Address like %a%)').
         then(function (results) {
             expect(results).to.be.an('array').length(73);
             done();
@@ -9,8 +9,8 @@ describe('Test select complex case', function () {
         })
     });
 
-    it('select with and "&" like', function (done) {
-        con.runSql('selEct * From Customers wherE Address like %a% & City=London').
+    it('select with and "&&" like', function (done) {
+        con.runSql('selEct * From Customers wherE Address like %a% && City=London').
         then(function (results) {
             expect(results).to.be.an('array').length(4);
             done();
@@ -19,8 +19,8 @@ describe('Test select complex case', function () {
         })
     });
 
-    it('select with and "&" not', function (done) {
-        con.runSql('select * from Customers where Country!=Mexico & City=London').
+    it('select with and "&&" not', function (done) {
+        con.runSql('select * from Customers where Country!=Mexico && City=London').
         then(function (results) {
             expect(results).to.be.an('array').length(6);
             done();
@@ -30,7 +30,7 @@ describe('Test select complex case', function () {
     });
 
     it('select with multiple and (wrong data)', function (done) {
-        con.runSql('select * from Customers where Address=hisrtgb & City=London').
+        con.runSql('select * from Customers where Address=hisrtgb && City=London').
         then(function (results) {
             expect(results).to.be.an('array').length(0);
             done();
@@ -40,7 +40,7 @@ describe('Test select complex case', function () {
     });
 
     it('select with or (wrong data)', function (done) {
-        con.runSql('select * from Customers where Address=hisrtgb | City=London').
+        con.runSql('select * from Customers where Address=hisrtgb || City=London').
         then(function (results) {
             expect(results).to.be.an('array').length(6);
             done();
@@ -51,7 +51,7 @@ describe('Test select complex case', function () {
 
 
     it("sql qry - select * from customers where city='london' or address like 'a%' ", function (done) {
-        con.runSql("select * from Customers where City='London' | Address like a% ").
+        con.runSql("select * from Customers where City='London' || Address like a% ").
         then(function (results) {
             expect(results).to.be.an('array').length(16);
             done();
@@ -61,7 +61,7 @@ describe('Test select complex case', function () {
     });
 
     it("sql qry - select * from customers where city='dsfgtbb' or address like 'a%' ", function (done) {
-        con.runSql("select * from Customers where City='dsfgtbb' | Address lIke a%").
+        con.runSql("select * from Customers where City='dsfgtbb' || Address lIke a%").
         then(function (results) {
             expect(results).to.be.an('array').length(10);
             done();
@@ -71,7 +71,7 @@ describe('Test select complex case', function () {
     });
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexico' and (City='London' or Address like '%a%')", function (done) {
-        con.runSql("SELECT * FROM Customers WHERE Country='Mexico' & (City='London' | Address like %a%)").
+        con.runSql("SELECT * FROM Customers WHERE Country='Mexico' && (City='London' || Address like %a%)").
         then(function (results) {
             var expected_id_list = [2, 3, 13, 58, 80];
             var id_list = [];
@@ -86,7 +86,7 @@ describe('Test select complex case', function () {
     });
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexizfdfco' and (City='London' or Address like '%a%')", function (done) {
-        con.runSql("SELECT * FROM Customers WHERE Country='Mexizfdfco' & (City='London' | Address like %a%)").
+        con.runSql("SELECT * FROM Customers WHERE Country='Mexizfdfco' && (City='London' || Address like %a%)").
         then(function (results) {
             expect(results).to.be.an('array').length(0);
             done();
@@ -97,7 +97,7 @@ describe('Test select complex case', function () {
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexico' or (City='London' and Address like '%a%')", function (done) {
 
-        con.runSql("SELECT * FROM Customers WHERE Country='Mexico' | (City='London' & Address like %a%)").
+        con.runSql("SELECT * FROM Customers WHERE Country='Mexico' || (City='London' && Address like %a%)").
         then(function (results) {
             var expected_id_list = [2, 3, 4, 11, 13, 16, 58, 72, 80];
             var id_list = [];
@@ -112,7 +112,7 @@ describe('Test select complex case', function () {
     });
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexico' or (City='London' and Address like '%adsfvbbbb%')", function (done) {
-        con.runSql("SELECT * FROM Customers WHERE Country='Mexico' | (City='London' & Address like %adsfvbbbb%)").
+        con.runSql("SELECT * FROM Customers WHERE Country='Mexico' || (City='London' && Address like %adsfvbbbb%)").
         then(function (results) {
             var expected_id_list = [2, 3, 13, 58, 80];
             var id_list = [];
@@ -128,7 +128,7 @@ describe('Test select complex case', function () {
 
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexico' and (City='London' or Address like '%a%') and ContactName like '%a%'", function (done) {
-        con.runSql("SELECT * FROM Customers WHERE Country='Mexico' & (City='London' | Address liKe %a%) & ContactName like %a%").
+        con.runSql("SELECT * FROM Customers WHERE Country='Mexico' && (City='London' || Address liKe %a%) && ContactName like %a%").
         then(function (results) {
             expect(results).to.be.an('array').length(4);
             done();
@@ -138,7 +138,7 @@ describe('Test select complex case', function () {
     });
 
     it("sql qry - SELECT * FROM Customers WHERE Country='Mexico' and (City='London' or Address like '%a%') or ContactName like 'a%'", function (done) {
-        con.runSql("SELECT * FROM Customers WHERE Country='Mexico' & (City='London' | Address like %a%) | ContactName like a%").
+        con.runSql("SELECT * FROM Customers WHERE Country='Mexico' && (City='London' || Address like %a%) || ContactName like a%").
         then(function (results) {
             expect(results).to.be.an('array').length(13);
             done();
@@ -147,8 +147,8 @@ describe('Test select complex case', function () {
         })
     });
 
-    it("select * from employees where jobSuspendedFlag=0 && state in('Working', 'Diagnostics', 'FinalTest')", function (done) {
-        con.runSql("select * from Employees where jobSuspendedFlag=0 & state in('Working', 'Diagnostics', 'FinalTest')").
+    it("select * from employees where jobSuspendedFlag=0 &&&& state in('Working', 'Diagnostics', 'FinalTest')", function (done) {
+        con.runSql("select * from Employees where jobSuspendedFlag=0 && state in('Working', 'Diagnostics', 'FinalTest')").
         then(function (results) {
             expect(results).to.be.an('array').length(15);
             done();

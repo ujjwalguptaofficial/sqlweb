@@ -103,7 +103,7 @@ describe('Test update Api', function () {
     
     it('update with or', function (done) {
         var selectCount;
-        con.runSql("select from Customers where Country=Mexico | City=Madrid").
+        con.runSql("select from Customers where Country=Mexico || City=Madrid").
         then(function (results) {
             selectCount = results.length;
             done();
@@ -112,7 +112,7 @@ describe('Test update Api', function () {
             done(err);
         })
 
-        con.runSql("update Customers sEt City=madrid where Country=Mexico | City=Madrid").
+        con.runSql("update Customers sEt City=madrid where Country=Mexico || City=Madrid").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(selectCount);
             done();

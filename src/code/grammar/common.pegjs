@@ -8,11 +8,11 @@ JoinOp= And/Or;
 
 OrderByTypes "order type" = "asc"/"desc" ;
 
-And = "&";
+And = "&&";
 
-Or = "|";
+Or = "||";
 
-ColumnValue=[a-zA-Z0-9@_'#*!~$+=/|\:.?-]
+ColumnValue= [a-zA-Z0-9@_'#*!~$+=/|\:.?-]
 
 Identifier "identifier"= val:[a-zA-Z_]+ {
 	return val.join("");
@@ -22,7 +22,7 @@ Word = l:Letter+ {return l.join("");}
 
 WordAndNumber = [a-zA-Z0-9]
 
-Letter = [a-zA-Z]
+Letter = [^]+
 
 Number= d:Digit+ {return Number(d.join(""))}
 

@@ -174,7 +174,7 @@ whereitems = item1:(whereQryWithoutParanthesis/whereQryWithParanthesis) item2:jo
 
 joinWhereItems = _ op:JoinOp _* where:(whereQryWithoutParanthesis/whereQryWithParanthesis) {
 	
-    if(op==='|'){
+    if(op==='||'){
     	var obj={};
         if(Array.isArray(where)){
           where.forEach(val=>{
@@ -228,7 +228,7 @@ whereQryWithParanthesis = "(" _*  fw: firstWhere jw:joinWhereItem* _* ")" {
 firstWhere = whereItem
 
 joinWhereItem = _ op:JoinOp _ item:whereItem {
-	if(op==='|'){
+	if(op==='||'){
     	return {
         	or: item
         }

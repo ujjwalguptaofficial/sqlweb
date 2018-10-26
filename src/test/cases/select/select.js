@@ -68,7 +68,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with ignore case with a number type', function (done) {
-        con.runSql("select * from Customers where Country='meXico' &  CustomerID=3 ignoreCase").
+        con.runSql("select * from Customers where Country='meXico' &&  CustomerID=3 ignoreCase").
         then(function (results) {
             expect(results).to.be.an('array').length(1);
             done();
@@ -79,7 +79,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with ignore case with a number type and not equal to value', function (done) {
-        con.runSql("select * from Customers where Country='meXico' &  CustomerID != 3 ignoreCase").
+        con.runSql("select * from Customers where Country='meXico' &&  CustomerID != 3 ignoreCase").
         then(function (results) {
             expect(results).to.be.an('array').length(4);
             done();
@@ -101,7 +101,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with or', function (done) {
-        con.runSql("select * from Customers where Country='Mexico' | City= Madrid ").
+        con.runSql("select * from Customers where Country='Mexico' || City= Madrid ").
         then(function (results) {
             expect(results).to.be.an('array').length(8);
             done();
