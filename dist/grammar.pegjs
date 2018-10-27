@@ -8,7 +8,7 @@ createQuery = db:createDbQuery tables:createTableQuery* {
     }
 }
 
-createDbQuery = DEFINE _* (DATABASE/DB) _* name:dbName ";"? {
+createDbQuery = DEFINE _* DB _* name:dbName ";"? {
 	return {
     	name:name
     }
@@ -183,7 +183,7 @@ return = RETURN{
 
 
 
-removeQuery = (REMOVE/DELETE) _* FROM _ table:tableName _* where:whereQry? _* 
+removeQuery = DELETE _* FROM _ table:tableName _* where:whereQry? _* 
 option:(ignoreCase)* {
   var ignoreCase =false;
   option.forEach(val=>{
@@ -280,10 +280,14 @@ aggregateQry = ("*"_)/ aggr: aggregate _ {
 	return aggr[0];
 }
 
-aggregate = AGGREGATE _* "[" _* first: aggregateType _* rest: inBetweenAggregateColumn* _* "]" {
+aggregate = "["first: aggregateType _* rest: inBetweenAggregateColumn* "]" {
 	rest.splice(0,0,first);
     return rest;
 }
+
+inBetweenAggregateColumn = "," _* val:aggregateType _*{
+	return val;
+} 
 
 aggregateType = minAggregate/ maxAggregate/avgAggregate/countAggregate/sumAggregate
 
@@ -404,7 +408,7 @@ whereitems = item1:(whereQryWithoutParanthesis/whereQryWithParanthesis) item2:jo
 
 joinWhereItems = _ op:JoinOp _* where:(whereQryWithoutParanthesis/whereQryWithParanthesis) {
 	
-    if(op==='|'){
+    if(op==='||'){
     	var obj={};
         if(Array.isArray(where)){
           where.forEach(val=>{
@@ -458,7 +462,7 @@ whereQryWithParanthesis = "(" _*  fw: firstWhere jw:joinWhereItem* _* ")" {
 firstWhere = whereItem
 
 joinWhereItem = _ op:JoinOp _ item:whereItem {
-	if(op==='|'){
+	if(op==='||'){
     	return {
         	or: item
         }
@@ -507,10 +511,6 @@ inBetweenParanthesisColumn = "," _* val:column _*{
 	return val;
 } 
 
-inBetweenAggregateColumn = "," _* val:aggregateType _*{
-	return val;
-} 
-
 inBetweenParanthesisItem = "," _* val:value _*{
 	return val;
 } 
@@ -518,24 +518,27 @@ inBetweenParanthesisItem = "," _* val:value _*{
 likeItem = col:column _* LIKE _* val:likeType { 
 	return {
     	[col]:{
-        	like:val.join('')
+        	like:val
         }
 	}
 }
 
-likeType = (('%'_* value _* '%')/('%'_* value)/(value _* '%'))
+likeType = likeType1/likeType2/likeType3
 
-value "column value"= val:ColumnValue+ {
-  var value=val.join("");
-  if(value[0]=== "'" && value[value.length-1] === "'"){
-  	return value.substr(1,value.length-2);
-  }
-  var number = Number(value); 
-  if(isNaN(number)) 
-  	return value; 
-  else 
-  	return number;
+likeType1= "'%"_* val:Word _* "%'"{
+	return "%"+val+"%";
 }
+
+likeType2 = "'%"_* val:Word"'" {
+  return "%"+ val;
+}
+
+likeType3 = "'"val:Word _* "%'" {
+	return val+"%";
+}
+
+
+
 
 
 updateQuery = UPDATE _ table:tableName _* SET _* set: updateValue _* where:whereQry? _* option:(ignoreCase)* {
@@ -611,23 +614,29 @@ JoinOp= And/Or;
 
 OrderByTypes "order type" = "asc"/"desc" ;
 
-And = "&";
+And = "&&";
 
-Or = "|";
+Or = "||";
 
-ColumnValue=[a-zA-Z0-9@_'#*!~$+=/|\:.?-]
+value "column value"=  val:(ColumnValue/Number) {
+    return val;
+}
+
+ColumnValue=  "'" val:Word "'" {
+	return val;
+}
 
 Identifier "identifier"= val:[a-zA-Z_]+ {
 	return val.join("");
 }
 
-Word = l:Letter+ {return l.join("");}
+Word "word"= l:Letter+ {return l.join("");}
 
 WordAndNumber = [a-zA-Z0-9]
 
-Letter = [a-zA-Z]
+Letter = [^'%]
 
-Number= d:Digit+ {return Number(d.join(""))}
+Number "number"= d:Digit+ {return Number(d.join(""))}
 
 Digit=[0-9]
 
@@ -712,8 +721,6 @@ UPDATE "update" = U P D A T E;
 
 SET "set" = S E T;
 
-REMOVE "remove" = R E M O V E;
-
 DELETE "delete" = D E L E T E;
 
 VERSION "version" = V E R S I O N;
@@ -745,8 +752,6 @@ NOTNULL "notnull" = N O T N U L L;
 DEFAULT "default" = D E F A U L T;
 
 DEFINE "define" = D E F I N E;
-
-DATABASE "database" = D A T A B A S E;
 
 TABLE "table" = T A B L E;
 
