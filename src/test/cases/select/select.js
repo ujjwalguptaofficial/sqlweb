@@ -35,7 +35,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with where', function (done) {
-        con.runSql('select * from Customers where Country=Mexico').
+        con.runSql("select * from Customers where Country='Mexico'").
         then(function (results) {
             expect(results).to.be.an('array').length(5);
             done();
@@ -101,7 +101,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with or', function (done) {
-        con.runSql("select * from Customers where Country='Mexico' || City= Madrid ").
+        con.runSql("select * from Customers where Country='Mexico' || City= 'Madrid' ").
         then(function (results) {
             expect(results).to.be.an('array').length(8);
             done();
@@ -123,7 +123,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like -"%or%"', function (done) {
-        con.runSql("select * from Customers where CustomerName like %or% ").
+        con.runSql("select * from Customers where CustomerName like '%or%' ").
         then(function (results) {
             expect(results).to.be.an('array').length(11);
             done();
@@ -134,7 +134,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like - "o%"', function (done) {
-        con.runSql("select * from Customers where CustomerName like o% ").
+        con.runSql("select * from Customers where CustomerName like 'o%' ").
         then(function (results) {
             var expected_id_list = [54, 55, 56];
             var id_list = [];
@@ -150,7 +150,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like - "%o"', function (done) {
-        con.runSql("select * from Customers where CustomerName like %o ").
+        con.runSql("select * from Customers where CustomerName like '%o' ").
         then(function (results) {
             var expected_id_list = [15, 21, 29, 46, 69, 73];
             var id_list = [];

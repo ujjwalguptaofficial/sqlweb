@@ -13,19 +13,25 @@ And = "&&";
 Or = "||";
 
 ColumnValue= [a-zA-Z0-9@_'#*!~$+=/|\:.?-]
-ColumnValue= [a-zA-Z0-9@_;'#*!~$+=/|\:.?-]
+value "column value"=  val:(ColumnValue/Number) {
+    return val;
+}
+
+ColumnValue=  "'" val:Word "'" {
+	return val;
+}
 
 Identifier "identifier"= val:[a-zA-Z_]+ {
 	return val.join("");
 }
 
-Word = l:Letter+ {return l.join("");}
+Word "word"= l:Letter+ {return l.join("");}
 
 WordAndNumber = [a-zA-Z0-9]
 
-Letter = [^]+
+Letter = [^'%]
 
-Number= d:Digit+ {return Number(d.join(""))}
+Number "number"= d:Digit+ {return Number(d.join(""))}
 
 Digit=[0-9]
 

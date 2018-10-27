@@ -26,7 +26,7 @@ describe('Test update Api', function () {
     });
 
     it('update with like -"%or%', function (done) {
-        con.runSql('update Customers set Country=india where CustomerName like %or%').
+        con.runSql("update Customers set Country='india' where CustomerName like '%or%'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(11);
             done();
@@ -37,7 +37,7 @@ describe('Test update Api', function () {
     });
 
     it('update with like -"o%', function (done) {
-        con.runSql("update Customers set Country=india where CustomerName like o%").
+        con.runSql("update Customers set Country='india' where CustomerName like 'o%'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(3);
             done();
@@ -48,7 +48,7 @@ describe('Test update Api', function () {
     });
 
     it('update with like -"%o', function (done) {
-        con.runSql("update Customers set Country=india where CustomerName like %o").
+        con.runSql("update Customers set Country='india' where CustomerName like '%o'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(6);
             done();
@@ -59,7 +59,7 @@ describe('Test update Api', function () {
     });
 
     it('update with like', function (done) {
-        con.runSql("update Customers set Country=india where CustomerName like %or%").
+        con.runSql("update Customers set Country='india' where CustomerName like '%or%'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(11);
             done();
@@ -103,7 +103,7 @@ describe('Test update Api', function () {
     
     it('update with or', function (done) {
         var selectCount;
-        con.runSql("select from Customers where Country=Mexico || City=Madrid").
+        con.runSql("select from Customers where Country='Mexico' || City='Madrid'").
         then(function (results) {
             selectCount = results.length;
             done();
@@ -112,7 +112,7 @@ describe('Test update Api', function () {
             done(err);
         })
 
-        con.runSql("update Customers sEt City=madrid where Country=Mexico || City=Madrid").
+        con.runSql("update Customers sEt City='madrid' where Country='Mexico' || City='Madrid'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(selectCount);
             done();
@@ -144,7 +144,7 @@ describe('Test update Api', function () {
 
     it('update with operator - != (for string)', function (done) {
         var count;
-        con.runSql("count * from Customers where Country!=Mexico").
+        con.runSql("count * from Customers where Country!='Mexico'").
         then(function (results) {
             count = results;
         }).
@@ -152,7 +152,7 @@ describe('Test update Api', function () {
             done(err);
         });
 
-        con.runSql("update Customers set ContactName= 'Ujjwsal',City= 'bhubaneswsar' where Country!=Mexico").
+        con.runSql("update Customers set ContactName= 'Ujjwsal',City= 'bhubaneswsar' where Country!='Mexico'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -278,7 +278,7 @@ describe('Test update Api', function () {
             done(err);
         })
 
-        con.runSql("update Products set ProductName= Chocolate where Price between (10,20)").
+        con.runSql("update Products set ProductName= 'Chocolate' where Price between (10,20)").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();

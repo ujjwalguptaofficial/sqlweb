@@ -284,23 +284,26 @@ inBetweenParanthesisItem = "," _* val:value _*{
 likeItem = col:column _* LIKE _* val:likeType { 
 	return {
     	[col]:{
-        	like:val.join('')
+        	like:val
         }
 	}
 }
 
-likeType = (('%'_* value _* '%')/('%'_* value)/(value _* '%'))
+likeType = likeType1/likeType2/likeType3
 
-value "column value"= val:ColumnValue+ {
-  var value=val.join("");
-  if(value[0]=== "'" && value[value.length-1] === "'"){
-  	return value.substr(1,value.length-2);
-  }
-  var number = Number(value); 
-  if(isNaN(number)) 
-  	return value; 
-  else 
-  	return number;
+likeType1= "'%"_* val:Word _* "%'"{
+	return "%"+val+"%";
 }
+
+likeType2 = "'%"_* val:Word"'" {
+  return "%"+ val;
+}
+
+likeType3 = "'"val:Word _* "%'" {
+	return val+"%";
+}
+
+
+
 
 

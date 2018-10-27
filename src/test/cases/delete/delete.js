@@ -1,14 +1,14 @@
-describe('Test remove Api', function () {
-    it('remove with where', function (done) {
+describe('Test delete Api', function () {
+    it('delete with where', function (done) {
         var count;
-        con.runSql('count from Customers where Country = Sweden').
+        con.runSql("count from Customers where Country = 'Sweden'").
         then(function (results) {
             count = results
         }).catch(function (err) {
             done(err);
         })
 
-        con.runSql("delete from Customers where Country = Sweden").
+        con.runSql("delete from Customers where Country = 'Sweden'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -19,14 +19,14 @@ describe('Test remove Api', function () {
 
     it('remove without ignore case', function (done) {
         var count;
-        con.runSql("count from Customers where Country = meXico").
+        con.runSql("count from Customers where Country = 'meXico'").
         then(function (results) {
             count = results;
         }).catch(function (err) {
             done(err);
         })
 
-        con.runSql("delete from Customers where Country = meXico").
+        con.runSql("delete from Customers where Country = 'meXico'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -38,14 +38,14 @@ describe('Test remove Api', function () {
     it('remove with ignore case', function (done) {
 
         var count;
-        con.runSql("count from Customers where Country = meXico IGnoreCase").
+        con.runSql("count from Customers where Country = 'meXico' IGnoreCase").
         then(function (results) {
             count = results;
         }).catch(function (err) {
             done(err);
         })
 
-        con.runSql("delete from Customers where Country = meXico IGnoreCase").
+        con.runSql("delete from Customers where Country = 'meXico' IGnoreCase").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -57,14 +57,14 @@ describe('Test remove Api', function () {
     it('remove with or', function (done) {
 
         var count;
-        con.runSql("Count * from Customers where Country=Mexico || City=Madrid").
+        con.runSql("Count * from Customers where Country='Mexico' || City='Madrid'").
         then(function (results) {
             count = results;
         }).catch(function (err) {
             done(err);
         })
 
-        con.runSql("deLete from Customers where Country=Mexico || City=Madrid").
+        con.runSql("deLete from Customers where Country='Mexico' || City='Madrid'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -95,14 +95,14 @@ describe('Test remove Api', function () {
     it('remove with operator - != (for string)', function (done) {
         var count;
 
-        con.runSql("count from Customers where Country != Mexico").
+        con.runSql("count from Customers where Country != 'Mexico'").
         then(function (results) {
             count = results;
         }).catch(function (err) {
             done(err);
         });
 
-        con.runSql("delete from Customers where Country != Mexico").
+        con.runSql("delete from Customers where Country != 'Mexico'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -226,7 +226,7 @@ describe('Test remove Api', function () {
     it('remove with like- "%or%"', function (done) {
         var count;
 
-        con.runSql("count from Customers where CustomerName like %or% ").
+        con.runSql("count from Customers where CustomerName like '%or%' ").
         then(function (results) {
             count = results;
             done();
@@ -234,7 +234,7 @@ describe('Test remove Api', function () {
             done(err);
         })
 
-        con.runSql("delete from Customers where CustomerName like %or% ").
+        con.runSql("delete from Customers where CustomerName like '%or%' ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -245,10 +245,10 @@ describe('Test remove Api', function () {
 
     it('remove with like- "%or"', function (done) {
         var count;
-        con.runSql("count from Customers where CustomerName like %or ").
+        con.runSql("count from Customers where CustomerName like '%or' ").
         then(function (results) {
             count = results;
-            con.runSql("delete from Customers where CustomerName like %or ").
+            con.runSql("delete from Customers where CustomerName like '%or' ").
             then(function (results) {
                 expect(results).to.be.an('number').to.equal(count);
                 done();
@@ -263,14 +263,14 @@ describe('Test remove Api', function () {
 
     it('remove with like- "or%"', function (done) {
         var count;
-        con.runSql("count from Customers where CustomerName like or% ").
+        con.runSql("count from Customers where CustomerName like 'or%' ").
         then(function (results) {
             count = results;
         }).catch(function (results) {
             done(err);
         })
 
-        con.runSql("delete from Customers where CustomerName like or% ").
+        con.runSql("delete from Customers where CustomerName like 'or%' ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();

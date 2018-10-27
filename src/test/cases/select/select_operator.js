@@ -1,6 +1,6 @@
 describe('Test operator', function () {
     it('select with operator - != (for string)', function (done) {
-        con.runSql("select * from Customers where Country!=Mexico").
+        con.runSql("select * from Customers where Country!='Mexico'").
         then(function (results) {
             expect(results).to.be.an('array').length(88);
             done();

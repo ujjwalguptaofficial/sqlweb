@@ -1,7 +1,7 @@
 describe('Test Select with not equal to', function () {
 
     it("select * from employees where jobSuspendedFlag!=0 and lastName like '%e%')", function (done) {
-        con.runSql("select * from Employees where jobSuspendedFlag!=0 && lastName like %e%").
+        con.runSql("select * from Employees where jobSuspendedFlag!=0 && lastName like '%e%' ").
         then(function (results) {
             expect(results).to.be.an('array').length(3);
             done();
@@ -33,7 +33,7 @@ describe('Test Select with not equal to', function () {
         })
     });
 
-    it("select * from employees where jobSuspendedFlag!=1 &&&& state in('Working', 'Diagnostics', 'FinalTest')", function (done) {
+    it("select * from employees where jobSuspendedFlag!=1 && state in('Working', 'Diagnostics', 'FinalTest')", function (done) {
         con.runSql("select * from Employees where jobSuspendedFlag!=1 && state in('Working', 'Diagnostics', 'FinalTest')").
         then(function (results) {
             expect(results).to.be.an('array').length(15);
@@ -45,7 +45,7 @@ describe('Test Select with not equal to', function () {
     });
 
     it("select * from employees where (notes like '%from%' &&&& state!='Concluded') &&&& state !='WaitPickup'", function (done) {
-        con.runSql("select * from Employees where (notes like %from% && state!='Concluded') && state !='WaitPickup'").
+        con.runSql("select * from Employees where (notes like '%from%' && state!='Concluded') && state !='WaitPickup'").
         then(function (results) {
             expect(results).to.be.an('array').length(6);
             done();

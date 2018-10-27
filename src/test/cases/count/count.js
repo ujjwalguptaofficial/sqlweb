@@ -12,7 +12,7 @@ describe('Test count Api', function () {
     });
 
     it('count with where', function (done) {
-        con.runSql("count * from Customers where Country=Mexico").
+        con.runSql("count * from Customers where Country='Mexico'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(5);
             done();
@@ -23,7 +23,7 @@ describe('Test count Api', function () {
     });
 
     it('count without ignore case', function (done) {
-        con.runSql("count * from Customers where Country=mexico").
+        con.runSql("count * from Customers where Country='mexico'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(0);
             done();
@@ -35,7 +35,7 @@ describe('Test count Api', function () {
 
     it('count with ignore case', function (done) {
 
-        con.runSql("count * from Customers where Country=mexico IgnoreCase").
+        con.runSql("count * from Customers where Country='mexico' IgnoreCase").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(5);
             done();
@@ -46,7 +46,7 @@ describe('Test count Api', function () {
     });
 
     it('count with or', function (done) {
-        con.runSql("count from Customers where Country=Mexico || City=Madrid").
+        con.runSql("count from Customers where Country='Mexico' || City='Madrid'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(8);
             done();
@@ -79,14 +79,6 @@ describe('Test count Api', function () {
     });
 
     it('count with operator - >=', function (done) {
-        // con.jsStoreCon_.count({
-        //     from: 'Products',
-        //     where: {
-        //         Price: {
-        //             ">=": 20
-        //         }
-        //     }
-        // }).
         con.runSql("Count * from Products wHere Price>=20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(38);
@@ -123,7 +115,7 @@ describe('Test count Api', function () {
 
     it('select with operator - != (for string)', function (done) {
 
-        con.runSql("Count * from Customers wHere Country !=Mexico").
+        con.runSql("Count * from Customers wHere Country !='Mexico'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(88);
             done();
@@ -157,7 +149,7 @@ describe('Test count Api', function () {
 
     it('count with like', function (done) {
 
-        con.runSql("Count * from Customers where CustomerName like %or% ").
+        con.runSql("Count * from Customers where CustomerName like '%or%' ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(11);
             done();
@@ -168,7 +160,7 @@ describe('Test count Api', function () {
     });
 
     it('select with like - "o%"', function (done) {
-        con.runSql("Count * from Customers where CustomerName like o% ").
+        con.runSql("Count * from Customers where CustomerName like 'o%' ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(3);
             done();
@@ -179,7 +171,7 @@ describe('Test count Api', function () {
     });
 
     it('select with like - "%o"', function (done) {
-        con.runSql("Count * from Customers where CustomerName like %o ").
+        con.runSql("Count * from Customers where CustomerName like '%o' ").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(6);
             done();

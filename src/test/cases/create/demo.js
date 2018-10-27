@@ -4,7 +4,7 @@ describe('create demo database', function () {
         con.runSql('isDbExist Demo').then(function (isExist) {
             console.log('db exist :' + isExist);
             if (isExist) {
-                con.runSql('open Demo').then(function () {
+                con.runSql('openDb Demo').then(function () {
                     console.log('Database opened');
                     done();
                 });
@@ -108,7 +108,7 @@ function getDbSchema() {
         Address notNull string,
         City notNull string,
         PostalCode notNull string,
-        Country notNull string Default india,
+        Country notNull string Default 'india',
         Phone notNull string
     )
      `

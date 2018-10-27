@@ -4,7 +4,7 @@ function randomDate(start, end) {
 
 describe('Test insert', function () {
     it('wrong table test', function (done) {
-        con.runSql("insert into Customer values=@val").
+        con.runSql("insert into Customer values='@val'").
         catch(function (err) {
             console.log(err);
             var error = {
@@ -18,7 +18,7 @@ describe('Test insert', function () {
 
     it('insert customers', function (done) {
         $.getJSON("test/static/Customers.json", function (results) {
-            var qry = new SqlWeb.Query('insert into Customers Values=@values');
+            var qry = new SqlWeb.Query("insert into Customers Values='@values'");
             qry.map("@values", results);
             con.runSql(qry).
             then(function (results) {
@@ -33,7 +33,7 @@ describe('Test insert', function () {
 
     it('insert Orders', function (done) {
         $.getJSON("test/static/Orders.json", function (results) {
-            var qry = new SqlWeb.Query('insert into Orders Values=@values');
+            var qry = new SqlWeb.Query("insert into Orders Values='@values'");
             qry.map("@values", results);
             con.runSql(qry).
             then(function (results) {
@@ -52,7 +52,7 @@ describe('Test insert', function () {
             results.forEach(function (value) {
                 value.birthDate = new randomDate(startDate, endDate);
             });
-            var qry = new SqlWeb.Query('insert into Employees Values=@values');
+            var qry = new SqlWeb.Query("insert into Employees Values='@values'");
             qry.map("@values", results);
             con.runSql(qry).
             then(function (results) {
@@ -68,7 +68,7 @@ describe('Test insert', function () {
         $.getJSON("test/static/Shippers.json", function (results) {
             var countInsert = 0;
             results.forEach(function (result) {
-                var query = new SqlWeb.Query("insert into Shippers values=@values");
+                var query = new SqlWeb.Query("insert into Shippers values='@values'");
                 query.map("@values", [result]);
                 con.runSql(query).then(function (rowsInserted) {
                     countInsert += rowsInserted;
@@ -84,7 +84,7 @@ describe('Test insert', function () {
 
     it('insert products - using Skip Data', function (done) {
         $.getJSON("test/static/Products.json", function (results) {
-            var qry = new SqlWeb.Query('insert into Products Values=@values skipDataCheck');
+            var qry = new SqlWeb.Query("insert into Products Values='@values' skipDataCheck");
             qry.map("@values", results);
             con.runSql(qry).
             then(function (results) {
@@ -98,7 +98,7 @@ describe('Test insert', function () {
 
     it('insert suppliers - using return Data', function (done) {
         $.getJSON("test/static/Suppliers.json", function (results) {
-            var qry = new SqlWeb.Query('insert into Suppliers Values=@values return');
+            var qry = new SqlWeb.Query("insert into Suppliers Values='@values' return");
             qry.map("@values", results);
             con.runSql(qry).
             then(function (results) {
@@ -112,7 +112,7 @@ describe('Test insert', function () {
 
 
     it('not null test', function (done) {
-        var qry = new SqlWeb.Query('insert into Customers Values=@values');
+        var qry = new SqlWeb.Query("insert into Customers Values='@values'");
         qry.map("@values", [{}]);
         con.runSql(qry).
         catch(function (err) {
