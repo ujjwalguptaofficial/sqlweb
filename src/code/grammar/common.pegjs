@@ -12,7 +12,6 @@ And = "&&";
 
 Or = "||";
 
-ColumnValue= [a-zA-Z0-9@_'#*!~$+=/|\:.?-]
 value "column value"=  val:(ColumnValue/Number) {
     return val;
 }
