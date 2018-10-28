@@ -4,19 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "start":"webpack-dev-server"
   },
   "author": "ujjwal gupta",
   "license": "ISC",
   "dependencies": {
     "jquery": "^3.3.1",
     "jsstore": "^2.7.2",
-    "sqlweb": "^1.1.0"
+    "sqlweb": "^1.2.0"
   },
   "devDependencies": {
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
     "webpack": "^4.6.0",
-    "webpack-cli": "^2.1.2"
+    "webpack-cli": "^2.1.2",
+    "webpack-dev-server": "^3.1.10"
   }
 }
