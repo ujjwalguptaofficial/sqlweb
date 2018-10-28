@@ -18,7 +18,7 @@ window.onload = function () {
 };
 
 function deleteData(studentId) {
-    var query = new SqlWeb.Query("REMOVE FROM Student WHERE Id=@studentId");
+    var query = new SqlWeb.Query("DELETE FROM Student WHERE Id='@studentId'");
     query.map("@studentId", Number(studentId));
     connection.runSql(query).
     then(function (rowsDeleted) {
@@ -56,7 +56,7 @@ function initiateDb() {
 
 function insertStudents() {
     var students = getStudents();
-    var query = new SqlWeb.Query('INSERT INTO Student values=@val');
+    var query = new SqlWeb.Query("INSERT INTO Student values='@val'");
     query.map("@val", students);
     connection.runSql(query).then(function (rowsAdded) {
         if (rowsAdded > 0) {
@@ -73,7 +73,7 @@ function getDbQuery() {
     var tblStudent = `DEFINE TABLE Student(
         Id PRIMARYKEY AUTOINCREMENT,
         Name NOTNULL STRING,
-        GENDER STRING DEFAULT male,
+        GENDER STRING DEFAULT 'male',
         Country NOTNULL STRING,
         City NOTNULL
     )

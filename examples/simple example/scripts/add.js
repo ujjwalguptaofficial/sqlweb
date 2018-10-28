@@ -23,7 +23,7 @@ function getStudent() {
     StudentId = getQsValueByName('id');
     //check if Query string param exist
     if (StudentId) {
-        var query = new SqlWeb.Query('select * from Student where Id=@id');
+        var query = new SqlWeb.Query("select * from Student where Id='@id'");
         query.map('@id', Number(StudentId));
         connection.runSql(query)
             .then(function (results) {
@@ -54,7 +54,7 @@ function Submit() {
 }
 
 function updateStudent() {
-    var query = new SqlWeb.Query('UPDATE Student SET Name=@name,Gender=@gender,Country=@country,City=@city WHERE Id=@id');
+    var query = new SqlWeb.Query("UPDATE Student SET Name='@name',Gender='@gender',Country='@country',City='@city' WHERE Id='@id'");
     query.map("@name", $('#txtName').val());
     query.map("@gender", $("input[name='Gender']:checked").val());
     query.map("@country", $('#txtCountry').val());
@@ -78,7 +78,7 @@ function addStudent() {
         Country: $('#txtCountry').val(),
         City: $('#txtCity').val()
     };
-    var query = new SqlWeb.Query('insert into Student values ({Name:@name,Gender:@gender,Country:@country,City:@city})')
+    var query = new SqlWeb.Query("insert into Student values ({Name:'@name',Gender:'@gender',Country:'@country',City:'@city'})")
     query.map("@name", $('#txtName').val());
     query.map("@gender", $("input[name='Gender']:checked").val());
     query.map("@country", $('#txtCountry').val());
