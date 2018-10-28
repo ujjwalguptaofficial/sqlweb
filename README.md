@@ -6,17 +6,10 @@
 
 SqlWeb is an extension of [JsStore](http://jsstore.net/) which allows to use sql query for performing database operation in IndexedDB.
 
+### Website
+
+[https://github.com/ujjwalguptaofficial/sqlweb/wiki](https://github.com/ujjwalguptaofficial/sqlweb/wiki)
+
 ### Example
-
-```
-var con = new JsStore.Instance(new Worker('jsstore script path'));
-
-//insert into table customers
-con.runSql('insert into Customers ({id: 1,name:ujjwal})');
-
-//select all customers
-con.runSql('select from Customers');
-
-```
 
 Please see [examples](https://github.com/ujjwalguptaofficial/sqlweb/tree/master/examples) folder for different tools support and real world example.
