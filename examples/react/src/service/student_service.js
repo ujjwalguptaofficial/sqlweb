@@ -18,7 +18,7 @@ export class StudentService extends BaseService {
 
     addStudent(student) {
         const qry = new Query(`insert into ${this.tableName} 
-        values ({name:@name,gender:@gender,country:@country,city:@city}) return
+        values ({name:'@name',gender:'@gender',country:'@country',city:'@city'}) return
         `);
         qry.map("@name", student.name);
         qry.map("@gender", student.gender);
@@ -26,7 +26,7 @@ export class StudentService extends BaseService {
         qry.map("@city", student.city);
 
         // below code is equaivalent of above - another way of using insert
-        // const qry = new Query(`insert into ${this.tableName} values=@values return`);
+        // const qry = new Query(`insert into ${this.tableName} values='@values' return`);
         // qry.map('@values', [student]);
 
         return this.connection.runSql(qry);
@@ -37,15 +37,15 @@ export class StudentService extends BaseService {
     }
 
     removeStudent(id) {
-        return this.connection.runSql(`remove from ${this.tableName} where id= ${id}`);
+        return this.connection.runSql(`delete from ${this.tableName} where id= ${id}`);
     }
 
     updateStudentById(id, updateData) {
         const qry = `update ${this.tableName} set 
-        name=${updateData.name},
-        gender=${updateData.gender},
-        country=${updateData.country},
-        city=${updateData.city} 
+        name='${updateData.name}',
+        gender='${updateData.gender}',
+        country='${updateData.country}',
+        city='${updateData.city}'
         where id=${id}`;
 
         return this.connection.runSql(qry);

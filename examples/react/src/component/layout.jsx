@@ -25,7 +25,7 @@ export default class Layout extends React.Component {
 
     addStudent(student) {
         this.service.addStudent(student).then((students) => {
-            this.state.students.push(student);
+            this.state.students.push(students[0]);
             this.setState({ students: this.state.students });
         }).catch((err) => {
             console.log(err);
