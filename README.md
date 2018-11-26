@@ -10,6 +10,17 @@ SqlWeb is an extension of [JsStore](http://jsstore.net/) which allows to use sql
 
 [https://github.com/ujjwalguptaofficial/sqlweb/wiki](https://github.com/ujjwalguptaofficial/sqlweb/wiki)
 
-### Example
+### Examples
 
-Please see [examples](https://github.com/ujjwalguptaofficial/sqlweb/tree/master/examples) folder for different tools support and real world example.
+```
+var connection = new JsStore.Instance('jsstore worker path');
+connection.runSql("select * from Customers").then(function(result) {
+    console.log(result);
+});
+```
+For a complete example - check out below examples.
+
+* [Using it in react](https://github.com/ujjwalguptaofficial/sqlweb/tree/master/examples/react)
+* [Using it with typescript](https://github.com/ujjwalguptaofficial/sqlweb/tree/master/examples/typescript)
+* [Using it with webpack](https://github.com/ujjwalguptaofficial/sqlweb/tree/master/examples/webpack)
+* [Simple example without any framework](https://github.com/ujjwalguptaofficial/sqlweb/tree/master/examples/simple%20example)
