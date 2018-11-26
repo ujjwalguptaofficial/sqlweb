@@ -18,7 +18,7 @@ connection.runSql("select * from Customers").then(function(result) {
     console.log(result);
 });
 ```
-For a complete example - check out below examples.
+For a complete example - check out below link.
 
 * [Using it in react](https://github.com/ujjwalguptaofficial/sqlweb/tree/master/examples/react)
 * [Using it with typescript](https://github.com/ujjwalguptaofficial/sqlweb/tree/master/examples/typescript)
