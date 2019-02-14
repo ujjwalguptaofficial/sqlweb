@@ -1,8 +1,12 @@
 {
   "name": "sqlweb",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "keywords": [
-    "indexeddb", "sql", "jsstore", "websql", "storage"
+    "indexeddb",
+    "sql",
+    "jsstore",
+    "alternative",
+    "websql"
   ],
   "description": "SqlWeb allows you to use sql query for performing database operation in IndexedDB.",
   "main": "dist/sqlweb.commonjs2.js",
@@ -14,12 +18,13 @@
     "test:dev": "karma start src/test/karma.config.dev.js",
     "test:prod": "karma start src/test/karma.config.prod.js",
     "build:dev": "npm run lint && npm run build && npm run test:dev",
+    "build:node": "webpack --config src/webpack/webpack.node.config.js",
     "build:prod": "npm run webpack:prod && npm run test:prod",
     "build:ci": "npm run build:dev && npm run build:prod",
     "webpack:dev": "webpack --config src/webpack/webpack.dev.config.js",
     "webpack:prod": "webpack --config src/webpack/webpack.prod.config.js",
     "move:deploy_file": "node src/deploy_helper.js",
-    "deploy": "npm run build:ci && npm run move:deploy_file"
+    "deploy": "npm run build:ci && npm run build:node && npm run move:deploy_file"
   },
   "repository": {
     "type": "git",
@@ -34,7 +39,7 @@
   "devDependencies": {
     "chai": "^4.1.2",
     "fs-extra": "^7.0.0",
-    "jsstore": "^2.7.2",
+    "jsstore": "^2.10.1",
     "karma": "^1.7.1",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",

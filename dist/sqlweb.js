@@ -1,7 +1,7 @@
 /*!
- * @license :sqlweb - V1.2.0 - 27/10/2018
+ * @license :sqlweb - V1.2.1 - 14/02/2019
  * https://github.com/ujjwalguptaofficial/sqlweb
- * Copyright (c) 2018 @Ujjwal Gupta; Licensed MIT
+ * Copyright (c) 2019 @Ujjwal Gupta; Licensed MIT
  */
 var SqlWeb =
 /******/ (function(modules) { // webpackBootstrap

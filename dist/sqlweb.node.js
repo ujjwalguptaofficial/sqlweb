@@ -8249,4 +8249,4 @@ var parseSql = function (query) {
 
 /***/ })
 /******/ ]);
-//# sourceMappingURL=sqlweb.commonjs2.js.map
+//# sourceMappingURL=sqlweb.node.js.map
