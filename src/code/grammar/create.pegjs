@@ -1,7 +1,7 @@
 createQuery = db:createDbQuery tables:createTableQuery* {
 	db.tables=tables
      return {
-        api:'createDb',
+        api:'initDb',
         data:db
     }
 }
@@ -13,13 +13,17 @@ createDbQuery = DEFINE _* DB _* name:dbName ";"? {
 }
 
 createTableQuery = DEFINE _* (TABLE) _* table:tableName _* "(" _* first:firstColumnDef all:betweenColumnDef* _* ")" _* ver:version? ";"? _* {
- all.push(first);
- var versionData = ver==null?null:ver['version'];
- return {
-     name: table,
-     columns : all,
-     version: versionData
- }
+    all.push(first);
+    var columns = {};
+    all.forEach(function(column){
+        columns = {...columns,...column}
+    });
+    var versionData = ver==null?null:ver['version'];
+    return {
+        name: table,
+        columns : columns,
+        version: versionData
+    }
 }
 
 firstColumnDef = columnDef;
@@ -30,7 +34,6 @@ betweenColumnDef = _* "," _* def: columnDef {
 
 columnDef = name:column _* options:columnOption* {
     var defaultValue = {
-        name:name,
         unique:false,
         autoIncrement:false,
         default:null,
@@ -44,7 +47,9 @@ columnDef = name:column _* options:columnOption* {
         var key = Object.keys(option)[0];
         defaultValue[key] = option[key];
     });
-    return defaultValue;
+    return {
+        [name]: defaultValue
+    };
 }
 
 columnOption = option:columnOpts _*{

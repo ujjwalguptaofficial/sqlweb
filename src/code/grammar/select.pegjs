@@ -1,6 +1,6 @@
 
 
-selectQuery = SELECT _ aggr:aggregateQry ? FROM _ table:tableName _* where:whereQry? _* 
+selectQuery = SELECT _("*"_)? aggr:aggregateQry ? FROM _ table:tableName _* where:whereQry? _* 
 option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
