@@ -5,7 +5,6 @@ export class BaseService {
 
     constructor() {
         this.dbName = "students_db";
-        this.connection.setLogStatus(true);
         this.initJsStore();
     }
 
@@ -14,16 +13,11 @@ export class BaseService {
     }
 
     initJsStore() {
-        this.connection.runSql(`ISDBEXIST ${this.dbName}`).then((isExist) => {
-            if (isExist) {
-                const qry = 'OPENDB ' + this.dbName;
-                this.connection.runSql(qry);
-            } else {
-                const qry = this.getDbQuery();
-                this.connection.runSql(qry);
-            }
-        }).catch(err => {
-            console.error(err);
+        const qry = this.getDbQuery();
+        this.connection.runSql(qry).then(function () {
+            console.log('db initiated');
+        }).catch(function (ex) {
+            console.error(ex);
         })
     }
 
