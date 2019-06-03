@@ -91,3 +91,11 @@ ISDBEXIST "isDbExist" = I S D B E X I S T;
 OPENDB "openDb" = O P E N D B;
 
 DISABLESEARCH "disablesearch" = D I S A B L E S E A R C H;
+
+JOIN "join" = J O I N
+
+ON "on" = O N
+
+INNER "inner" = I N N E R
+
+LEFT "left" = L E F T

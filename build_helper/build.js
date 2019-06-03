@@ -41,6 +41,7 @@ generateParser = function () {
             'src/grammar/remove.pegjs',
             'src/grammar/count.pegjs',
             'src/grammar/select.pegjs',
+            'src/grammar/select_join.pegjs',
             'src/grammar/update.pegjs',
             'src/grammar/open.pegjs',
             'src/grammar/is_db_exist.pegjs',
