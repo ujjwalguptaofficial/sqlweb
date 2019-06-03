@@ -3,10 +3,15 @@ examples
 logos
 node_modules
 src
+build
+test
+webpack
+build_helper
 
 #build tools
 .travis.yml
 .vscode
+
 
 #definition
 !dist/src

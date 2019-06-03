@@ -13,7 +13,7 @@
   "types": "dist/ts/index.d.ts",
   "scripts": {
     "test": "tsc && karma start test/karma.config.js",
-    "build": "node build.js && npm run webpack:dev",
+    "build": "node build_helper/build.js && npm run webpack:dev",
     "lint": "tslint src/**/*.ts",
     "test:dev": "karma start test/karma.config.dev.js",
     "test:prod": "karma start test/karma.config.prod.js",
@@ -23,7 +23,7 @@
     "build:ci": "npm run build:dev && npm run build:prod",
     "webpack:dev": "webpack --config webpack/webpack.dev.config.js",
     "webpack:prod": "webpack --config webpack/webpack.prod.config.js",
-    "move:deploy_file": "node deploy_helper.js",
+    "move:deploy_file": "node build_helper/deploy_helper.js",
     "deploy": "npm run build:ci && npm run build:node && npm run move:deploy_file"
   },
   "repository": {
