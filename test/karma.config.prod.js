@@ -9,7 +9,7 @@ module.exports = function (config) {
                 timeout: 10000 // 6 seconds - upped from 2 seconds
             }
         },
-        files: ['output/sqlweb.min.js', ...files.list_of_files],
+        files: ['build/sqlweb.min.js', ...files.list_of_files],
         proxies: {
             '/test/': '/base/test/',
             '/output/': '/base/output/'
