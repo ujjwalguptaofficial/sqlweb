@@ -3,7 +3,7 @@ export declare class Query {
     private topLevelKeys_;
     constructor(qry: string);
     map(key: string, value: any): void;
-    private isString_(value);
-    private parseJson_(value);
-    private parseSql_(value);
+    private isString_;
+    private parseJson_;
+    private parseSql_;
 }

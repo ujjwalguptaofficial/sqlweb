@@ -1,5 +1,5 @@
 /*!
- * @license :sqlweb - V1.2.1 - 14/02/2019
+ * @license :sqlweb - V1.3.0 - 03/06/2019
  * https://github.com/ujjwalguptaofficial/sqlweb
  * Copyright (c) 2019 @Ujjwal Gupta; Licensed MIT
  */
@@ -145,8 +145,8 @@ var Query = /** @class */ (function () {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Util", function() { return Util; });
-/* harmony import */ var _output_parser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
-/* harmony import */ var _output_parser__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_output_parser__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _build_parser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(3);
+/* harmony import */ var _build_parser__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_build_parser__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _log_helper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(4);
 /* harmony import */ var _enums__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
 
@@ -171,7 +171,7 @@ var Util = /** @class */ (function () {
     Util.parseSql = function (query) {
         try {
             query = query.replace(new RegExp('\n', 'g'), '').trim();
-            return _output_parser__WEBPACK_IMPORTED_MODULE_0__["parse"](query);
+            return _build_parser__WEBPACK_IMPORTED_MODULE_0__["parse"](query);
         }
         catch (ex) {
             var err = new _log_helper__WEBPACK_IMPORTED_MODULE_1__["LogHelper"](_enums__WEBPACK_IMPORTED_MODULE_2__["ERROR_TYPE"].SynTaxError, ex.message).get();
@@ -334,7 +334,7 @@ function peg$parse(input, options) {
       peg$c0 = function(db, tables) {
       	db.tables=tables
            return {
-              api:'createDb',
+              api:'initDb',
               data:db
           }
       },
@@ -350,13 +350,17 @@ function peg$parse(input, options) {
       peg$c6 = ")",
       peg$c7 = peg$literalExpectation(")", false),
       peg$c8 = function(table, first, all, ver) {
-       all.push(first);
-       var versionData = ver==null?null:ver['version'];
-       return {
-           name: table,
-           columns : all,
-           version: versionData
-       }
+          all.push(first);
+          var columns = {};
+          all.forEach(function(column){
+              columns = {...columns,...column}
+          });
+          var versionData = ver==null?null:ver['version'];
+          return {
+              name: table,
+              columns : columns,
+              version: versionData
+          }
       },
       peg$c9 = ",",
       peg$c10 = peg$literalExpectation(",", false),
@@ -365,7 +369,6 @@ function peg$parse(input, options) {
       },
       peg$c12 = function(name, options) {
           var defaultValue = {
-              name:name,
               unique:false,
               autoIncrement:false,
               default:null,
@@ -379,7 +382,9 @@ function peg$parse(input, options) {
               var key = Object.keys(option)[0];
               defaultValue[key] = option[key];
           });
-          return defaultValue;
+          return {
+              [name]: defaultValue
+          };
       },
       peg$c13 = function(option) {
       	return option;
@@ -2366,83 +2371,112 @@ function peg$parse(input, options) {
   }
 
   function peg$parseselectQuery() {
-    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
+    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12;
 
     s0 = peg$currPos;
     s1 = peg$parseSELECT();
     if (s1 !== peg$FAILED) {
       s2 = peg$parse_();
       if (s2 !== peg$FAILED) {
-        s3 = peg$parseaggregateQry();
+        s3 = peg$currPos;
+        if (input.charCodeAt(peg$currPos) === 42) {
+          s4 = peg$c41;
+          peg$currPos++;
+        } else {
+          s4 = peg$FAILED;
+          if (peg$silentFails === 0) { peg$fail(peg$c42); }
+        }
+        if (s4 !== peg$FAILED) {
+          s5 = peg$parse_();
+          if (s5 !== peg$FAILED) {
+            s4 = [s4, s5];
+            s3 = s4;
+          } else {
+            peg$currPos = s3;
+            s3 = peg$FAILED;
+          }
+        } else {
+          peg$currPos = s3;
+          s3 = peg$FAILED;
+        }
         if (s3 === peg$FAILED) {
           s3 = null;
         }
         if (s3 !== peg$FAILED) {
-          s4 = peg$parseFROM();
+          s4 = peg$parseaggregateQry();
+          if (s4 === peg$FAILED) {
+            s4 = null;
+          }
           if (s4 !== peg$FAILED) {
-            s5 = peg$parse_();
+            s5 = peg$parseFROM();
             if (s5 !== peg$FAILED) {
-              s6 = peg$parsetableName();
+              s6 = peg$parse_();
               if (s6 !== peg$FAILED) {
-                s7 = [];
-                s8 = peg$parse_();
-                while (s8 !== peg$FAILED) {
-                  s7.push(s8);
-                  s8 = peg$parse_();
-                }
+                s7 = peg$parsetableName();
                 if (s7 !== peg$FAILED) {
-                  s8 = peg$parsewhereQry();
-                  if (s8 === peg$FAILED) {
-                    s8 = null;
+                  s8 = [];
+                  s9 = peg$parse_();
+                  while (s9 !== peg$FAILED) {
+                    s8.push(s9);
+                    s9 = peg$parse_();
                   }
                   if (s8 !== peg$FAILED) {
-                    s9 = [];
-                    s10 = peg$parse_();
-                    while (s10 !== peg$FAILED) {
-                      s9.push(s10);
-                      s10 = peg$parse_();
+                    s9 = peg$parsewhereQry();
+                    if (s9 === peg$FAILED) {
+                      s9 = null;
                     }
                     if (s9 !== peg$FAILED) {
                       s10 = [];
-                      s11 = peg$parseskip();
-                      if (s11 === peg$FAILED) {
-                        s11 = peg$parselimit();
-                        if (s11 === peg$FAILED) {
-                          s11 = peg$parsedistinct();
-                          if (s11 === peg$FAILED) {
-                            s11 = peg$parseignoreCase();
-                            if (s11 === peg$FAILED) {
-                              s11 = peg$parseorderBy();
-                              if (s11 === peg$FAILED) {
-                                s11 = peg$parsegroupBy();
-                              }
-                            }
-                          }
-                        }
-                      }
+                      s11 = peg$parse_();
                       while (s11 !== peg$FAILED) {
                         s10.push(s11);
-                        s11 = peg$parseskip();
-                        if (s11 === peg$FAILED) {
-                          s11 = peg$parselimit();
-                          if (s11 === peg$FAILED) {
-                            s11 = peg$parsedistinct();
-                            if (s11 === peg$FAILED) {
-                              s11 = peg$parseignoreCase();
-                              if (s11 === peg$FAILED) {
-                                s11 = peg$parseorderBy();
-                                if (s11 === peg$FAILED) {
-                                  s11 = peg$parsegroupBy();
+                        s11 = peg$parse_();
+                      }
+                      if (s10 !== peg$FAILED) {
+                        s11 = [];
+                        s12 = peg$parseskip();
+                        if (s12 === peg$FAILED) {
+                          s12 = peg$parselimit();
+                          if (s12 === peg$FAILED) {
+                            s12 = peg$parsedistinct();
+                            if (s12 === peg$FAILED) {
+                              s12 = peg$parseignoreCase();
+                              if (s12 === peg$FAILED) {
+                                s12 = peg$parseorderBy();
+                                if (s12 === peg$FAILED) {
+                                  s12 = peg$parsegroupBy();
                                 }
                               }
                             }
                           }
                         }
-                      }
-                      if (s10 !== peg$FAILED) {
-                        peg$savedPos = s0;
-                        s1 = peg$c44(s3, s6, s8, s10);
-                        s0 = s1;
+                        while (s12 !== peg$FAILED) {
+                          s11.push(s12);
+                          s12 = peg$parseskip();
+                          if (s12 === peg$FAILED) {
+                            s12 = peg$parselimit();
+                            if (s12 === peg$FAILED) {
+                              s12 = peg$parsedistinct();
+                              if (s12 === peg$FAILED) {
+                                s12 = peg$parseignoreCase();
+                                if (s12 === peg$FAILED) {
+                                  s12 = peg$parseorderBy();
+                                  if (s12 === peg$FAILED) {
+                                    s12 = peg$parsegroupBy();
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                        if (s11 !== peg$FAILED) {
+                          peg$savedPos = s0;
+                          s1 = peg$c44(s4, s7, s9, s11);
+                          s0 = s1;
+                        } else {
+                          peg$currPos = s0;
+                          s0 = peg$FAILED;
+                        }
                       } else {
                         peg$currPos = s0;
                         s0 = peg$FAILED;

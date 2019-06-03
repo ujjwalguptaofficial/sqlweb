@@ -9,5 +9,5 @@ export declare class LogHelper implements IError {
     logError(): void;
     logWarning(): void;
     get(): IError;
-    private getMsg_();
+    private getMsg_;
 }
