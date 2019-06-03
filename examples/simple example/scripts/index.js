@@ -21,37 +21,30 @@ function deleteData(studentId) {
     var query = new SqlWeb.Query("DELETE FROM Student WHERE Id='@studentId'");
     query.map("@studentId", Number(studentId));
     connection.runSql(query).
-    then(function (rowsDeleted) {
-        console.log(rowsDeleted + ' rows deleted');
-        if (rowsDeleted > 0) {
-            showTableData();
-        }
-    }).catch(function (error) {
-        console.log(err);
-        alert(error.message);
-    });
+        then(function (rowsDeleted) {
+            console.log(rowsDeleted + ' rows deleted');
+            if (rowsDeleted > 0) {
+                showTableData();
+            }
+        }).catch(function (error) {
+            console.log(err);
+            alert(error.message);
+        });
 }
 
 function initiateDb() {
-    var dbName = "Students";
-    connection.runSql('ISDBEXIST ' + dbName).then(function (isExist) {
-        if (isExist) {
-            connection.runSql('OPENDB ' + dbName).then(function () {
-                console.log('db opened');
-            });
+    try {
+        var dbQuery = getDbQuery();
+        connection.runSql(dbQuery).then(function (isDbCreated) {
+            if(isDbCreated){
+                insertStudents();
+            }
             showTableData();
-        } else {
-            var dbQuery = getDbQuery();
-            connection.runSql(dbQuery).then(function (tables) {
-                console.log(tables);
-            });
-            insertStudents();
-            showTableData();
-        }
-    }).catch(function (err) {
-        console.log(err);
-        alert(err.message);
-    });
+        });
+    }
+    catch (ex) {
+        console.error(ex);
+    }
 }
 
 function insertStudents() {
@@ -104,29 +97,29 @@ function showTableData() {
 function getStudents() {
     //Student Array
     var Students = [{
-            Name: 'Alfreds',
-            Gender: 'male',
-            Country: 'Germany',
-            City: 'Berlin'
-        },
-        {
-            Name: 'george',
-            Gender: 'male',
-            Country: 'America',
-            City: 'xyx'
-        },
-        {
-            Name: 'Berglunds',
-            Gender: 'female',
-            Country: 'Sweden',
-            City: 'Luleå'
-        },
-        {
-            Name: 'Eastern',
-            Gender: 'male',
-            Country: 'Canada',
-            City: 'qwe'
-        },
+        Name: 'Alfreds',
+        Gender: 'male',
+        Country: 'Germany',
+        City: 'Berlin'
+    },
+    {
+        Name: 'george',
+        Gender: 'male',
+        Country: 'America',
+        City: 'xyx'
+    },
+    {
+        Name: 'Berglunds',
+        Gender: 'female',
+        Country: 'Sweden',
+        City: 'Luleå'
+    },
+    {
+        Name: 'Eastern',
+        Gender: 'male',
+        Country: 'Canada',
+        City: 'qwe'
+    },
     ]
     return Students;
 }
