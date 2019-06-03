@@ -1,10 +1,10 @@
 const path = require('path');
 const SmartBannerPlugin = require('smart-banner-webpack-plugin');
-const banner = require('./../license');
+const banner = require('../license');
 
 module.exports = [{
     name: "sqlweb",
-    entry: "./src/code/index.ts",
+    entry: "./src/index.ts",
     module: {
         rules: [{
             test: /\.ts$/,

@@ -13,17 +13,17 @@
   "types": "dist/src/ts/code/index.d.ts",
   "scripts": {
     "test": "tsc && karma start test/karma.config.js",
-    "build": "node src/build.js && npm run webpack:dev",
+    "build": "node build.js && npm run webpack:dev",
     "lint": "tslint src/code/**/*.ts",
-    "test:dev": "karma start src/test/karma.config.dev.js",
-    "test:prod": "karma start src/test/karma.config.prod.js",
+    "test:dev": "karma start test/karma.config.dev.js",
+    "test:prod": "karma start test/karma.config.prod.js",
     "build:dev": "npm run lint && npm run build && npm run test:dev",
     "build:node": "webpack --config src/webpack/webpack.node.config.js",
     "build:prod": "npm run webpack:prod && npm run test:prod",
     "build:ci": "npm run build:dev && npm run build:prod",
-    "webpack:dev": "webpack --config src/webpack/webpack.dev.config.js",
-    "webpack:prod": "webpack --config src/webpack/webpack.prod.config.js",
-    "move:deploy_file": "node src/deploy_helper.js",
+    "webpack:dev": "webpack --config webpack/webpack.dev.config.js",
+    "webpack:prod": "webpack --config webpack/webpack.prod.config.js",
+    "move:deploy_file": "node deploy_helper.js",
     "deploy": "npm run build:ci && npm run build:node && npm run move:deploy_file"
   },
   "repository": {

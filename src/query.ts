@@ -1,4 +1,3 @@
-import * as parser from './../output/parser';
 import { Util } from './util';
 export class Query {
     query_;

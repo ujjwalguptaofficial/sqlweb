@@ -1,4 +1,4 @@
-import * as parser from './../output/parser';
+import * as parser from '../build/parser';
 import { LogHelper } from './log_helper';
 import { ERROR_TYPE } from './enums';
 

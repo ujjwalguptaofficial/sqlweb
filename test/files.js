@@ -1,4 +1,4 @@
-const nodeModules = "../node_modules/"
+const nodeModules = "node_modules/"
 exports.list_of_files = [
     'test/scripts/jquery-3.2.1.min.js',
     // 'test/scripts/jsstore.js',
@@ -22,7 +22,7 @@ exports.list_of_files = [
         served: true,
     },
     {
-        pattern: 'output/*.js',
+        pattern: 'build/*.js',
         included: false,
         served: true,
     },

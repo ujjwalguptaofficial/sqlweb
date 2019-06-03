@@ -35,26 +35,26 @@ const getFilesContent = function (files) {
 generateParser = function () {
     var grammar = getFilesContent(
         [
-            'src/code/grammar/index.pegjs',
-            'src/code/grammar/create.pegjs',
-            'src/code/grammar/insert.pegjs',
-            'src/code/grammar/remove.pegjs',
-            'src/code/grammar/count.pegjs',
-            'src/code/grammar/select.pegjs',
-            'src/code/grammar/update.pegjs',
-            'src/code/grammar/open.pegjs',
-            'src/code/grammar/is_db_exist.pegjs',
-            'src/code/grammar/common.pegjs',
-            'src/code/grammar/constant.pegjs'
+            'src/grammar/index.pegjs',
+            'src/grammar/create.pegjs',
+            'src/grammar/insert.pegjs',
+            'src/grammar/remove.pegjs',
+            'src/grammar/count.pegjs',
+            'src/grammar/select.pegjs',
+            'src/grammar/update.pegjs',
+            'src/grammar/open.pegjs',
+            'src/grammar/is_db_exist.pegjs',
+            'src/grammar/common.pegjs',
+            'src/grammar/constant.pegjs'
         ]);
     //console.log(grammar);
-    saveAsFile('./src/output/grammar.pegjs', grammar);
+    saveAsFile('./build/grammar.pegjs', grammar);
     var content = peg.generate(grammar, {
         optimize: "speed",
         output: 'source',
         format: "commonjs"
     });
-    saveAsFile('./src/output/parser.js', content);
+    saveAsFile('./build/parser.js', content);
 }
-createFolderIfNotExist('./src/output');
+createFolderIfNotExist('./build');
 generateParser();
