@@ -15,18 +15,14 @@ export class BaseService {
      * 
      * @memberof IdbService
      */
-    initDatabase() {
-        this.connection.runSql(`ISDBEXIST ${this.dbName_}`).then((ifExist: boolean) => {
-            if (ifExist) {
-                this.connection.runSql(`OPENDB ${this.dbName_}`);
-            }
-            else {
-                const qry = this.getDbQuery_();
-                this.connection.runSql(qry);
-            }
-        }).catch((err: IError) => {
-            console.error(err);
-        });
+    async initDatabase() {
+        const qry = this.getDbQuery_();
+        try {
+            await this.connection.runSql(qry);
+        }
+        catch (ex) {
+            console.error(ex);
+        }
     }
 
     private getDbQuery_() {

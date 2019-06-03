@@ -1,8 +1,8 @@
 const path = require('path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
 module.exports = {
-  entry: './src/code/index.ts',
-  devtool: 'inline-source-map',
+  entry: './src/index.ts',
+  devtool: 'source-map',
   module: {
     rules: [{
       test: /\.tsx?$/,

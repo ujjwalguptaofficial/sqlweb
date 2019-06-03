@@ -12,18 +12,14 @@ export class BaseService {
         return con;
     }
 
-    initJsStore() {
-        this.connection.runSql(`ISDBEXIST ${this.dbName}`).then((isExist) => {
-            if (isExist) {
-                const qry = 'OPENDB ' + this.dbName;
-                this.connection.runSql(qry);
-            } else {
-                const qry = this.getDbQuery();
-                this.connection.runSql(qry);
-            }
-        }).catch(err => {
-            console.error(err);
-        })
+    async initJsStore() {
+        const qry = this.getDbQuery();
+        try {
+            await this.connection.runSql(qry);
+        }
+        catch (ex) {
+            console.error(ex);
+        }
     }
 
     getDbQuery() {
