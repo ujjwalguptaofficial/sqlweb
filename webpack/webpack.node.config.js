@@ -12,7 +12,7 @@ function getConfigForTaget(target) {
         target: "node",
         devtool: 'source-map',
         output: {
-            path: path.join(__dirname, "./../output"),
+            path: path.join(__dirname, "../build"),
             filename: target.name,
             library: 'SqlWeb',
             libraryTarget: target.type
