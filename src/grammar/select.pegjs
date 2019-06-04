@@ -1,6 +1,6 @@
 
 
-selectQuery = SELECT _("*"_)? aggr:aggregateQry ? FROM _ table:tableName _* join:joinQry? _* where:whereQry? _* 
+selectQuery = SELECT _("*"_)? aggr:aggregateQry ? FROM _ table:tableName _* join:joinQry* _* where:whereQry? _* 
 option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
@@ -32,14 +32,11 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
       if(value.table){
           var joinWithSameTable = join.find(qry=>qry.with===value.table);
           if(joinWithSameTable!=null){
-            const whereQry =  {
-                 [value.table]:value.column
-                }
             if(Array.isArray(joinWithSameTable.where)){
-              joinWithSameTable.where.push(whereQry)
+              joinWithSameTable.where.push(value.query)
             }
             else {
-              joinWithSameTable.where = [whereQry];
+              joinWithSameTable.where = [value.query];
             }
           }
       }
@@ -59,7 +56,8 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
         distinct : distinct,
         order:order,
         groupBy:groupBy,
-        aggregate : aggr
+        aggregate : aggr,
+        join:join.length===0?null:join
      }
   }
 }
@@ -268,31 +266,53 @@ equalToItem = col:column colDot:colAfterDot? _*  "=" _* val:value {
     }
     return {
           table : col,
-          column: val
+          query: {
+          	[colDot]:val
+          }
     }
 }
 
-colAfterDot = "." col:column {
-   return col;
-}
-
-operatorItem = col:column _* op:(("!=")/(">=")/("<=")/(">")/("<")) _* val:value { 
-	return {
-    	[col]:{
-        	[op]:val
-        }
-	}
-}
-
-betweenItem = col:column _* BETWEEN _* "(" _* low:value _* "," _* high: value _* ")" {
-	return {
-    	[col]:{
-            '-':{
-                low : low,
-                high : high
+operatorItem = col:column colDot:colAfterDot? _* op:(("!=")/(">=")/("<=")/(">")/("<")) _* val:value { 
+	if(colDot==null){
+        return {
+                [col]:{
+                    [op]:val
+                }
+            }
+    }
+    return {
+        table : col,
+        query:{
+            [colDot]:{
+                [op]:val
             }
         }
 	}
+}
+
+betweenItem = col:column colDot:colAfterDot? _* BETWEEN _* "(" _* low:value _* "," _* high: value _* ")" {
+	if(colDot==null){
+        return {
+                [col]:{
+                    '-':{
+                        low : low,
+                        high : high
+                    }
+                }
+        }
+    }
+    return {
+        table : col,
+        query:{
+            [colDot]:{
+                '-':{
+                    low : low,
+                    high : high
+                }
+            }
+        }
+    }
+    
 }
 
 inItem = col:column _* IN _* "(" _* 
@@ -333,6 +353,10 @@ likeType2 = "'%"_* val:Word"'" {
 
 likeType3 = "'"val:Word _* "%'" {
 	return val+"%";
+}
+
+colAfterDot = "." col:column {
+   return col;
 }
 
 
