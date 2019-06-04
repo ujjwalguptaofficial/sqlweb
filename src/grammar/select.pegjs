@@ -248,12 +248,18 @@ whereQryWithParanthesis = "(" _*  fw: firstWhere jw:joinWhereItem* _* ")" {
 firstWhere = whereItem
 
 joinWhereItem = _ op:JoinOp _ item:whereItem {
-	if(op==='||'){
-    	return {
-        	or: item
-        }
+	if(op==='&&'){
+        return item;
     }
-    return item;
+    else if(item.table){
+        item.query = {
+            or: item.query
+        }
+        return item;
+    }
+    return {
+        or: item
+    }
 }
 
 whereItem = equalToItem/likeItem/inItem/operatorItem/betweenItem
