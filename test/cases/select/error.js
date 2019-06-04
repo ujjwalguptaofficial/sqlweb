@@ -7,7 +7,7 @@ describe('error', function () {
                 done(err);
             });
         } catch (ex) {
-            var error = { "message": "Expected \"*\", \"[\", or from but \"f\" found.", "type": "syntax_error" };
+            var error = { "message": 'Expected "[", One or more whitespaces, or from but "f" found.', "type": "syntax_error" };
             expect(ex).to.be.an('object').eql(error);
             done();
         }

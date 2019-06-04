@@ -1,6 +1,6 @@
 
 
-selectQuery = SELECT _("*"_)? aggr:aggregateQry ? FROM _ table:tableName _* join:joinQry* _* where:whereQry? _* 
+selectQuery = SELECT _+ ("*"_+)? aggr:aggregateQry? FROM _ table:tableName _* join:joinQry* _* where:whereQry? _* 
 option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
@@ -62,11 +62,11 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   }
 }
 
-aggregateQry = ("*"_)/ aggr: aggregate _ {
+aggregateQry = aggr: aggregate _ {
 	return aggr[0];
 }
 
-aggregate = "["first: aggregateType _* rest: inBetweenAggregateColumn* "]" {
+aggregate = "[" first: aggregateType _* rest: inBetweenAggregateColumn* "]" {
 	rest.splice(0,0,first);
     return rest;
 }
