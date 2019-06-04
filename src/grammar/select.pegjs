@@ -8,7 +8,6 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var distinct = false;
   var order = null;
   var groupBy = null;
-  var aggregate = aggr;
   option.forEach(val=>{
   	var key = Object.keys(val)[0];
     switch(key){
@@ -26,11 +25,34 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
         	groupBy = val[key]; break;
     }
   });
+  let modifiedWhere ;
+  if(where!=null){
+    modifiedWhere = [];
+      where.forEach(value=>{
+      if(value.table){
+          var joinWithSameTable = join.find(qry=>qry.with===value.table);
+          if(joinWithSameTable!=null){
+            const whereQry =  {
+                 [value.table]:value.column
+                }
+            if(Array.isArray(joinWithSameTable.where)){
+              joinWithSameTable.where.push(whereQry)
+            }
+            else {
+              joinWithSameTable.where = [whereQry];
+            }
+          }
+      }
+      else{
+          modifiedWhere.push(value);
+      }
+    });
+  }
   return {
      api:'select',
      data:{
         from:table,
-        where:where,
+        where:modifiedWhere,
         skip:skip,
         limit:limit,
         ignoreCase: ignoreCase,
@@ -238,10 +260,20 @@ joinWhereItem = _ op:JoinOp _ item:whereItem {
 
 whereItem = equalToItem/likeItem/inItem/operatorItem/betweenItem
 
-equalToItem = col:column _* "=" _* val:value { 
-	return {
-    	[col]:val
-	}
+equalToItem = col:column colDot:colAfterDot? _*  "=" _* val:value { 
+	if(colDot==null){
+      return {
+          [col]:val
+      }
+    }
+    return {
+          table : col,
+          column: val
+    }
+}
+
+colAfterDot = "." col:column {
+   return col;
 }
 
 operatorItem = col:column _* op:(("!=")/(">=")/("<=")/(">")/("<")) _* val:value { 
