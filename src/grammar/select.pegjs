@@ -315,12 +315,22 @@ betweenItem = col:column colDot:colAfterDot? _* BETWEEN _* "(" _* low:value _* "
     
 }
 
-inItem = col:column _* IN _* "(" _* 
+inItem = col:column colDot:colAfterDot? _* IN _* "(" _* 
 first:value _* 
 betweens:inBetweenParanthesisItem* ")" { 
-	return {
-    	[col]:{
-        	in:[first,...betweens]
+	if(colDot==null){
+        return {
+            [col]:{
+                in:[first,...betweens]
+            }
+        }
+    }
+    return {
+        table:col,
+        query:{
+            [colDot]:{
+                in:[first,...betweens]
+            }
         }
 	}
 }
@@ -333,12 +343,23 @@ inBetweenParanthesisItem = "," _* val:value _*{
 	return val;
 } 
 
-likeItem = col:column _* LIKE _* val:likeType { 
-	return {
-    	[col]:{
-        	like:val
+likeItem = col:column colDot:colAfterDot? _* LIKE _* val:likeType { 
+	if(colDot==null){
+        return {
+            [col]:{
+                like:val
+            }
+        }
+    }
+    return {
+        table:col,
+        query:{
+            [colDot]:{
+                like:val
+            }
         }
 	}
+    
 }
 
 likeType = likeType1/likeType2/likeType3
