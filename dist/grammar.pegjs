@@ -239,7 +239,7 @@ option:(distinct/ignoreCase/groupBy)* {
 }
 
 
-selectQuery = SELECT _("*"_)? aggr:aggregateQry ? FROM _ table:tableName _* where:whereQry? _* 
+selectQuery = SELECT _+ ("*"_+)? as: asQuery? aggr:aggregateQry? FROM _ table:tableName _* join:joinQry* _* where:whereQry? _* 
 option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
@@ -247,7 +247,6 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var distinct = false;
   var order = null;
   var groupBy = null;
-  var aggregate = aggr;
   option.forEach(val=>{
   	var key = Object.keys(val)[0];
     switch(key){
@@ -265,27 +264,88 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
         	groupBy = val[key]; break;
     }
   });
+  let modifiedWhere ;
+  if(where!=null){
+    modifiedWhere = [];
+    where.forEach(value=>{
+      if(value.table){
+          var joinWithSameTable = join.find(qry=>qry.with===value.table);
+          if(joinWithSameTable!=null){
+            if(Array.isArray(joinWithSameTable.where)){
+              joinWithSameTable.where.push(value.query)
+            }
+            else {
+              joinWithSameTable.where = [value.query];
+            }
+          }
+      }
+      else{
+          modifiedWhere.push(value);
+      }
+    });
+    if(modifiedWhere.length===0){
+        modifiedWhere = null;
+    }
+  }
+  if(as!=null){
+      as.forEach(value=>{
+          const joinQry = join.find(qry=> qry.with===value.table);
+          if(joinQry!=null){
+                const asVal = {
+                    [value.column]: value.alias   
+                }
+                if(joinQry.as ==null){
+                    joinQry.as = asVal;
+                }
+                else{
+                    joinQry.as = {...asVal, ...joinQry.as}
+                }
+          }
+      })
+  }
   return {
      api:'select',
      data:{
         from:table,
-        where:where,
+        where:modifiedWhere,
         skip:skip,
         limit:limit,
         ignoreCase: ignoreCase,
         distinct : distinct,
         order:order,
         groupBy:groupBy,
-        aggregate : aggr
+        aggregate : aggr,
+        join:join.length===0?null:join
      }
   }
 }
 
-aggregateQry = ("*"_)/ aggr: aggregate _ {
+asQuery = alias: aliasGrammar _+ {
+   return alias;
+}
+
+aliasGrammar = first: asFirstQuery rest: asAfterFirstQuery* {
+  rest.splice(0,0,first);
+  return rest;
+}
+
+asFirstQuery = tableName: column "." columnName:column _+ AS _+ alias: column {
+ return {
+    table: tableName,
+    column: columnName,
+    alias: alias
+ }
+}
+
+asAfterFirstQuery = _* "," _* as: asFirstQuery {
+  return as;
+}
+
+aggregateQry = aggr: aggregate _ {
 	return aggr[0];
 }
 
-aggregate = "["first: aggregateType _* rest: inBetweenAggregateColumn* "]" {
+aggregate = "[" first: aggregateType _* rest: inBetweenAggregateColumn* "]" {
 	rest.splice(0,0,first);
     return rest;
 }
@@ -467,47 +527,95 @@ whereQryWithParanthesis = "(" _*  fw: firstWhere jw:joinWhereItem* _* ")" {
 firstWhere = whereItem
 
 joinWhereItem = _ op:JoinOp _ item:whereItem {
-	if(op==='||'){
-    	return {
-        	or: item
-        }
+	if(op==='&&'){
+        return item;
     }
-    return item;
+    else if(item.table){
+        item.query = {
+            or: item.query
+        }
+        return item;
+    }
+    return {
+        or: item
+    }
 }
 
 whereItem = equalToItem/likeItem/inItem/operatorItem/betweenItem
 
-equalToItem = col:column _* "=" _* val:value { 
-	return {
-    	[col]:val
-	}
+equalToItem = col:column colDot:colAfterDot? _*  "=" _* val:value { 
+	if(colDot==null){
+      return {
+          [col]:val
+      }
+    }
+    return {
+          table : col,
+          query: {
+          	[colDot]:val
+          }
+    }
 }
 
-operatorItem = col:column _* op:(("!=")/(">=")/("<=")/(">")/("<")) _* val:value { 
-	return {
-    	[col]:{
-        	[op]:val
-        }
-	}
-}
-
-betweenItem = col:column _* BETWEEN _* "(" _* low:value _* "," _* high: value _* ")" {
-	return {
-    	[col]:{
-            '-':{
-                low : low,
-                high : high
+operatorItem = col:column colDot:colAfterDot? _* op:(("!=")/(">=")/("<=")/(">")/("<")) _* val:value { 
+	if(colDot==null){
+        return {
+                [col]:{
+                    [op]:val
+                }
+            }
+    }
+    return {
+        table : col,
+        query:{
+            [colDot]:{
+                [op]:val
             }
         }
 	}
 }
 
-inItem = col:column _* IN _* "(" _* 
+betweenItem = col:column colDot:colAfterDot? _* BETWEEN _* "(" _* low:value _* "," _* high: value _* ")" {
+	if(colDot==null){
+        return {
+                [col]:{
+                    '-':{
+                        low : low,
+                        high : high
+                    }
+                }
+        }
+    }
+    return {
+        table : col,
+        query:{
+            [colDot]:{
+                '-':{
+                    low : low,
+                    high : high
+                }
+            }
+        }
+    }
+    
+}
+
+inItem = col:column colDot:colAfterDot? _* IN _* "(" _* 
 first:value _* 
 betweens:inBetweenParanthesisItem* ")" { 
-	return {
-    	[col]:{
-        	in:[first,...betweens]
+	if(colDot==null){
+        return {
+            [col]:{
+                in:[first,...betweens]
+            }
+        }
+    }
+    return {
+        table:col,
+        query:{
+            [colDot]:{
+                in:[first,...betweens]
+            }
         }
 	}
 }
@@ -520,12 +628,23 @@ inBetweenParanthesisItem = "," _* val:value _*{
 	return val;
 } 
 
-likeItem = col:column _* LIKE _* val:likeType { 
-	return {
-    	[col]:{
-        	like:val
+likeItem = col:column colDot:colAfterDot? _* LIKE _* val:likeType { 
+	if(colDot==null){
+        return {
+            [col]:{
+                like:val
+            }
+        }
+    }
+    return {
+        table:col,
+        query:{
+            [colDot]:{
+                like:val
+            }
         }
 	}
+    
 }
 
 likeType = likeType1/likeType2/likeType3
@@ -542,10 +661,29 @@ likeType3 = "'"val:Word _* "%'" {
 	return val+"%";
 }
 
+colAfterDot = "." col:column {
+   return col;
+}
 
 
 
 
+
+joinQry = type:joinType? JOIN _+ table:tableName _+ ON _+ onValue1: onValue _* '=' onValue2: onValue _*{
+  return  {
+   with: table,
+   on: `${onValue1}=${onValue2}`,
+   type: type
+  }
+}
+
+onValue "on value" = val:[a-zA-Z_.]+ {
+	return val.join("");
+}
+
+joinType = type:(INNER/LEFT) _+ {
+   return type==null?null : type.join('');
+}
 updateQuery = UPDATE _ table:tableName _* SET _* set: updateValue _* where:whereQry? _* option:(ignoreCase)* {
 
     var ignoreCase =false;
@@ -767,3 +905,14 @@ ISDBEXIST "isDbExist" = I S D B E X I S T;
 OPENDB "openDb" = O P E N D B;
 
 DISABLESEARCH "disablesearch" = D I S A B L E S E A R C H;
+
+JOIN "join" = J O I N
+
+ON "on" = O N
+
+INNER "inner" = I N N E R
+
+LEFT "left" = L E F T
+
+AS "as" = A S
+
