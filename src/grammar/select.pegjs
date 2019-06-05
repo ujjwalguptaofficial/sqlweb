@@ -1,6 +1,6 @@
 
 
-selectQuery = SELECT _+ ("*"_+)? aggr:aggregateQry? FROM _ table:tableName _* join:joinQry* _* where:whereQry? _* 
+selectQuery = SELECT _+ ("*"_+)? as: asQuery? aggr:aggregateQry? FROM _ table:tableName _* join:joinQry* _* where:whereQry? _* 
 option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
@@ -28,7 +28,7 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
   let modifiedWhere ;
   if(where!=null){
     modifiedWhere = [];
-      where.forEach(value=>{
+    where.forEach(value=>{
       if(value.table){
           var joinWithSameTable = join.find(qry=>qry.with===value.table);
           if(joinWithSameTable!=null){
@@ -44,6 +44,25 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
           modifiedWhere.push(value);
       }
     });
+    if(modifiedWhere.length===0){
+        modifiedWhere = null;
+    }
+  }
+  if(as!=null){
+      as.forEach(value=>{
+          const joinQry = join.find(qry=> qry.with===value.table);
+          if(joinQry!=null){
+                const asVal = {
+                    [value.column]: value.alias   
+                }
+                if(joinQry.as ==null){
+                    joinQry.as = asVal;
+                }
+                else{
+                    joinQry.as = {...asVal, ...joinQry.as}
+                }
+          }
+      })
   }
   return {
      api:'select',
@@ -60,6 +79,27 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
         join:join.length===0?null:join
      }
   }
+}
+
+asQuery = alias: aliasGrammar _+ {
+   return alias;
+}
+
+aliasGrammar = first: asFirstQuery rest: asAfterFirstQuery* {
+  rest.splice(0,0,first);
+  return rest;
+}
+
+asFirstQuery = tableName: column "." columnName:column _+ AS _+ alias: column {
+ return {
+    table: tableName,
+    column: columnName,
+    alias: alias
+ }
+}
+
+asAfterFirstQuery = _* "," _* as: asFirstQuery {
+  return as;
 }
 
 aggregateQry = aggr: aggregate _ {

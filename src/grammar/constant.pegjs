@@ -99,3 +99,6 @@ ON "on" = O N
 INNER "inner" = I N N E R
 
 LEFT "left" = L E F T
+
+AS "as" = A S
+
