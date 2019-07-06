@@ -401,17 +401,22 @@ groupByRestValue = _* "," _* val:column _*{
 	return val;
 } 
 
-orderBy= by:orderByValue type:orderByType?{
-	return {
-    	order: {
-        	by:by,
-            type: type
-        }
+orderBy = ORDER _ BY _ value:orderByQry rest:restOrderByQry* {
+    rest.unshift(value);
+    return {
+      order: rest
     };
 }
 
-orderByValue = ORDER _ BY _ by:column {
-	return by;
+restOrderByQry = _* "," _* qry:orderByQry {
+	return qry;
+} 
+
+orderByQry = by:column type:orderByType?{
+	return {
+        by:by,
+        type: type
+    }
 }
 
 orderByType = _ type: OrderByTypes _* {
