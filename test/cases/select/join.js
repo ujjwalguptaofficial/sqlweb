@@ -1,18 +1,5 @@
 describe('Test join', function () {
     it('inner join', function (done) {
-        // con.select({
-        //     from: "Orders",
-        //     join: {
-        //         with: "Customers",
-        //         type: "inner",
-        //         on: "Orders.CustomerID=Customers.CustomerID",
-        //         as: {
-        //             CustomerName: "name",
-        //             ContactName: "cName",
-        //             CustomerID: "cId"
-        //         }
-        //     }
-        // })
         con.runSql(`select Customers.CustomerName as name, Customers.ContactName as cName, Customers.CustomerID as cId from Orders join Customers on Orders.CustomerID=Customers.CustomerID`)
             .then(function (results) {
                 expect(results).to.be.an('array').length(196);
