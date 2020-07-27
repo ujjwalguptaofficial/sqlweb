@@ -100,3 +100,5 @@ LEFT "left" = L E F T
 
 AS "as" = A S
 
+UPSERT "upsert" = U P S E R T
+

@@ -1,13 +1,14 @@
 insertQuery = INSERT _ INTO _ table: tableName _* VALUES _* insertValue: valueTypes _* options: insertOptions* {
-     var skipDataCheck = false;
-     var returnValue = false;
+     let option = {};
      options.forEach(val=>{
             var key = Object.keys(val)[0];
             switch(key){
                 case 'skipDataCheck':
-                    skipDataCheck = val[key]; break;
+                    option.skipDataCheck = val[key]; break;
                 case 'return':
-                    returnValue = val[key]; break;
+                    option.return = val[key]; break;
+                case 'upsert':
+                    option.upsert = val[key]; break;
             }
      });
      return {
@@ -15,8 +16,7 @@ insertQuery = INSERT _ INTO _ table: tableName _* VALUES _* insertValue: valueTy
         data: {
             into: table,
             values: insertValue,
-            skipDataCheck: skipDataCheck,
-            return : returnValue
+            ...option
         }
      }
 }
@@ -50,7 +50,7 @@ insertWithEqual = "=" insertValue: value {
 	return insertValue;
 }
 
-insertOptions = option:(skipDataCheck/return)_* {
+insertOptions = option:(skipDataCheck/return/upsert)_* {
     return {
         [option]:true
     }
@@ -62,6 +62,10 @@ skipDataCheck = SKIPDATACHECK {
 
 return = RETURN{
     return 'return';
+}
+
+upsert = UPSERT{
+    return 'upsert';
 }
 
 
