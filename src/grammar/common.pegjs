@@ -20,7 +20,7 @@ ColumnValue=  "'" val:Word "'" {
 	return val;
 }
 
-Identifier "identifier"= val:[a-zA-Z_]+ {
+Identifier "identifier"= val:[a-zA-Z0-9_]+ {
 	return val.join("");
 }
 

@@ -113,7 +113,11 @@ function getDbSchema() {
     )
      `
 
+    var tblQueryTest1 = `Define table Test1(
+        SupplierID primaryKey autoIncrement,
+        image1 notNull string
+    )`
     return query + tblQueryCustomer + tblQueryCategories + tblQueryEmployees +
         tblQueryOrderDetails + tblQueryOrders + tblQueryProducts + tblQueryShippers +
-        tblQuerySuppliers
+        tblQuerySuppliers + tblQueryTest1
 }
