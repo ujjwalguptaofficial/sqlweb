@@ -188,22 +188,12 @@ return = RETURN{
 
 
 
-removeQuery = DELETE _* FROM _ table:tableName _* where:whereQry? _* 
-option:(ignoreCase)* {
-  var ignoreCase =false;
-  option.forEach(val=>{
-  	var key = Object.keys(val)[0];
-    switch(key){
-        case 'ignoreCase':
-        	ignoreCase = val[key]; break;
-    }
-  });
+removeQuery = DELETE _* FROM _ table:tableName _* where:whereQry? _*  {
   return {
      api:'remove',
      data:{
         from:table,
         where:where,
-        ignoreCase: ignoreCase
      }
   }
 }
@@ -211,15 +201,12 @@ option:(ignoreCase)* {
 
 
 countQuery = COUNT _ ("*"_)? FROM _ table:tableName _* where:whereQry? _* 
-option:(distinct/ignoreCase/groupBy)* {
-  var ignoreCase =false;
+option:(distinct/groupBy)* {
   var distinct = false;
   var groupBy = null;
   option.forEach(val=>{
   	var key = Object.keys(val)[0];
     switch(key){
-        case 'ignoreCase':
-        	ignoreCase = val[key]; break;
         case 'distinct':
         	distinct = val[key]; break;
          case 'groupBy':
@@ -231,7 +218,6 @@ option:(distinct/ignoreCase/groupBy)* {
      data:{
         from:table,
         where:where,
-        ignoreCase: ignoreCase,
         distinct : distinct,
         groupBy:groupBy
      }
@@ -240,10 +226,9 @@ option:(distinct/ignoreCase/groupBy)* {
 
 
 selectQuery = SELECT _+ ("*"_+)? as: asQuery? aggr:aggregateQry? FROM _ table:tableName _* join:joinQry* _* where:whereQry? _* 
-option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
+option:(skip/limit/distinct/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
-  var ignoreCase =false;
   var distinct = false;
   var order = null;
   var groupBy = null;
@@ -254,8 +239,6 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
          	skip= val[key]; break;
         case 'limit':
             limit= val[key]; break;
-        case 'ignoreCase':
-        	ignoreCase = val[key]; break;
         case 'distinct':
         	distinct = val[key]; break;
         case 'order':
@@ -310,7 +293,6 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
         where:modifiedWhere,
         skip:skip,
         limit:limit,
-        ignoreCase: ignoreCase,
         distinct : distinct,
         order:order,
         groupBy:groupBy,
@@ -426,12 +408,6 @@ orderByType = _ type: OrderByTypes _* {
 distinct= DISTINCT _? {
 	return {
     	distinct: true
-    };
-}
-
-ignoreCase= IGNORECASE _? {
-	return {
-    	ignoreCase: true
     };
 }
 
@@ -689,23 +665,13 @@ onValue "on value" = val:[a-zA-Z_.]+ {
 joinType = type:(INNER/LEFT) _+ {
    return type==null?null : type.join('');
 }
-updateQuery = UPDATE _ table:tableName _* SET _* set: updateValue _* where:whereQry? _* option:(ignoreCase)* {
-
-    var ignoreCase =false;
-  option.forEach(val=>{
-  	var key = Object.keys(val)[0];
-    switch(key){
-        case 'ignoreCase':
-        	ignoreCase = val[key]; break;
-    }
-  });
-  return {
+updateQuery = UPDATE _ table:tableName _* SET _* set: updateValue _* where:whereQry? _*  {
+ return {
      api:'update',
      data:{
         in:table,
         set:set,
-        where:where,
-        ignoreCase: ignoreCase
+        where:where
      }
   }
 }
@@ -774,7 +740,7 @@ ColumnValue=  "'" val:Word "'" {
 	return val;
 }
 
-Identifier "identifier"= val:[a-zA-Z_]+ {
+Identifier "identifier"= val:[a-zA-Z0-9_]+ {
 	return val.join("");
 }
 
@@ -836,8 +802,6 @@ IN "in" = I N
 LIKE "like" = L I K E
 
 SELECT "select" = S E L E C T
-
-IGNORECASE "ignoreCase" = I G N O R E C A S E
 
 DISTINCT "distinct" = D I S T I N C T
 
