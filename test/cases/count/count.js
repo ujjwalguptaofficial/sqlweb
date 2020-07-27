@@ -22,7 +22,7 @@ describe('Test count Api', function () {
             })
     });
 
-    it('count without ignore case', function (done) {
+    it('count', function (done) {
         con.runSql("count * from Customers where Country='mexico'").
             then(function (results) {
                 expect(results).to.be.an('number').to.equal(0);

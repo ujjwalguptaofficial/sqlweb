@@ -18,8 +18,6 @@ LIKE "like" = L I K E
 
 SELECT "select" = S E L E C T
 
-IGNORECASE "ignoreCase" = I G N O R E C A S E
-
 DISTINCT "distinct" = D I S T I N C T
 
 ORDER "order" = O R D E R

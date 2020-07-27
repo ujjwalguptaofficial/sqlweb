@@ -1,13 +1,10 @@
 countQuery = COUNT _ ("*"_)? FROM _ table:tableName _* where:whereQry? _* 
-option:(distinct/ignoreCase/groupBy)* {
-  var ignoreCase =false;
+option:(distinct/groupBy)* {
   var distinct = false;
   var groupBy = null;
   option.forEach(val=>{
   	var key = Object.keys(val)[0];
     switch(key){
-        case 'ignoreCase':
-        	ignoreCase = val[key]; break;
         case 'distinct':
         	distinct = val[key]; break;
          case 'groupBy':
@@ -19,7 +16,6 @@ option:(distinct/ignoreCase/groupBy)* {
      data:{
         from:table,
         where:where,
-        ignoreCase: ignoreCase,
         distinct : distinct,
         groupBy:groupBy
      }

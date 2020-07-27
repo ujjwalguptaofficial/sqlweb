@@ -17,43 +17,6 @@ describe('Test delete Api', function () {
         })
     });
 
-    it('remove without ignore case', function (done) {
-        var count;
-        con.runSql("count from Customers where Country = 'meXico'").
-        then(function (results) {
-            count = results;
-        }).catch(function (err) {
-            done(err);
-        })
-
-        con.runSql("delete from Customers where Country = 'meXico'").
-        then(function (results) {
-            expect(results).to.be.an('number').to.equal(count);
-            done();
-        }).catch(function (err) {
-            done(err);
-        })
-    });
-
-    it('remove with ignore case', function (done) {
-
-        var count;
-        con.runSql("count from Customers where Country = 'meXico' IGnoreCase").
-        then(function (results) {
-            count = results;
-        }).catch(function (err) {
-            done(err);
-        })
-
-        con.runSql("delete from Customers where Country = 'meXico' IGnoreCase").
-        then(function (results) {
-            expect(results).to.be.an('number').to.equal(count);
-            done();
-        }).catch(function (err) {
-            done(err);
-        })
-    });
-
     it('remove with or', function (done) {
 
         var count;

@@ -46,7 +46,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with distinct', function (done) {
-        con.runSql("select * from Customers where City='bhubaneswar' distinct ignoreCase").
+        con.runSql("select * from Customers where City='bhubaneswar' distinct").
             then(function (results) {
                 expect(results).to.be.an('array').length(1);
                 done();

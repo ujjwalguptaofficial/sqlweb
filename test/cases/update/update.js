@@ -79,27 +79,6 @@ describe('Test update Api', function () {
             done(err);
         })
     });
-
-    it('update with ignore case', function (done) {
-        debugger;
-        var count;
-        con.runSql("count from Customers where City= 'BhUbaneSwar' ignoreCase").
-        then(function (results) {
-            count = results;
-        }).
-        catch(function (err) {
-            done(err);
-        });
-
-        con.runSql("update Customers set ContactName= 'Ujjwal', City= 'bhubaneswar' where City= 'BhUbaneSwar' ignoreCase").
-        then(function (results) {
-            expect(results).to.be.an('number').to.equal(count);
-            done();
-        }).
-        catch(function (err) {
-            done(err);
-        })
-    });
     
     it('update with or', function (done) {
         var selectCount;

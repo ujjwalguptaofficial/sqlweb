@@ -1,10 +1,9 @@
 
 
 selectQuery = SELECT _+ ("*"_+)? as: asQuery? aggr:aggregateQry? FROM _ table:tableName _* join:joinQry* _* where:whereQry? _* 
-option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
+option:(skip/limit/distinct/orderBy/groupBy)* {
   var skip=null;
   var limit=null;
-  var ignoreCase =false;
   var distinct = false;
   var order = null;
   var groupBy = null;
@@ -15,8 +14,6 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
          	skip= val[key]; break;
         case 'limit':
             limit= val[key]; break;
-        case 'ignoreCase':
-        	ignoreCase = val[key]; break;
         case 'distinct':
         	distinct = val[key]; break;
         case 'order':
@@ -71,7 +68,6 @@ option:(skip/limit/distinct/ignoreCase/orderBy/groupBy)* {
         where:modifiedWhere,
         skip:skip,
         limit:limit,
-        ignoreCase: ignoreCase,
         distinct : distinct,
         order:order,
         groupBy:groupBy,
@@ -187,12 +183,6 @@ orderByType = _ type: OrderByTypes _* {
 distinct= DISTINCT _? {
 	return {
     	distinct: true
-    };
-}
-
-ignoreCase= IGNORECASE _? {
-	return {
-    	ignoreCase: true
     };
 }
 
