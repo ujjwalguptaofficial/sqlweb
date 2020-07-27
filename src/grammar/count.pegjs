@@ -1,14 +1,13 @@
 countQuery = COUNT _ ("*"_)? FROM _ table:tableName _* where:whereQry? _* 
-option:(distinct/groupBy)* {
-  var distinct = false;
-  var groupBy = null;
-  option.forEach(val=>{
+options:(distinct/groupBy)* {
+  const option = {};
+  options.forEach(val=>{
   	var key = Object.keys(val)[0];
     switch(key){
         case 'distinct':
-        	distinct = val[key]; break;
+        	option.distinct = val[key]; break;
          case 'groupBy':
-        	groupBy = val[key]; break;
+        	option.groupBy = val[key]; break;
     }
   });
   return {
@@ -16,8 +15,7 @@ option:(distinct/groupBy)* {
      data:{
         from:table,
         where:where,
-        distinct : distinct,
-        groupBy:groupBy
+        ...option
      }
   }
 }
