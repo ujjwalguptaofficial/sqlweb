@@ -39,7 +39,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "fs-extra": "^7.0.1",
-    "jsstore": "^3.2.2",
+    "jsstore": "^3.10.3",
     "karma": "^4.1.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^2.2.0",

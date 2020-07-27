@@ -11,10 +11,6 @@ export class Query {
         this.query_ = this.parseJson_(stringifiedValue.replace('"' + key + '"', JSON.stringify(value)));
     }
 
-    private isString_(value) {
-        return Util.isString(value);
-    }
-
     private parseJson_(value) {
         return Util.parseJson(value);
     }

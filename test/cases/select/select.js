@@ -45,50 +45,6 @@ describe('Test Select Api', function () {
             })
     });
 
-    it('select without ignore case', function (done) {
-        con.runSql("select from Customers where Country='mexico'").
-            then(function (results) {
-                expect(results).to.be.an('array').length(0);
-                done();
-            }).
-            catch(function (err) {
-                done(err);
-            })
-    });
-
-    it('select with ignore case', function (done) {
-        con.runSql("select * from Customers where Country='meXico' ignoreCase").
-            then(function (results) {
-                expect(results).to.be.an('array').length(5);
-                done();
-            }).
-            catch(function (err) {
-                done(err);
-            })
-    });
-
-    it('select with ignore case with a number type', function (done) {
-        con.runSql("select * from Customers where Country='meXico' &&  CustomerID=3 ignoreCase").
-            then(function (results) {
-                expect(results).to.be.an('array').length(1);
-                done();
-            }).
-            catch(function (err) {
-                done(err);
-            })
-    });
-
-    it('select with ignore case with a number type and not equal to value', function (done) {
-        con.runSql("select * from Customers where Country='meXico' &&  CustomerID != 3 ignoreCase").
-            then(function (results) {
-                expect(results).to.be.an('array').length(4);
-                done();
-            }).
-            catch(function (err) {
-                done(err);
-            })
-    });
-
     it('select with distinct', function (done) {
         con.runSql("select * from Customers where City='bhubaneswar' distinct ignoreCase").
             then(function (results) {
