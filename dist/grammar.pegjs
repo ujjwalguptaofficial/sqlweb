@@ -120,15 +120,16 @@ version = VERSION _* val:Number {
     }
 }
 insertQuery = INSERT _ INTO _ table: tableName _* VALUES _* insertValue: valueTypes _* options: insertOptions* {
-     var skipDataCheck = false;
-     var returnValue = false;
+     let option = {};
      options.forEach(val=>{
             var key = Object.keys(val)[0];
             switch(key){
                 case 'skipDataCheck':
-                    skipDataCheck = val[key]; break;
+                    option.skipDataCheck = val[key]; break;
                 case 'return':
-                    returnValue = val[key]; break;
+                    option.return = val[key]; break;
+                case 'upsert':
+                    option.upsert = val[key]; break;
             }
      });
      return {
@@ -136,8 +137,7 @@ insertQuery = INSERT _ INTO _ table: tableName _* VALUES _* insertValue: valueTy
         data: {
             into: table,
             values: insertValue,
-            skipDataCheck: skipDataCheck,
-            return : returnValue
+            ...option
         }
      }
 }
@@ -171,7 +171,7 @@ insertWithEqual = "=" insertValue: value {
 	return insertValue;
 }
 
-insertOptions = option:(skipDataCheck/return)_* {
+insertOptions = option:(skipDataCheck/return/upsert)_* {
     return {
         [option]:true
     }
@@ -183,6 +183,10 @@ skipDataCheck = SKIPDATACHECK {
 
 return = RETURN{
     return 'return';
+}
+
+upsert = UPSERT{
+    return 'upsert';
 }
 
 
@@ -201,16 +205,15 @@ removeQuery = DELETE _* FROM _ table:tableName _* where:whereQry? _*  {
 
 
 countQuery = COUNT _ ("*"_)? FROM _ table:tableName _* where:whereQry? _* 
-option:(distinct/groupBy)* {
-  var distinct = false;
-  var groupBy = null;
-  option.forEach(val=>{
+options:(distinct/groupBy)* {
+  const option = {};
+  options.forEach(val=>{
   	var key = Object.keys(val)[0];
     switch(key){
         case 'distinct':
-        	distinct = val[key]; break;
+        	option.distinct = val[key]; break;
          case 'groupBy':
-        	groupBy = val[key]; break;
+        	option.groupBy = val[key]; break;
     }
   });
   return {
@@ -218,33 +221,28 @@ option:(distinct/groupBy)* {
      data:{
         from:table,
         where:where,
-        distinct : distinct,
-        groupBy:groupBy
+        ...option
      }
   }
 }
 
 
 selectQuery = SELECT _+ ("*"_+)? as: asQuery? aggr:aggregateQry? FROM _ table:tableName _* join:joinQry* _* where:whereQry? _* 
-option:(skip/limit/distinct/orderBy/groupBy)* {
-  var skip=null;
-  var limit=null;
-  var distinct = false;
-  var order = null;
-  var groupBy = null;
-  option.forEach(val=>{
+options:(skip/limit/distinct/orderBy/groupBy)* {
+  const option = {};
+  options.forEach(val=>{
   	var key = Object.keys(val)[0];
     switch(key){
     	case 'skip':
-         	skip= val[key]; break;
+         	option.skip= val[key]; break;
         case 'limit':
-            limit= val[key]; break;
+            option.limit= val[key]; break;
         case 'distinct':
-        	distinct = val[key]; break;
+        	option.distinct = val[key]; break;
         case 'order':
-        	order = val[key]; break;
+        	option.order = val[key]; break;
          case 'groupBy':
-        	groupBy = val[key]; break;
+        	option.groupBy = val[key]; break;
     }
   });
   let modifiedWhere ;
@@ -291,11 +289,7 @@ option:(skip/limit/distinct/orderBy/groupBy)* {
      data:{
         from:table,
         where:modifiedWhere,
-        skip:skip,
-        limit:limit,
-        distinct : distinct,
-        order:order,
-        groupBy:groupBy,
+        ...option,
         aggregate : aggr,
         join:join.length===0?null:join
      }
@@ -884,4 +878,6 @@ INNER "inner" = I N N E R
 LEFT "left" = L E F T
 
 AS "as" = A S
+
+UPSERT "upsert" = U P S E R T
 
