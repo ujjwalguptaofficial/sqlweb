@@ -1,6 +1,6 @@
 describe('Test Select Api', function () {
     it('select all', function (done) {
-        con.runSql('select * from Customers').
+        con.$sql.run('select * from Customers').
             then(function (results) {
                 expect(results).to.be.an('array').length(93);
                 done();
@@ -11,7 +11,7 @@ describe('Test Select Api', function () {
     });
 
     it('wrong table test', function (done) {
-        con.runSql('select from Customer').
+        con.$sql.run('select from Customer').
             catch(function (err) {
                 console.log(err);
                 var error = {
@@ -24,7 +24,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with skip', function (done) {
-        con.runSql('select from Customers skip 10').
+        con.$sql.run('select from Customers skip 10').
             then(function (results) {
                 expect(results).to.be.an('array').length(83);
                 done();
@@ -35,7 +35,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with where', function (done) {
-        con.runSql("select * from Customers where Country='Mexico'").
+        con.$sql.run("select * from Customers where Country='Mexico'").
             then(function (results) {
                 expect(results).to.be.an('array').length(5);
                 done();
@@ -46,7 +46,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with distinct', function (done) {
-        con.runSql("select * from Customers where City='bhubaneswar' distinct").
+        con.$sql.run("select * from Customers where City='bhubaneswar' distinct").
             then(function (results) {
                 expect(results).to.be.an('array').length(1);
                 done();
@@ -57,7 +57,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with or', function (done) {
-        con.runSql("select * from Customers where Country='Mexico' || City= 'Madrid' ").
+        con.$sql.run("select * from Customers where Country='Mexico' || City= 'Madrid' ").
             then(function (results) {
                 expect(results).to.be.an('array').length(8);
                 done();
@@ -68,7 +68,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with in', function (done) {
-        con.runSql("select * from Customers where Country in ('Germany', 'France', 'UK') ").
+        con.$sql.run("select * from Customers where Country in ('Germany', 'France', 'UK') ").
             then(function (results) {
                 expect(results).to.be.an('array').length(29);
                 done();
@@ -79,7 +79,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like -"%or%"', function (done) {
-        con.runSql("select * from Customers where CustomerName like '%or%' ").
+        con.$sql.run("select * from Customers where CustomerName like '%or%' ").
             then(function (results) {
                 expect(results).to.be.an('array').length(11);
                 done();
@@ -90,7 +90,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like - "o%"', function (done) {
-        con.runSql("select * from Customers where CustomerName like 'o%' ").
+        con.$sql.run("select * from Customers where CustomerName like 'o%' ").
             then(function (results) {
                 var expected_id_list = [54, 55, 56];
                 var id_list = [];
@@ -106,7 +106,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with like - "%o"', function (done) {
-        con.runSql("select * from Customers where CustomerName like '%o' ").
+        con.$sql.run("select * from Customers where CustomerName like '%o' ").
             then(function (results) {
                 var expected_id_list = [15, 21, 29, 46, 69, 73];
                 var id_list = [];
@@ -122,7 +122,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with GroupBy', function (done) {
-        con.runSql("select * from Customers group by Country").
+        con.$sql.run("select * from Customers group by Country").
             then(function (results) {
                 expect(results).to.be.an('array').length(22);
                 done();
@@ -133,7 +133,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with order by', function (done) {
-        con.runSql("select * from Customers order by Country desc").
+        con.$sql.run("select * from Customers order by Country desc").
             then(function (results) {
                 expect(results).to.be.an('array').length(93);
                 done();
@@ -144,7 +144,7 @@ describe('Test Select Api', function () {
     });
 
     it('select with order by,limit 5, deep eql', function (done) {
-        con.runSql("select * from Customers order by Country desc limit 5").
+        con.$sql.run("select * from Customers order by Country desc limit 5").
             then(function (results) {
                 var countries = ["Venezuela", "Venezuela", "Venezuela", "Venezuela", "USA"];
                 expect(results).to.be.an('array').length(5);

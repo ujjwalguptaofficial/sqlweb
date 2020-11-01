@@ -1,16 +1,16 @@
 describe('create demo database', function () {
     it('use isexist and then open/create db', function (done) {
         console.log('initiate database');
-        con.runSql('isDbExist Demo').then(function (isExist) {
+        con.$sql.run('isDbExist Demo').then(function (isExist) {
             console.log('db exist :' + isExist);
             if (isExist) {
-                con.runSql('openDb Demo').then(function () {
+                con.$sql.run('openDb Demo').then(function () {
                     console.log('Database opened');
                     done();
                 });
             } else {
                 var query = getDbSchema();
-                con.runSql(query).then(function () {
+                con.$sql.run(query).then(function () {
                     console.log('Database created');
                     done();
                 });

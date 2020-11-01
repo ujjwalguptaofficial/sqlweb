@@ -1,7 +1,7 @@
 describe('Test update Api', function () {
 
     it('update with where - using promise', function (done) {
-        con.runSql("update Customers set ContactName='Ujjwal', City= 'Bhubaneswar' where CustomerID=1").
+        con.$sql.run("update Customers set ContactName='Ujjwal', City= 'Bhubaneswar' where CustomerID=1").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(1);
             done();
@@ -12,7 +12,7 @@ describe('Test update Api', function () {
     });
 
     it('wrong table test', function (done) {
-        con.runSql("update Customerss set ContactName ='Ujjwal', City = 'Bhubaneswar' where CustomerID=1").
+        con.$sql.run("update Customerss set ContactName ='Ujjwal', City = 'Bhubaneswar' where CustomerID=1").
         then(function (results) {
             done(results);
         }).catch(function (err) {
@@ -26,7 +26,7 @@ describe('Test update Api', function () {
     });
 
     it('update with like -"%or%', function (done) {
-        con.runSql("update Customers set Country='india' where CustomerName like '%or%'").
+        con.$sql.run("update Customers set Country='india' where CustomerName like '%or%'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(11);
             done();
@@ -37,7 +37,7 @@ describe('Test update Api', function () {
     });
 
     it('update with like -"o%', function (done) {
-        con.runSql("update Customers set Country='india' where CustomerName like 'o%'").
+        con.$sql.run("update Customers set Country='india' where CustomerName like 'o%'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(3);
             done();
@@ -48,7 +48,7 @@ describe('Test update Api', function () {
     });
 
     it('update with like -"%o', function (done) {
-        con.runSql("update Customers set Country='india' where CustomerName like '%o'").
+        con.$sql.run("update Customers set Country='india' where CustomerName like '%o'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(6);
             done();
@@ -59,7 +59,7 @@ describe('Test update Api', function () {
     });
 
     it('update with like', function (done) {
-        con.runSql("update Customers set Country='india' where CustomerName like '%or%'").
+        con.$sql.run("update Customers set Country='india' where CustomerName like '%or%'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(11);
             done();
@@ -70,7 +70,7 @@ describe('Test update Api', function () {
     });
 
     it('update without ignore case', function (done) {
-        con.runSql("update Customers set ContactName= 'Ujjwal', City= 'bhubaneswar' where City= 'BhUbaneSwar'").
+        con.$sql.run("update Customers set ContactName= 'Ujjwal', City= 'bhubaneswar' where City= 'BhUbaneSwar'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(0);
             done();
@@ -82,7 +82,7 @@ describe('Test update Api', function () {
     
     it('update with or', function (done) {
         var selectCount;
-        con.runSql("select from Customers where Country='Mexico' || City='Madrid'").
+        con.$sql.run("select from Customers where Country='Mexico' || City='Madrid'").
         then(function (results) {
             selectCount = results.length;
             done();
@@ -91,7 +91,7 @@ describe('Test update Api', function () {
             done(err);
         })
 
-        con.runSql("update Customers sEt City='madrid' where Country='Mexico' || City='Madrid'").
+        con.$sql.run("update Customers sEt City='madrid' where Country='Mexico' || City='Madrid'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(selectCount);
             done();
@@ -103,7 +103,7 @@ describe('Test update Api', function () {
 
     it('update with in', function (done) {
         var Count;
-        con.runSql("select * from Customers where Country in ('Germany', 'France', 'UK')").
+        con.$sql.run("select * from Customers where Country in ('Germany', 'France', 'UK')").
         then(function (results) {
             Count = results.length;
         }).
@@ -111,7 +111,7 @@ describe('Test update Api', function () {
             done(err);
         })
 
-        con.runSql("Update Customers set ContactName= 'Ujjwal',City= 'bhubaneswar' where Country in ('Germany', 'France', 'UK')").
+        con.$sql.run("Update Customers set ContactName= 'Ujjwal',City= 'bhubaneswar' where Country in ('Germany', 'France', 'UK')").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(Count);
             done();
@@ -123,7 +123,7 @@ describe('Test update Api', function () {
 
     it('update with operator - != (for string)', function (done) {
         var count;
-        con.runSql("count * from Customers where Country!='Mexico'").
+        con.$sql.run("count * from Customers where Country!='Mexico'").
         then(function (results) {
             count = results;
         }).
@@ -131,7 +131,7 @@ describe('Test update Api', function () {
             done(err);
         });
 
-        con.runSql("update Customers set ContactName= 'Ujjwsal',City= 'bhubaneswsar' where Country!='Mexico'").
+        con.$sql.run("update Customers set ContactName= 'Ujjwsal',City= 'bhubaneswsar' where Country!='Mexico'").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -143,7 +143,7 @@ describe('Test update Api', function () {
 
     it('update with operator - != (for number)', function (done) {
         var count;
-        con.runSql("count * from Products where Price!=20").
+        con.$sql.run("count * from Products where Price!=20").
         then(function (results) {
             count = results;
         }).
@@ -151,7 +151,7 @@ describe('Test update Api', function () {
             done(err);
         })
 
-        con.runSql("updatE Products set ContactName= 'Ujjwal',City= 'bhubaneswar' where Price!=20").
+        con.$sql.run("updatE Products set ContactName= 'Ujjwal',City= 'bhubaneswar' where Price!=20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -164,7 +164,7 @@ describe('Test update Api', function () {
 
     it('update with operator - >', function (done) {
         var count;
-        con.runSql("select From Products where Price>20").
+        con.$sql.run("select From Products where Price>20").
         then(function (results) {
             count = results.length;
             expect(results).to.be.an('array').length(37);
@@ -173,7 +173,7 @@ describe('Test update Api', function () {
             done(err);
         })
 
-        con.runSql("update Products set ProductName= 'Cofee' where Price>20").
+        con.$sql.run("update Products set ProductName= 'Cofee' where Price>20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -185,7 +185,7 @@ describe('Test update Api', function () {
 
     it('update with operator - >=', function (done) {
         var count;
-        con.runSql("select From Products where Price>=20").
+        con.$sql.run("select From Products where Price>=20").
         then(function (results) {
             count = results.length;
             expect(results).to.be.an('array').length(38);
@@ -194,7 +194,7 @@ describe('Test update Api', function () {
             done(err);
         })
 
-        con.runSql("update Products set ProductName= 'Whisky' where Price>=20").
+        con.$sql.run("update Products set ProductName= 'Whisky' where Price>=20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -206,7 +206,7 @@ describe('Test update Api', function () {
 
     it('update with operator - <', function (done) {
 
-        con.runSql("select From Products where Price<20").
+        con.$sql.run("select From Products where Price<20").
         then(function (results) {
             expect(results).to.be.an('array').length(39);
         }).
@@ -214,7 +214,7 @@ describe('Test update Api', function () {
             done(err);
         })
 
-        con.runSql("update Products  set ProductName='Tea' where Price<20").
+        con.$sql.run("update Products  set ProductName='Tea' where Price<20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(39);
             done();
@@ -227,7 +227,7 @@ describe('Test update Api', function () {
     it('update with operator - <=', function (done) {
         var count;
 
-        con.runSql("select From Products where Price<=20").
+        con.$sql.run("select From Products where Price<=20").
         then(function (results) {
             count = results.length;
             expect(results).to.be.an('array').length(40);
@@ -236,7 +236,7 @@ describe('Test update Api', function () {
             done(err);
         })
 
-        con.runSql("update Products  set ProductName='Candy' where Price<=20").
+        con.$sql.run("update Products  set ProductName='Candy' where Price<=20").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();
@@ -248,7 +248,7 @@ describe('Test update Api', function () {
 
     it('update with operator - between', function (done) {
         var count;
-        con.runSql("select * from Products where Price between (10,20)").
+        con.$sql.run("select * from Products where Price between (10,20)").
         then(function (results) {
             count = results.length;
             expect(results).to.be.an('array').length(29);
@@ -257,7 +257,7 @@ describe('Test update Api', function () {
             done(err);
         })
 
-        con.runSql("update Products set ProductName= 'Chocolate' where Price between (10,20)").
+        con.$sql.run("update Products set ProductName= 'Chocolate' where Price between (10,20)").
         then(function (results) {
             expect(results).to.be.an('number').to.equal(count);
             done();

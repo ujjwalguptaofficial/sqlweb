@@ -2,9 +2,9 @@
 //     // con.jsStoreCon_.insert({
 //     //     into: 'Customers'
 //     // }).
-//     var qry = new SqlWeb.Query('insert into Suppliers Values=@values return');
+//     var qry = new con.$sql.Query('insert into Suppliers Values=@values return');
 //     qry.map("@values", results);
-//     con.runSql(qry).
+//     con.$sql.run(qry).
 //     catch(function (err) {
 //         console.log(err);
 //         var error = {

@@ -1,6 +1,6 @@
 describe('Test operator', function () {
     it('select with operator - != (for string)', function (done) {
-        con.runSql("select * from Customers where Country!='Mexico'").
+        con.$sql.run("select * from Customers where Country!='Mexico'").
         then(function (results) {
             expect(results).to.be.an('array').length(88);
             done();
@@ -10,7 +10,7 @@ describe('Test operator', function () {
     });
 
     it('select with operator - != (for number)', function (done) {
-        con.runSql("select * from Products wheRe Price!=20").
+        con.$sql.run("select * from Products wheRe Price!=20").
         then(function (results) {
             expect(results).to.be.an('array').length(76);
             done();
@@ -20,7 +20,7 @@ describe('Test operator', function () {
     });
 
     it('select with operator - >', function (done) {
-        con.runSql("select * from Products wheRe Price>20").
+        con.$sql.run("select * from Products wheRe Price>20").
         then(function (results) {
             expect(results).to.be.an('array').length(37);
             done();
@@ -30,7 +30,7 @@ describe('Test operator', function () {
     });
 
     it('select with operator - >=', function (done) {
-        con.runSql("select from Products wheRe Price>=20").
+        con.$sql.run("select from Products wheRe Price>=20").
         then(function (results) {
             expect(results).to.be.an('array').length(38);
             done();
@@ -40,7 +40,7 @@ describe('Test operator', function () {
     });
 
     it('select with operator - <', function (done) {
-        con.runSql("select * from Products wheRe Price<20").
+        con.$sql.run("select * from Products wheRe Price<20").
         then(function (results) {
             expect(results).to.be.an('array').length(39);
             done();
@@ -50,7 +50,7 @@ describe('Test operator', function () {
     });
 
     it('select with operator - <=', function (done) {
-        con.runSql("select * from Products wheRe Price <= 20").
+        con.$sql.run("select * from Products wheRe Price <= 20").
         then(function (results) {
             expect(results).to.be.an('array').length(40);
             done();
@@ -60,7 +60,7 @@ describe('Test operator', function () {
     });
 
     it('select with operator - between', function (done) {
-        con.runSql("select * from Products wheRe Price between (10,20)").
+        con.$sql.run("select * from Products wheRe Price between (10,20)").
         then(function (results) {
             expect(results).to.be.an('array').length(29);
             done();
@@ -70,7 +70,7 @@ describe('Test operator', function () {
     });
 
     it('select with operator - "<" and ">" ', function (done) {
-        con.runSql("select * from Products wheRe Price >10 && Price<20").
+        con.$sql.run("select * from Products wheRe Price >10 && Price<20").
         then(function (results) {
             expect(results).to.be.an('array').length(25);
             done();

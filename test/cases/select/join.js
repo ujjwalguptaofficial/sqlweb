@@ -1,6 +1,6 @@
 describe('Test join', function () {
     it('inner join', function (done) {
-        con.runSql(`select Customers.CustomerName as name, Customers.ContactName as cName, Customers.CustomerID as cId from Orders join Customers on Orders.CustomerID=Customers.CustomerID`)
+        con.$sql.run(`select Customers.CustomerName as name, Customers.ContactName as cName, Customers.CustomerID as cId from Orders join Customers on Orders.CustomerID=Customers.CustomerID`)
             .then(function (results) {
                 expect(results).to.be.an('array').length(196);
                 const firstValue = results[0];
@@ -22,7 +22,7 @@ describe('Test join', function () {
     });
 
     it('inner join with reversed table', function (done) {
-        con.runSql(`select from Customers inner join Orders on Orders.CustomerID=Customers.CustomerID`).
+        con.$sql.run(`select from Customers inner join Orders on Orders.CustomerID=Customers.CustomerID`).
             then(function (results) {
                 expect(results).to.be.an('array').length(196);
                 done();
@@ -33,7 +33,7 @@ describe('Test join', function () {
 
     it('left join', function (done) {
 
-        con.runSql(`select * from Orders left join Customers on Orders.CustomerID=Customers.CustomerID`)
+        con.$sql.run(`select * from Orders left join Customers on Orders.CustomerID=Customers.CustomerID`)
             .then(function (results) {
                 expect(results).to.be.an('array').length(196);
                 done();
@@ -43,7 +43,7 @@ describe('Test join', function () {
     });
 
     it('left join reverse', function (done) {
-        con.runSql(`select from Customers left join Orders on Orders.CustomerID=Customers.CustomerID`)
+        con.$sql.run(`select from Customers left join Orders on Orders.CustomerID=Customers.CustomerID`)
             .then(function (results) {
                 // console.table(results);
                 expect(results).to.be.an('array').length(215);
@@ -54,7 +54,7 @@ describe('Test join', function () {
     });
 
     it('three table join', function (done) {
-        con.runSql(`select * from Orders join Customers on Orders.CustomerID=Customers.CustomerID inner join Shippers on Orders.ShipperID=Shippers.ShipperID`).then(function (results) {
+        con.$sql.run(`select * from Orders join Customers on Orders.CustomerID=Customers.CustomerID inner join Shippers on Orders.ShipperID=Shippers.ShipperID`).then(function (results) {
             expect(results).to.be.an('array').length(196);
             const result = results[0];
             expect(result.CustomerID).to.be.an('number');
@@ -67,7 +67,7 @@ describe('Test join', function () {
     });
 
     it('self join ', function (done) {
-        con.runSql(`select Customers.CustomerName as name, Customers.ContactName as cName, Customers.CustomerID as cId, Customers.Address as address,Customers.PostalCode as postalCode, Customers.Country as country,Customers.Email as email  from Customers join Customers on Customers.City=Customers.City`).
+        con.$sql.run(`select Customers.CustomerName as name, Customers.ContactName as cName, Customers.CustomerID as cId, Customers.Address as address,Customers.PostalCode as postalCode, Customers.Country as country,Customers.Email as email  from Customers join Customers on Customers.City=Customers.City`).
             then(function (results) {
                 expect(results).to.be.an('array').length(183);
                 done();
@@ -97,7 +97,7 @@ describe('Test join', function () {
         //         }
         //     }
         // })
-        con.runSql(`select Customers.CustomerName as name, Customers.ContactName as cName, Customers.CustomerID as cId, Customers.Address as address,Customers.PostalCode as postalCode, Customers.Country as country,Customers.Email as email  from Customers join Customers on Customers.City=Customers.City where Customers.CustomerID<90`).
+        con.$sql.run(`select Customers.CustomerName as name, Customers.ContactName as cName, Customers.CustomerID as cId, Customers.Address as address,Customers.PostalCode as postalCode, Customers.Country as country,Customers.Email as email  from Customers join Customers on Customers.City=Customers.City where Customers.CustomerID<90`).
             then(function (results) {
                 expect(results).to.be.an('array').length(177);
                 done();
