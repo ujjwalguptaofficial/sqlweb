@@ -5,7 +5,7 @@ window.onload = function () {
 }
 
 var con = new JsStore.Connection();
-con.use(SqlWeb.default);
+con.addPlugin(SqlWeb.default);
 function startTest() {
     window.__karma__.start();
 }
