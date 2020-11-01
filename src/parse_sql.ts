@@ -1,4 +1,4 @@
-import { Query } from ".";
+import { Query } from "./query";
 import { Util } from "./util";
 
 export let parseSql = (query: string | Query) => {

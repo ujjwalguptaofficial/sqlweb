@@ -1,10 +1,11 @@
-window.__karma__.loaded = function () {};
+window.__karma__.loaded = function () { };
 window.onload = function () {
     // initDb();
     startTest();
 }
 
-var con = new JsStore.Instance();
+var con = new JsStore.Connection();
+con.use(SqlWeb.default);
 function startTest() {
     window.__karma__.start();
 }
