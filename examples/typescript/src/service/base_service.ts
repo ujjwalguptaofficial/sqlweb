@@ -1,5 +1,4 @@
 import { con } from "./idb_helper";
-import { IError } from "sqlweb";
 
 export class BaseService {
 
@@ -18,7 +17,7 @@ export class BaseService {
     async initDatabase() {
         const qry = this.getDbQuery_();
         try {
-            await this.connection.runSql(qry);
+            await this.connection.$sql.run(qry);
         }
         catch (ex) {
             console.error(ex);
@@ -39,7 +38,7 @@ export class BaseService {
     }
 
     get connection() {
-        return con;
+        return con as any;
     }
 
 }
