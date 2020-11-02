@@ -1,6 +1,4 @@
-import {
-    idbCon
-} from "./idb_service";
+import { idbCon } from "./idb_service";
 export class BaseService {
 
     constructor() {
@@ -14,7 +12,7 @@ export class BaseService {
 
     initJsStore() {
         const qry = this.getDbQuery();
-        this.connection.runSql(qry).then(function () {
+        this.connection.$sql.run(qry).then(function () {
             console.log('db initiated');
         }).catch(function (ex) {
             console.error(ex);

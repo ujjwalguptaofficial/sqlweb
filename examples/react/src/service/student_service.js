@@ -1,9 +1,5 @@
-import {
-    BaseService
-} from "./base_service";
-import {
-    Query
-} from "sqlweb";
+import { BaseService } from "./base_service";
+
 
 export class StudentService extends BaseService {
 
@@ -13,11 +9,11 @@ export class StudentService extends BaseService {
     }
 
     getStudents() {
-        return this.connection.runSql(`select from ${this.tableName}`);
+        return this.connection.$sql.run(`select from ${this.tableName}`);
     }
 
     addStudent(student) {
-        const qry = new Query(`insert into ${this.tableName} 
+        const qry = new this.connection.$sql.Query(`insert into ${this.tableName} 
         values ({name:'@name',gender:'@gender',country:'@country',city:'@city'}) return
         `);
         qry.map("@name", student.name);
@@ -26,18 +22,18 @@ export class StudentService extends BaseService {
         qry.map("@city", student.city);
 
         // below code is equaivalent of above - another way of using insert
-        // const qry = new Query(`insert into ${this.tableName} values='@values' return`);
+        // const qry = new this.connection.$sql.Query(`insert into ${this.tableName} values='@values' return`);
         // qry.map('@values', [student]);
 
-        return this.connection.runSql(qry);
+        return this.connection.$sql.run(qry);
     }
 
     getStudentById(id) {
-        return this.connection.runSql(`select from ${this.tableName} where id= ${id}`);
+        return this.connection.$sql.run(`select from ${this.tableName} where id= ${id}`);
     }
 
     removeStudent(id) {
-        return this.connection.runSql(`delete from ${this.tableName} where id= ${id}`);
+        return this.connection.$sql.run(`delete from ${this.tableName} where id= ${id}`);
     }
 
     updateStudentById(id, updateData) {
@@ -48,6 +44,6 @@ export class StudentService extends BaseService {
         city='${updateData.city}'
         where id=${id}`;
 
-        return this.connection.runSql(qry);
+        return this.connection.$sql.run(qry);
     }
 }
