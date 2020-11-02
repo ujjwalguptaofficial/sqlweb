@@ -1,6 +1,5 @@
-import {
-    con
-} from "./idb_service";
+import { con } from "./idb_service";
+
 export class BaseService {
 
     constructor() {
@@ -15,7 +14,7 @@ export class BaseService {
     async initJsStore() {
         const qry = this.getDbQuery();
         try {
-            await this.connection.runSql(qry);
+            await this.connection.$sql.run(qry);
         }
         catch (ex) {
             console.error(ex);
