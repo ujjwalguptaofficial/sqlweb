@@ -7,7 +7,7 @@
     "dev": "webpack-dev-server"
   },
   "dependencies": {
-    "jquery": "^3.3.1",
+    "jquery": "^3.5.0",
     "jsstore": "^3.11.1",
     "sqlweb": "^1.5.0"
   },
