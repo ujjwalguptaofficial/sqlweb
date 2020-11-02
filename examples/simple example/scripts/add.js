@@ -1,5 +1,9 @@
-var connection = new JsStore.Instance(new Worker('scripts/jsstore.worker.js')),
+var connection = new JsStore.Connection(new Worker('scripts/jsstore.worker.js')),
     StudentId;
+
+// Register sqlweb
+connection.addPlugin(SqlWeb.default);
+
 window.onload = function () {
     initiateDb();
     getStudent();
@@ -7,9 +11,9 @@ window.onload = function () {
 
 function initiateDb() {
     var dbName = "Students";
-    connection.runSql('ISDBEXIST ' + dbName).then(function (isExist) {
+    connection.$sql.run('ISDBEXIST ' + dbName).then(function (isExist) {
         if (isExist) {
-            connection.runSql('OPENDB ' + dbName);
+            connection.$sql.run('OPENDB ' + dbName);
         } else {
             window.location.href = "index.html";
         }
@@ -23,9 +27,9 @@ function getStudent() {
     StudentId = getQsValueByName('id');
     //check if Query string param exist
     if (StudentId) {
-        var query = new SqlWeb.Query("select * from Student where Id='@id'");
+        var query = new connection.$sql.Query("select * from Student where Id='@id'");
         query.map('@id', Number(StudentId));
-        connection.runSql(query)
+        connection.$sql.run(query)
             .then(function (results) {
                 if (results.length > 0) {
                     var Student = results[0];
@@ -54,13 +58,13 @@ function Submit() {
 }
 
 function updateStudent() {
-    var query = new SqlWeb.Query("UPDATE Student SET Name='@name',Gender='@gender',Country='@country',City='@city' WHERE Id='@id'");
+    var query = new connection.$sql.Query("UPDATE Student SET Name='@name',Gender='@gender',Country='@country',City='@city' WHERE Id='@id'");
     query.map("@name", $('#txtName').val());
     query.map("@gender", $("input[name='Gender']:checked").val());
     query.map("@country", $('#txtCountry').val());
     query.map("@city", $('#txtCity').val());
     query.map("@id", Number(StudentId));
-    connection.runSql(query).then(function (rowsAffected) {
+    connection.$sql.run(query).then(function (rowsAffected) {
         alert(rowsAffected + " record Updated");
         if (rowsAffected > 0) {
             window.location.href = "index.html";
@@ -78,12 +82,12 @@ function addStudent() {
         Country: $('#txtCountry').val(),
         City: $('#txtCity').val()
     };
-    var query = new SqlWeb.Query("insert into Student values ({Name:'@name',Gender:'@gender',Country:'@country',City:'@city'})")
+    var query = new connection.$sql.Query("insert into Student values ({Name:'@name',Gender:'@gender',Country:'@country',City:'@city'})")
     query.map("@name", $('#txtName').val());
     query.map("@gender", $("input[name='Gender']:checked").val());
     query.map("@country", $('#txtCountry').val());
     query.map("@city", $('#txtCity').val());
-    connection.runSql(query).then(function (rowsAdded) {
+    connection.$sql.run(query).then(function (rowsAdded) {
         alert(rowsAdded + " record Added");
         window.location.href = "index.html";
     }).catch(function (err) {

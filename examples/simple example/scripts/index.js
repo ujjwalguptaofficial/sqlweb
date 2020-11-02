@@ -1,4 +1,8 @@
-var connection = new JsStore.Instance(new Worker('scripts/jsstore.worker.js'));
+var connection = new JsStore.Connection(new Worker('scripts/jsstore.worker.js'));
+
+// Register sqlweb
+connection.addPlugin(SqlWeb.default);
+
 window.onload = function () {
     initiateDb();
     $('#btnAddStudent').click(function () {
@@ -18,9 +22,9 @@ window.onload = function () {
 };
 
 function deleteData(studentId) {
-    var query = new SqlWeb.Query("DELETE FROM Student WHERE Id='@studentId'");
+    var query = new connection.$sql.Query("DELETE FROM Student WHERE Id='@studentId'");
     query.map("@studentId", Number(studentId));
-    connection.runSql(query).
+    connection.$sql.run(query).
         then(function (rowsDeleted) {
             console.log(rowsDeleted + ' rows deleted');
             if (rowsDeleted > 0) {
@@ -35,7 +39,7 @@ function deleteData(studentId) {
 function initiateDb() {
     try {
         var dbQuery = getDbQuery();
-        connection.runSql(dbQuery).then(function (isDbCreated) {
+        connection.$sql.run(dbQuery).then(function (isDbCreated) {
             if(isDbCreated){
                 insertStudents();
             }
@@ -49,9 +53,9 @@ function initiateDb() {
 
 function insertStudents() {
     var students = getStudents();
-    var query = new SqlWeb.Query("INSERT INTO Student values='@val'");
+    var query = new connection.$sql.Query("INSERT INTO Student values='@val'");
     query.map("@val", students);
-    connection.runSql(query).then(function (rowsAdded) {
+    connection.$sql.run(query).then(function (rowsAdded) {
         if (rowsAdded > 0) {
             alert('Successfully added');
         }
@@ -77,7 +81,7 @@ function getDbQuery() {
 
 //This function refreshes the table
 function showTableData() {
-    connection.runSql('select * from Student').then(function (students) {
+    connection.$sql.run('select * from Student').then(function (students) {
         var HtmlString = "";
         students.forEach(function (student) {
             HtmlString += "<tr ItemId=" + student.Id + "><td>" +
