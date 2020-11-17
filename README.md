@@ -13,8 +13,17 @@ SqlWeb is an extension of [JsStore](http://jsstore.net/) which allows to use sql
 ### Examples
 
 ```
+import * as JsStore from 'jsstore';
+import SqlWeb from "sqlweb";
+
+// create jsstore connection
 var connection = new JsStore.Instance('jsstore worker path');
-connection.runSql("select * from Customers").then(function(result) {
+
+// add SqlWeb 
+connection.addPlugin(SqlWeb);
+
+// run select query
+connection.$sql.run("select * from Customers").then(function(result) {
     console.log(result);
 });
 ```
