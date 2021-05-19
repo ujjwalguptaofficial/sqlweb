@@ -1,4 +1,4 @@
-query = selectQuery/countQuery/insertQuery/updateQuery/removeQuery/createQuery/openQuery/isDbExistQuery ;
+query = selectQuery/countQuery/insertQuery/updateQuery/removeQuery/createQuery/openQuery ;
 
 createQuery = db:createDbQuery tables:createTableQuery* {
 	db.tables=tables
@@ -687,29 +687,6 @@ openQuery = OPENDB _* name:dbName {
         api:'openDb',
         data:name
     }
-}
-
-isDbExistQuery =  ISDBEXIST _* name:dbName _* tblInfo: tableInfo? {
-	var result = {
-     	api:'isDbExist'
-    }
-    if(tblInfo==null){
-      result.data=name;
-    }
-    else{
-    	result.data={
-            dbName:name,
-            table:tblInfo
-        }
-    }
-    return result;
-}
-
-tableInfo = TABLE _* table:tableName _* ver:version {
-	return {
-                name:table,
-                version:ver
-                }
 }
 
 tableName "table name" = Identifier
