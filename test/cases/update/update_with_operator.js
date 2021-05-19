@@ -8,13 +8,14 @@ describe('Test update with operator option', function () {
                 ProductID: 1
             }
         }).
-        then(function (results) {
-            Price = results[0].Price;
-        }).catch(function (err) {
-            done(err);
-        });
+            then(function (results) {
+                Price = results[0].Price;
+            }).catch(function (err) {
+                done(err);
+            });
 
-        con.update({ in: "Products",
+        con.update({
+            in: "Products",
             set: {
                 Price: {
                     '+': 5
@@ -55,7 +56,8 @@ describe('Test update with operator option', function () {
             done(err);
         });
 
-        con.update({ in: "Products",
+        con.update({
+            in: "Products",
             set: {
                 Price: {
                     '-': 5
@@ -95,7 +97,8 @@ describe('Test update with operator option', function () {
         }).catch(function (err) {
             done(err);
         });
-        con.update({ in: "Products",
+        con.update({
+            in: "Products",
             set: {
                 Price: {
                     '*': 5
@@ -135,7 +138,8 @@ describe('Test update with operator option', function () {
         }).catch(function (err) {
             done(err);
         });
-        con.update({ in: "Products",
+        con.update({
+            in: "Products",
             set: {
                 Price: {
                     '/': 5
@@ -175,7 +179,8 @@ describe('Test update with operator option', function () {
         }).catch(function (err) {
             done(err);
         });
-        con.update({ in: "Products",
+        con.update({
+            in: "Products",
             set: {
                 ProductName: {
                     '+': 'temp'
@@ -204,7 +209,8 @@ describe('Test update with operator option', function () {
     });
 
     it('update with wrong operator - #', function (done) {
-        con.update({ in: "Products",
+        con.update({
+            in: "Products",
             set: {
                 ProductName: {
                     '#': 'temp'
@@ -213,8 +219,6 @@ describe('Test update with operator option', function () {
             where: {
                 ProductID: 1
             }
-        }).then(function (results) {
-            expect(results).to.be.an('number').to.equal(1);
         }).catch(function (err) {
             var error = {
                 "message": "Supplied value for column 'ProductName' have wrong data type",

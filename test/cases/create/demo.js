@@ -1,24 +1,15 @@
 describe('create demo database', function () {
     it('use isexist and then open/create db', function (done) {
         console.log('initiate database');
-        con.$sql.run('isDbExist Demo').then(function (isExist) {
-            console.log('db exist :' + isExist);
-            if (isExist) {
-                con.$sql.run('openDb Demo').then(function () {
-                    console.log('Database opened');
-                    done();
-                });
-            } else {
-                var query = getDbSchema();
-                con.$sql.run(query).then(function () {
-                    console.log('Database created');
-                    done();
-                });
-            }
+        var query = getDbSchema();
+        con.$sql.run(query).then(function (isDbCreated) {
+            console.log('Database created');
+            expect(isDbCreated).equal(true);
+            done();
         }).catch(function (err) {
             done(err);
         });
-    });
+    })
 });
 
 // con.jsStoreCon_.isDbExist('Demo').then(function (exist) {
