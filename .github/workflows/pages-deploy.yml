@@ -22,7 +22,7 @@ jobs:
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - name: Checkout
-    - uses: actions/checkout@v2
+      uses: actions/checkout@v2
       with:
         ref: docs
    
@@ -33,7 +33,7 @@ jobs:
         npm run deploy
         
     - name: Deploy 🚀
-    - uses: JamesIves/github-pages-deploy-action@4.1.4
+      uses: JamesIves/github-pages-deploy-action@4.1.4
       with:
           branch: gh-pages # The branch the action should deploy to.
           folder: build
