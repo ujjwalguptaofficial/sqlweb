@@ -1,0 +1,72 @@
+
+# This is a basic workflow to help you get started with Actions
+
+name: gh-pages deploy
+
+# Controls when the action will run. Triggers the workflow on push or pull request 
+# events but only for the master branch
+on:
+  push:
+    branches: [ docs ]
+  pull_request:
+    branches: [ docs ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - uses: actions/checkout@v2
+    - name: Merge to gh-pages branch
+      uses: devmasx/merge-branch@v1.1.0
+      with:
+        type: now
+        target_branch: 'gh-pages'
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+    #- name: merge
+      #uses: devmasx/merge-branch@v1.1.0
+      #with:
+       #   label_name: 'merged in develop'
+        #  target_branch: 'gh-pages'
+      #env:
+         # GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      #run: |
+       # git fetch
+        #git checkout origin/gh-pages
+        #git fetch origin
+      #  git merge origin/master
+        
+    # Checkout branch gh-pages
+    - name: Checkout gh-pages
+      run: |
+        git fetch
+        git checkout origin/gh-pages
+    # Runs a single command using the runners shell
+    - name: Build
+      run: |
+        cd docs 
+        npm install
+        npm run deploy
+    # Runs a set of commands using the runners shell
+    - name: copy files
+      run: |
+        node docs/copy_helper.js
+    
+    - name: Commit Changes
+      run: |
+        git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
+        git add --all
+        git commit -m "deploy to gh-pages"
+        
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: "gh-pages"
