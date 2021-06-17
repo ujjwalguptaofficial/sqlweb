@@ -67,10 +67,10 @@ module.exports = [
                 text: "Or",
                 url: "or"
             },
-            {
-                text: "Regex",
-                url: "regex"
-            },
+            // {
+            //     text: "Regex",
+            //     url: "regex"
+            // },
             {
                 text: "Like",
                 url: "like"
@@ -79,10 +79,10 @@ module.exports = [
                 text: "In",
                 url: "in"
             },
-            {
-                text: "Operators",
-                url: "operators"
-            },
+            // {
+            //     text: "Operators",
+            //     url: "operators"
+            // },
             {
                 text: "Between",
                 url: "between"

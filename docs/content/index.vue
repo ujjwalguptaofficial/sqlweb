@@ -21,7 +21,7 @@
         </div>
       </div>
       <div class="row content-center mt-20px">
-        <a class="btn primary mr-10px x-big ripple" href="tutorial/get-started">
+        <a class="btn primary mr-10px x-big ripple" href="docs/get-started">
           Get Started
         </a>
         <a
