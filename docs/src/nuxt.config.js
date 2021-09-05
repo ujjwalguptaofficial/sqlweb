@@ -21,6 +21,10 @@ const host =
     "localhost";
 // return;
 module.exports = {
+    target: 'static',
+    router: {
+        base: '/sqlweb/'
+    },
     srcDir: path.join(__dirname),
     dir: {
         static: path.join(__dirname, '../static'),
