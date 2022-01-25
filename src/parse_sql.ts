@@ -1,13 +1,7 @@
 import { Query } from "./query";
 import { Util } from "./util";
 
-export let parseSql = (query: string | Query) => {
-    let result;
-    if (Util.isString(query) === true) {
-        result = Util.parseSql(query as string);
-    }
-    else {
-        result = (query as Query).query_;
-    }
-    return result;
+export let parseSql = (query: string | Query) => Util.isString(query)
+    ? Util.parseSql(query as string)
+    : (query as Query).query_;
 };
