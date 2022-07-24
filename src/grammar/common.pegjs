@@ -16,8 +16,8 @@ value "column value"=  val:(ColumnValue/Number) {
     return val;
 }
 
-ColumnValue=  "'" val:Word "'" {
-	return val;
+ColumnValue=  "'" val:Word? "'" {
+	return val || '';
 }
 
 Identifier "identifier"= val:[a-zA-Z0-9_]+ {

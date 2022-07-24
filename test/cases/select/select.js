@@ -45,6 +45,17 @@ describe('Test Select Api', function () {
             })
     });
 
+    it('select with where and empty', function (done) {
+        con.$sql.run("select * from Customers where Country='' ").
+            then(function (results) {
+                expect(results).to.be.an('array').length(0);
+                done();
+            }).
+            catch(function (err) {
+                done(err);
+            })
+    });
+
     it('select with distinct', function (done) {
         con.$sql.run("select * from Customers where City='bhubaneswar' distinct").
             then(function (results) {
